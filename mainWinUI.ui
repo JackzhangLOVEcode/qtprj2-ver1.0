@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="TX_Config">
      <attribute name="title">
@@ -1484,7 +1484,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>350</y>
+        <y>400</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -1500,7 +1500,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>350</y>
+        <y>400</y>
         <width>99</width>
         <height>24</height>
        </rect>
@@ -1529,7 +1529,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>390</y>
+        <y>440</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -1542,7 +1542,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>390</y>
+        <y>440</y>
         <width>71</width>
         <height>25</height>
        </rect>
@@ -1561,7 +1561,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>510</y>
+        <y>560</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -1574,7 +1574,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>510</y>
+        <y>560</y>
         <width>71</width>
         <height>25</height>
        </rect>
@@ -1590,7 +1590,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>470</y>
+        <y>520</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -1603,7 +1603,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>470</y>
+        <y>520</y>
         <width>71</width>
         <height>25</height>
        </rect>
@@ -1619,7 +1619,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>430</y>
+        <y>480</y>
         <width>101</width>
         <height>18</height>
        </rect>
@@ -1632,7 +1632,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>430</y>
+        <y>480</y>
         <width>71</width>
         <height>25</height>
        </rect>
@@ -1642,6 +1642,35 @@
       </property>
       <property name="value">
        <number>6250000</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="equa_amp_label">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>360</y>
+        <width>101</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>equa_amp</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="equa_amp_obj">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>360</y>
+        <width>71</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <number>65535</number>
+      </property>
+      <property name="value">
+       <number>16384</number>
       </property>
      </widget>
     </widget>
@@ -1991,13 +2020,13 @@
        <string/>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>31</x>
         <y>51</y>
         <width>191</width>
-        <height>335</height>
+        <height>338</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
