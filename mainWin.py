@@ -1,4 +1,4 @@
-import sys
+import sys, math
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QIcon
@@ -19,8 +19,13 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portBB = 8000
         self.ipRF = '127.0.0.1'
         self.portRF = 6005
+        self.ipStatistical = '127.0.0.1'
+        self.portStatistical = 7000
+        self.stopFlag = False
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
         self.setDefault.clicked.connect(self.setDefaultConfig)
+        self.start.clicked.connect(self.receiveStatistical)
+        self.stop.clicked.connect(self.stopReceiveStatistical)
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
@@ -201,6 +206,42 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.connectDefaultConfig()
         self.sendConfigtoBaseBand()
 
+    def showStatistical(self, data):
+        errbit = int.from_bytes(data[0:4], byteorder='big')
+        self.errbit_show.setText(str(errbit))
+        tolfrm = int.from_bytes(data[4:8], byteorder='big')
+        self.tolfrm_show.setText(str(tolfrm))
+        noise_pwr_sum = int.from_bytes(data[8:10], byteorder='big')
+        self.noise_pwr_sum_show.setText(str(noise_pwr_sum))
+        singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
+        self.singal_pwr_sum_show.setText(str(singal_pwr_sum))
+        o_freq_est_r = int.from_bytes(data[12:14], byteorder='big')
+        self.o_freq_est_r_show.setText(str(o_freq_est_r))
+        o_freq_est_t = int.from_bytes(data[14:16], byteorder='big')
+        self.o_freq_est_t_show.setText(str(o_freq_est_t))
+        crc_error = int.from_bytes(data[16:17], byteorder='big')
+        self.crc_error_show.setText(str(crc_error))
+        error_dft = int.from_bytes(data[17:18], byteorder='big')
+        self.error_dft_show.setText(str(error_dft))
+        hard_decision_err = int.from_bytes(data[18:19], byteorder='big')
+        self.hard_decision_err_show.setText(str(hard_decision_err))
+        SNR = 10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum)
+        self.SNR_show.setText(str(SNR))
+
+    def receiveStatistical(self):
+        #self.stopFlag = False
+        addr = (self.ipStatistical, self.portStatistical)
+        buffsize = 1024
+        statisticalSocket = socket(AF_INET, SOCK_DGRAM)
+        statisticalSocket.bind(addr)
+        #while (self.stopFlag == False):
+        data, addr_source = statisticalSocket.recvfrom(buffsize)
+        print(data)
+        self.showStatistical(data)
+        statisticalSocket.close()
+
+    def stopReceiveStatistical(self):
+        self.stopFlag = True
 
 
 if __name__ == "__main__":
