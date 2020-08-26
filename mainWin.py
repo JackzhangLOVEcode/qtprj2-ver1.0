@@ -37,14 +37,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portBB = 8000
         self.ipRF = '127.0.0.1'
         self.portRF = 6005
-        self.ipStatistical = '127.0.0.1'
-        self.portStatistical = 7000
-        self.stopFlag = False
+        self.timer = QTimer(self)
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
         self.setDefault.clicked.connect(self.setDefaultConfig)
-        self.mytimer()
-        #self.start.clicked.connect(self.receiveStatistical)
-        #self.stop.clicked.connect(self.stopReceiveStatistical)
+        self.start.clicked.connect(self.mytimer)
+        self.stop.clicked.connect(self.killMytimer)
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
@@ -248,16 +245,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNR_show.setText(str(SNR))
 
     def updateStatistical(self):
+        print('timer run')
         self.showStatistical(dataStatistical)
 
     def mytimer(self):
-        timer = QTimer(self)
-        timer.timeout.connect(self.updateStatistical)
-        timer.start(100)
+        self.timer.timeout.connect(self.updateStatistical)
+        self.timer.start(100)
 
-    def stopReceiveStatistical(self):
-        self.stopFlag = True
-
+    def killMytimer(self):
+        print('timer stop')
+        self.timer.stop()
 
 if __name__ == "__main__":
     workThread = WorkThread()
