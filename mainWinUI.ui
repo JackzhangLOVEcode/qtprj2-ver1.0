@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="TX_Config">
      <attribute name="title">
@@ -128,7 +128,7 @@
        <string>depapr_gain</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="MType_obj">
+     <widget class="QComboBox" name="MType_tx_obj">
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -167,17 +167,17 @@
        </property>
       </item>
      </widget>
-     <widget class="QLabel" name="MType_label">
+     <widget class="QLabel" name="MType_tx_label">
       <property name="geometry">
        <rect>
         <x>150</x>
         <y>190</y>
-        <width>51</width>
+        <width>81</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
-       <string>MTpye</string>
+       <string>MTpye_tx</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_num_tx_obj">

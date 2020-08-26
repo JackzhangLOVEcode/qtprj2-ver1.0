@@ -60,17 +60,20 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.TXConfig.clear()
         flag = 1
         self.TXConfig.extend((flag).to_bytes(1, byteorder='big'))
-        self.TXConfig.extend((self.papr_en_obj.checkState()).to_bytes(1, byteorder='big'))
+        papr_en = 1 if self.papr_en_obj.isChecked() else 0
+        self.TXConfig.extend((papr_en).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.depapr_thr_obj.value()).to_bytes(3, byteorder='big'))
         self.TXConfig.extend((self.depapr_gain_obj.value()).to_bytes(2, byteorder='big'))
-        self.TXConfig.extend((self.MType_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.TXConfig.extend((self.MType_tx_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.car_num_tx_obj.value()).to_bytes(3, byteorder='big'))
         self.TXConfig.extend(int((self.Alpha_tx_obj.value() * 32768)).to_bytes(3, byteorder='big'))
         self.TXConfig.extend(int(self.pilot_factor_obj.value()).to_bytes(2, byteorder='big'))
         self.TXConfig.extend(int(self.pss_factor_obj.value()).to_bytes(2, byteorder='big'))
         self.TXConfig.extend((self.ModeBSorMS_obj.currentIndex()).to_bytes(1, byteorder='big'))
-        self.TXConfig.extend((self.Sys_reset_obj.checkState()).to_bytes(1, byteorder='big'))
-        self.TXConfig.extend((self.Sys_enble_obj.checkState()).to_bytes(1, byteorder='big'))
+        Sys_reset = 1 if self.Sys_reset_obj.isChecked() else 0
+        self.TXConfig.extend((Sys_reset).to_bytes(1, byteorder='big'))
+        Sys_enble = 1 if self.Sys_enble_obj.isChecked() else 0
+        self.TXConfig.extend((Sys_enble).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.ModeUDPorPN_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.Base_loop_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.Rx_enb_obj.currentIndex()).to_bytes(1, byteorder='big'))
@@ -83,9 +86,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.TXConfig.extend((self.bs_tx_time_gap_obj.value()).to_bytes(3, byteorder='big'))
         self.TXConfig.extend((self.Trig_gap_cnt_obj.value()).to_bytes(3, byteorder='big'))
         self.TXConfig.extend((self.alway_tx_obj.currentIndex()).to_bytes(1, byteorder='big'))
-        mLen = self.calculateOFDMSymbleNum(self.car_num_tx_obj.value(), self.MType_obj.currentIndex())
+        mLen = self.calculateOFDMSymbleNum(self.car_num_tx_obj.value(), self.MType_tx_obj.currentIndex())
         self.TXConfig.extend((mLen).to_bytes(2, byteorder='big'))
-        maxLen = self.calculateOFDMSymbleNum(self.car_num_tx_obj.value(), self.MType_obj.currentIndex()) * 12 - 12
+        maxLen = self.calculateOFDMSymbleNum(self.car_num_tx_obj.value(), self.MType_tx_obj.currentIndex()) * 12 - 12
         self.TXConfig.extend((maxLen).to_bytes(2, byteorder='big'))
         self.TXConfig.extend((self.tx1_en_obj.currentIndex().to_bytes(1, byteorder='big')))
         self.TXConfig.extend((self.tx2_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
@@ -120,6 +123,60 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.mmse_thr_obj.value()).to_bytes(4, byteorder='big'))
         self.RXConfigBytes = bytes(self.RXConfig)
 
+    def connectDefaultConfig(self):
+        # 设置发端默认参数
+        self.papr_en_obj.setChecked(True)
+        self.depapr_thr_obj.setValue(38050)
+        self.depapr_gain_obj.setValue(16384)
+        self.MType_tx_obj.setCurrentIndex(0)
+        self.car_num_tx_obj.setValue(0xfffff)
+        self.Alpha_tx_obj.setValue(0.5)
+        self.pilot_factor_obj.setValue(32767)
+        self.pss_factor_obj.setValue(32767)
+        self.ModeBSorMS_obj.setCurrentIndex(1)
+        self.Sys_reset_obj.setChecked(False)
+        self.Sys_enble_obj.setChecked(True)
+        self.ModeUDPorPN_obj.setCurrentIndex(0)
+        self.Base_loop_en_obj.setCurrentIndex(0)
+        self.Rx_enb_obj.setCurrentIndex(0)
+        self.Rx_channel_obj.setCurrentIndex(0)
+        self.Rx_delay_obj.setValue(20)
+        self.Time_trig2tx_obj.setValue(34000)
+        self.Time_tx_hold_obj.setValue(34000)
+        self.ms_T_sync2trig_obj.setValue(21880)
+        self.bs_tdd_time_gap_obj.setValue(100000)
+        self.bs_tx_time_gap_obj.setValue(50000)
+        self.Trig_gap_cnt_obj.setValue(100000)
+        self.alway_tx_obj.setCurrentIndex(1)
+        self.tx1_en_obj.setCurrentIndex(0)
+        self.tx2_en_obj.setCurrentIndex(0)
+        self.rx1_en_obj.setCurrentIndex(0)
+        self.rx2_en_obj.setCurrentIndex(0)
+        self.TDD_EN_obj.setCurrentIndex(0)
+        self.UDP_loop_obj.setCurrentIndex(0)
+
+        # 设置收端默认参数
+        self.MType_rx_obj.setCurrentIndex(0)
+        self.agc_en_obj.setCurrentIndex(1)
+        self.frft_en_obj.setCurrentIndex(1)
+        self.car_num_rx_obj.setValue(0xfffff)
+        self.i_freq_est_obj.setValue(0)
+        self.sync_factor_obj.setValue(20384)
+        self.equa_factor_obj.setValue(4022)
+        self.Alpha_rx_obj.setValue(0.5)
+        self.equa_amp_obj.setValue(16384)
+        self.equa_amp_en_obj.setCurrentIndex(1)
+        self.car_thr1_obj.setValue(102656)
+        self.car_thr2_obj.setValue(6250000)
+        self.car_thr3_obj.setValue(625000000)
+        self.mmse_thr_obj.setValue(1000)
+
+        # 设置射频参数
+        self.Amplifier_obj.setCurrentIndex(1)
+        self.filter3_3p5G_obj.setCurrentIndex(0)
+        self.filter3p5_4G_obj.setCurrentIndex(0)
+        self.filter4p5_5G_obj.setCurrentIndex(0)
+        self.filter5_5p5G_obj.setCurrentIndex(0)
 
     def sendConfigtoBaseBand(self):
         addrBB = (self.ipBB, self.portBB)
@@ -131,16 +188,18 @@ class configPage(QMainWindow, Ui_MainWindow):
             configSocket.sendto(configRF, addRF)
             print(configRF)
         self.connectTXConfigData()
+        print(self.TXConfig)
         print(self.TXConfigBytes)
         configSocket.sendto((self.TXConfigBytes), addrBB)
         self.connectRXConfigData()
         print(self.RXConfig)
+        print(self.RXConfigBytes)
         configSocket.sendto(self.RXConfigBytes, addrBB)
         configSocket.close()
 
     def setDefaultConfig(self):
-        addr = (self.ipBB, self.ipBB)
-        defaultConfigSocket = socket(AF_INET, SOCK_DGRAM)
+        self.connectDefaultConfig()
+        self.sendConfigtoBaseBand()
 
 
 
