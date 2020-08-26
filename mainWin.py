@@ -1,8 +1,26 @@
 import sys, math
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import QThread, QTimer
 from PyQt5.QtGui import QIcon
 from socket import socket, AF_INET, SOCK_DGRAM
+
+class WorkThread(QThread):
+    # 初始化线程
+    def __int__(self):
+        super(WorkThread, self).__init__()
+    #线程运行函数
+    def run(self):
+        self.ipStatistical = '127.0.0.1'
+        self.portStatistical = 7000
+        addr = (self.ipStatistical, self.portStatistical)
+        buffsize = 1024
+        statisticalSocket = socket(AF_INET, SOCK_DGRAM)
+        statisticalSocket.bind(addr)
+        while True:
+            data, addrsource = statisticalSocket.recvfrom(buffsize)
+            global dataStatistical
+            dataStatistical = data
 
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -24,8 +42,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.stopFlag = False
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
         self.setDefault.clicked.connect(self.setDefaultConfig)
-        self.start.clicked.connect(self.receiveStatistical)
-        self.stop.clicked.connect(self.stopReceiveStatistical)
+        self.mytimer()
+        #self.start.clicked.connect(self.receiveStatistical)
+        #self.stop.clicked.connect(self.stopReceiveStatistical)
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
@@ -177,7 +196,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.mmse_thr_obj.setValue(1000)
 
         # 设置射频参数
-        self.Amplifier_obj.setCurrentIndex(1)
+        self.Amplifier_obj.setCurrentIndex(0)
         self.filter3_3p5G_obj.setCurrentIndex(0)
         self.filter3p5_4G_obj.setCurrentIndex(0)
         self.filter4p5_5G_obj.setCurrentIndex(0)
@@ -228,23 +247,21 @@ class configPage(QMainWindow, Ui_MainWindow):
         SNR = 10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum)
         self.SNR_show.setText(str(SNR))
 
-    def receiveStatistical(self):
-        #self.stopFlag = False
-        addr = (self.ipStatistical, self.portStatistical)
-        buffsize = 1024
-        statisticalSocket = socket(AF_INET, SOCK_DGRAM)
-        statisticalSocket.bind(addr)
-        #while (self.stopFlag == False):
-        data, addr_source = statisticalSocket.recvfrom(buffsize)
-        print(data)
-        self.showStatistical(data)
-        statisticalSocket.close()
+    def updateStatistical(self):
+        self.showStatistical(dataStatistical)
+
+    def mytimer(self):
+        timer = QTimer(self)
+        timer.timeout.connect(self.updateStatistical)
+        timer.start(100)
 
     def stopReceiveStatistical(self):
         self.stopFlag = True
 
 
 if __name__ == "__main__":
+    workThread = WorkThread()
+    workThread.start()
     app = QApplication(sys.argv)
     mainWin = configPage()
     mainWin.show()
