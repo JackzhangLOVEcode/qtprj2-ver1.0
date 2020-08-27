@@ -11,17 +11,20 @@ class WorkThread(QThread):
         super(WorkThread, self).__init__()
     #线程运行函数
     def run(self):
-        self.ipStatistical = '127.0.0.1'
+        self.ipStatistical = '192.168.1.110'
         self.portStatistical = 7000
         addr = (self.ipStatistical, self.portStatistical)
         buffsize = 1024
         statisticalSocket = socket(AF_INET, SOCK_DGRAM)
         statisticalSocket.bind(addr)
+        global dataStatistical
+        dataStatistical = bytes([0])
         while True:
-            global dataStatistical
-            dataStatistical = bytes([0])
+            print('receive data ......')
             data, addrsource = statisticalSocket.recvfrom(buffsize)
+            print(data)
             dataStatistical = data
+            print(dataStatistical)
 
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -34,11 +37,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RFConfig = []
         self.TXConfigBytes = bytes()
         self.RXConfigBytes = bytes()
-        self.ipBB = '127.0.0.1'
+        self.ipBB = '192.168.1.84'
         self.portBB = 8000
-        self.ipRF = '127.0.0.1'
+        self.ipRF = '192.168.1.38'
         self.portRF = 6005
-        self.ipData = '127.0.0.1'
+        self.ipData = '192.168.1.84'
         self.portData = 8002
         self.timer = QTimer(self)
         self.dataTimer = QTimer(self)
