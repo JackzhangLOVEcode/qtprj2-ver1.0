@@ -29,6 +29,12 @@
       <height>711</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <property name="currentIndex">
      <number>3</number>
     </property>
@@ -1963,7 +1969,7 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(0, 0, 255);</string>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string/>
@@ -1985,7 +1991,7 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(0, 0, 255);</string>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string/>
@@ -2039,10 +2045,13 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
          </property>
         </widget>
        </item>
@@ -2055,7 +2064,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
@@ -2085,7 +2094,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
@@ -2101,7 +2110,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
@@ -2138,7 +2147,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
@@ -2154,7 +2163,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
@@ -2184,7 +2193,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 255);</string>
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string/>
