@@ -18,8 +18,9 @@ class WorkThread(QThread):
         statisticalSocket = socket(AF_INET, SOCK_DGRAM)
         statisticalSocket.bind(addr)
         while True:
-            data, addrsource = statisticalSocket.recvfrom(buffsize)
             global dataStatistical
+            dataStatistical = bytes([0])
+            data, addrsource = statisticalSocket.recvfrom(buffsize)
             dataStatistical = data
 
 class configPage(QMainWindow, Ui_MainWindow):
@@ -37,11 +38,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portBB = 8000
         self.ipRF = '127.0.0.1'
         self.portRF = 6005
+        self.ipData = '127.0.0.1'
+        self.portData = 8002
         self.timer = QTimer(self)
+        self.dataTimer = QTimer(self)
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
+        self.sendConfig.clicked.connect(self.stopData)
         self.setDefault.clicked.connect(self.setDefaultConfig)
         self.start.clicked.connect(self.mytimer)
         self.stop.clicked.connect(self.killMytimer)
+        self.sendVideo.clicked.connect(self.startDataTimer)
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
@@ -241,7 +247,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.error_dft_show.setText(str(error_dft))
         hard_decision_err = int.from_bytes(data[18:19], byteorder='big')
         self.hard_decision_err_show.setText(str(hard_decision_err))
-        SNR = 10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum)
+        SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
         self.SNR_show.setText(str(SNR))
 
     def updateStatistical(self):
@@ -255,6 +261,27 @@ class configPage(QMainWindow, Ui_MainWindow):
     def killMytimer(self):
         print('timer stop')
         self.timer.stop()
+
+    def startDataTimer(self):
+        self.dataTimer.timeout.connect(self.sendData)
+        self.dataTimer.start(1)
+
+    def sendData(self):
+        data = []
+        data.clear()
+        for i in range(470):
+            data.extend(int(15658734).to_bytes(3, 'big'))
+        addr = (self.ipData, self.portData)
+        dataSocket = socket(AF_INET, SOCK_DGRAM)
+        print(data)
+        dataSocket.sendto(bytes(data), addr)
+        dataSocket.close()
+        print('data send')
+
+    def stopData(self):
+        self.dataTimer.stop()
+        print('data stop')
+
 
 if __name__ == "__main__":
     workThread = WorkThread()
