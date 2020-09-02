@@ -1,9 +1,8 @@
-import sys, math
+import sys, math, socket
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QThread, QTimer
 from PyQt5.QtGui import QIcon
-from socket import socket, AF_INET, SOCK_DGRAM
 
 class WorkThread(QThread):
     # 初始化线程
@@ -11,11 +10,12 @@ class WorkThread(QThread):
         super(WorkThread, self).__init__()
     #线程运行函数
     def run(self):
-        self.ipStatistical = '192.168.1.110'
+        statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        hostname = socket.gethostname()
+        self.ipStatistical = socket.gethostbyname(hostname)
         self.portStatistical = 7000
         addr = (self.ipStatistical, self.portStatistical)
         buffsize = 1024
-        statisticalSocket = socket(AF_INET, SOCK_DGRAM)
         statisticalSocket.bind(addr)
         global dataStatistical
         dataStatistical = bytes([0])
@@ -211,7 +211,7 @@ class configPage(QMainWindow, Ui_MainWindow):
     def sendConfigtoBaseBand(self):
         addrBB = (self.ipBB, self.portBB)
         addRF = (self.ipRF, self.portRF)
-        configSocket = socket(AF_INET, SOCK_DGRAM)
+        configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.connectRFConfigData()
         print(self.RFConfig)
         for configRF in self.RFConfig:
@@ -275,7 +275,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         for i in range(470):
             data.extend(int(15658734).to_bytes(3, 'big'))
         addr = (self.ipData, self.portData)
-        dataSocket = socket(AF_INET, SOCK_DGRAM)
+        dataSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         print(data)
         dataSocket.sendto(bytes(data), addr)
         dataSocket.close()
