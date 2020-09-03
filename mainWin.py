@@ -10,21 +10,27 @@ class WorkThread(QThread):
         super(WorkThread, self).__init__()
     #线程运行函数
     def run(self):
-        statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        hostname = socket.gethostname()
-        self.ipStatistical = socket.gethostbyname(hostname)
-        self.portStatistical = 7000
-        addr = (self.ipStatistical, self.portStatistical)
-        buffsize = 1024
-        statisticalSocket.bind(addr)
         global dataStatistical
         dataStatistical = bytes([0])
+        global portStatistical
+        portStatistical = 7000
         while True:
-            print('receive data ......')
-            data, addrsource = statisticalSocket.recvfrom(buffsize)
-            print(data)
-            dataStatistical = data
-            print(dataStatistical)
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                hostname = socket.gethostname()
+                self.ipStatistical = socket.gethostbyname(hostname)
+                self.portStatistical = portStatistical
+                addr = (self.ipStatistical, self.portStatistical)
+                buffsize = 1024
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(5)
+                print('receive data ......')
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                print(data)
+                dataStatistical = data
+                print(dataStatistical)
+            except socket.timeout:
+                statisticalSocket.close()
 
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -51,6 +57,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.start.clicked.connect(self.mytimer)
         self.stop.clicked.connect(self.killMytimer)
         self.sendVideo.clicked.connect(self.startDataTimer)
+        self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
@@ -209,6 +216,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.filter5_5p5G_obj.setCurrentIndex(0)
 
     def sendConfigtoBaseBand(self):
+        self.ipBB = self.BBIP_obj.text()
+        self.portBB = int(self.BBPort_obj.text())
+        self.ipRF = self.RFIP_obj.text()
+        self.portRF = int(self.RFPort_obj.text())
         addrBB = (self.ipBB, self.portBB)
         addRF = (self.ipRF, self.portRF)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -285,6 +296,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.dataTimer.stop()
         print('data stop')
 
+    def setStatisticalPort(self):
+        global portStatistical
+        port = int(self.statisticalPort_obj.text())
+        if 1024 <= port < 65535:
+            portStatistical = port
 
 if __name__ == "__main__":
     workThread = WorkThread()
