@@ -1,7 +1,7 @@
 import sys, math, socket
 from mainWinUI import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtCore import QThread, QTimer
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtCore import QThread, QTimer, pyqtSlot
 from PyQt5.QtGui import QIcon
 
 class WorkThread(QThread):
@@ -301,6 +301,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         port = int(self.statisticalPort_obj.text())
         if 1024 <= port < 65535:
             portStatistical = port
+        else:
+            if(self.statisticalPort_obj.hasFocus()):
+                QMessageBox.information(self, "Tips", "1024 <= statisticalPort < 65535")
+
 
 if __name__ == "__main__":
     workThread = WorkThread()
