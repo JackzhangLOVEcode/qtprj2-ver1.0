@@ -1,7 +1,7 @@
 import sys, math, socket
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-from PyQt5.QtCore import QThread, QTimer, pyqtSlot
+from PyQt5.QtCore import QThread, QTimer
 from PyQt5.QtGui import QIcon
 
 class WorkThread(QThread):
@@ -23,7 +23,7 @@ class WorkThread(QThread):
                 addr = (self.ipStatistical, self.portStatistical)
                 buffsize = 1024
                 statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(5)
+                statisticalSocket.settimeout(1)
                 print('receive data ......')
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
                 print(data)
@@ -280,15 +280,35 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.dataTimer.timeout.connect(self.sendData)
         self.dataTimer.start(1)
 
-    def sendData(self):
+    def testData(self):
         data = []
         data.clear()
         for i in range(470):
             data.extend(int(15658734).to_bytes(3, 'big'))
+        return bytes(data)
+
+    def dataSource(self):
+        hostName = socket.gethostname()
+        ipLocal = socket.gethostbyname(hostName)
+        ipData = 63000
+        buffSize = 1500
+        addr = (ipLocal, ipData)
+        socketSource = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        socketSource.bind(addr)
+        socketSource.settimeout(1)
+        try:
+            data, ipSource = socketSource.recvfrom(buffSize)
+        except socket.timeout:
+            data = self.testData()
+        socketSource.close()
+        return data
+
+    def sendData(self):
+        data = self.dataSource()
         addr = (self.ipData, self.portData)
         dataSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         print(data)
-        dataSocket.sendto(bytes(data), addr)
+        dataSocket.sendto(data, addr)
         dataSocket.close()
         print('data send')
 
