@@ -638,7 +638,7 @@
        <rect>
         <x>270</x>
         <y>240</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -661,7 +661,7 @@
      <widget class="QLabel" name="Time_trig2tx_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>240</y>
         <width>121</width>
         <height>18</height>
@@ -674,7 +674,7 @@
      <widget class="QLabel" name="Time_tx_hold_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>280</y>
         <width>111</width>
         <height>18</height>
@@ -689,7 +689,7 @@
        <rect>
         <x>270</x>
         <y>280</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -712,7 +712,7 @@
      <widget class="QLabel" name="ms_T_sync2trig_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>320</y>
         <width>131</width>
         <height>18</height>
@@ -727,7 +727,7 @@
        <rect>
         <x>270</x>
         <y>320</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -750,7 +750,7 @@
      <widget class="QLabel" name="bs_tdd_time_gap_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>360</y>
         <width>101</width>
         <height>18</height>
@@ -765,7 +765,7 @@
        <rect>
         <x>270</x>
         <y>360</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -788,7 +788,7 @@
      <widget class="QLabel" name="bs_tx_time_gap_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>400</y>
         <width>131</width>
         <height>18</height>
@@ -803,7 +803,7 @@
        <rect>
         <x>270</x>
         <y>400</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -820,13 +820,13 @@
        <number>1</number>
       </property>
       <property name="value">
-       <number>5000</number>
+       <number>50000</number>
       </property>
      </widget>
      <widget class="QLabel" name="Trig_gap_cnt_label">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>360</x>
         <y>440</y>
         <width>111</width>
         <height>18</height>
@@ -841,7 +841,7 @@
        <rect>
         <x>270</x>
         <y>440</y>
-        <width>71</width>
+        <width>80</width>
         <height>25</height>
        </rect>
       </property>
@@ -1244,7 +1244,7 @@
        <rect>
         <x>130</x>
         <y>30</y>
-        <width>51</width>
+        <width>80</width>
         <height>18</height>
        </rect>
       </property>
@@ -1384,7 +1384,7 @@
      <widget class="QLabel" name="car_num_rx_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>150</y>
         <width>101</width>
         <height>18</height>
@@ -1399,8 +1399,8 @@
        <rect>
         <x>20</x>
         <y>150</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -1427,8 +1427,8 @@
        <rect>
         <x>20</x>
         <y>190</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="suffix">
@@ -1441,7 +1441,7 @@
      <widget class="QLabel" name="i_freq_est_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>190</y>
         <width>101</width>
         <height>18</height>
@@ -1456,8 +1456,8 @@
        <rect>
         <x>20</x>
         <y>230</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1470,7 +1470,7 @@
      <widget class="QLabel" name="sync_factor_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>230</y>
         <width>101</width>
         <height>18</height>
@@ -1483,7 +1483,7 @@
      <widget class="QLabel" name="equa_factor_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>270</y>
         <width>101</width>
         <height>18</height>
@@ -1498,8 +1498,8 @@
        <rect>
         <x>20</x>
         <y>270</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1514,8 +1514,8 @@
        <rect>
         <x>20</x>
         <y>310</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="decimals">
@@ -1534,7 +1534,7 @@
      <widget class="QLabel" name="Alpha_rx_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>310</y>
         <width>101</width>
         <height>18</height>
@@ -1592,7 +1592,7 @@
      <widget class="QLabel" name="car_thr1_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>440</y>
         <width>101</width>
         <height>18</height>
@@ -1607,8 +1607,8 @@
        <rect>
         <x>20</x>
         <y>440</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1624,7 +1624,7 @@
      <widget class="QLabel" name="mmse_thr_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>560</y>
         <width>101</width>
         <height>18</height>
@@ -1639,8 +1639,8 @@
        <rect>
         <x>20</x>
         <y>560</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1653,7 +1653,7 @@
      <widget class="QLabel" name="car_thr3_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>520</y>
         <width>101</width>
         <height>18</height>
@@ -1668,8 +1668,8 @@
        <rect>
         <x>20</x>
         <y>520</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1682,7 +1682,7 @@
      <widget class="QLabel" name="car_thr2_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>480</y>
         <width>101</width>
         <height>18</height>
@@ -1697,8 +1697,8 @@
        <rect>
         <x>20</x>
         <y>480</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1711,7 +1711,7 @@
      <widget class="QLabel" name="equa_amp_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>130</x>
         <y>360</y>
         <width>101</width>
         <height>18</height>
@@ -1726,8 +1726,8 @@
        <rect>
         <x>20</x>
         <y>360</y>
-        <width>71</width>
-        <height>25</height>
+        <width>99</width>
+        <height>24</height>
        </rect>
       </property>
       <property name="maximum">

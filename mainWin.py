@@ -1,4 +1,4 @@
-import sys, math, socket
+import sys, math, socket, time
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtCore import QThread, QTimer
@@ -24,11 +24,11 @@ class WorkThread(QThread):
                 buffsize = 1024
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
-                print('receive data ......')
+                # print('receive data ......')
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                print(data)
+                # print(data)
                 dataStatistical = data
-                print(dataStatistical)
+                # print(dataStatistical)
             except socket.timeout:
                 statisticalSocket.close()
 
@@ -49,8 +49,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portRF = 6005
         self.ipData = '192.168.1.84'
         self.portData = 8002
-        self.timer = QTimer(self)
-        self.dataTimer = QTimer(self)
+        self.timer = QTimer()
+        self.dataTimer = QTimer()
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
         self.sendConfig.clicked.connect(self.stopData)
         self.setDefault.clicked.connect(self.setDefaultConfig)
@@ -91,6 +91,12 @@ class configPage(QMainWindow, Ui_MainWindow):
         MTypeToBit = [2, 4, 6, 8]
         car = self.calculateValidBitNum(car_num)
         m_len = car * 64 * MTypeToBit[mtype] / 8 - 4
+        return int(m_len)
+
+    def calculateOFDMSymbleNumRX(self, car_num, mtype):
+        MTypeToBit = [2, 4, 6, 8]
+        car = self.calculateValidBitNum(car_num)
+        m_len = car * 64 * MTypeToBit[mtype] / 8
         return int(m_len)
 
     def connectTXConfigData(self):
@@ -145,7 +151,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.car_num_rx_obj.value()).to_bytes(3, byteorder='big'))
         car_N = self.calculateValidBitNum(self.car_num_rx_obj.value()) * 64 - 1
         self.RXConfig.extend((car_N).to_bytes(2, byteorder='big'))
-        data_len = self.calculateOFDMSymbleNum(self.car_num_rx_obj.value(), self.MType_rx_obj.currentIndex())
+        data_len = self.calculateOFDMSymbleNumRX(self.car_num_rx_obj.value(), self.MType_rx_obj.currentIndex())
         self.RXConfig.extend((data_len).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.i_freq_est_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.sync_factor_obj.value()).to_bytes(2, byteorder='big'))
@@ -232,6 +238,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         print(self.TXConfig)
         print(self.TXConfigBytes)
         configSocket.sendto((self.TXConfigBytes), addrBB)
+        time.sleep(1)
         self.connectRXConfigData()
         print(self.RXConfig)
         print(self.RXConfigBytes)
@@ -265,20 +272,20 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNR_show.setText(str(SNR))
 
     def updateStatistical(self):
-        print('timer run')
+        # print('timer run')
         self.showStatistical(dataStatistical)
 
     def mytimer(self):
-        self.timer.timeout.connect(self.updateStatistical)
         self.timer.start(100)
+        self.timer.timeout.connect(self.updateStatistical)
 
     def killMytimer(self):
         print('timer stop')
         self.timer.stop()
 
     def startDataTimer(self):
-        self.dataTimer.timeout.connect(self.sendData)
         self.dataTimer.start(1)
+        self.dataTimer.timeout.connect(self.sendData)
 
     def testData(self):
         data = []
@@ -307,7 +314,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         data = self.dataSource()
         addr = (self.ipData, self.portData)
         dataSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        print(data)
+        #print(data)
         dataSocket.sendto(data, addr)
         dataSocket.close()
         print('data send')
