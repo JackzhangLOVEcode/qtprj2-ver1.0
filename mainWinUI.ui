@@ -2375,7 +2375,7 @@
      <string>sendConfig</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sendVideo">
+   <widget class="QPushButton" name="sendData">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -2385,7 +2385,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>sendVideo</string>
+     <string>sendData</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopData">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>730</y>
+      <width>112</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>stopData</string>
     </property>
    </widget>
   </widget>

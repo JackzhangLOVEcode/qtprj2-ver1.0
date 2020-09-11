@@ -1,4 +1,4 @@
-import sys, math, socket, time
+import sys, math, socket, time, queue
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtCore import QThread, QTimer
@@ -32,6 +32,36 @@ class WorkThread(QThread):
             except socket.timeout:
                 statisticalSocket.close()
 
+class DataThread(QThread):
+    def __int__(self):
+        super(WorkThread, self).__init__()
+
+    def run(self):
+        global startFlag
+        startFlag = True
+        global dataQueue
+        dataQueue = queue.Queue(0)
+        hostName = socket.gethostname()
+        ipLocal = socket.gethostbyname(hostName)
+        ipData = 63000
+        buffSize = 1500
+        addr = (ipLocal, ipData)
+        socketSource = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        socketSource.bind(addr)
+        socketSource.settimeout(1)
+        while True:
+            if startFlag:
+                try:
+                    data, ipSource = socketSource.recvfrom(buffSize)
+                    dataQueue.put(data)
+                    print('Receive source data')
+                except socket.timeout:
+                    print('dataSocket timeout')
+                    # pass
+        socketSource.close()
+
+
+
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(configPage, self).__init__()
@@ -47,16 +77,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portBB = 8000
         self.ipRF = '192.168.1.38'
         self.portRF = 6005
-        self.ipData = '192.168.1.84'
+        self.ipData = '192.168.71.174'
         self.portData = 8002
         self.timer = QTimer()
         self.dataTimer = QTimer()
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
-        self.sendConfig.clicked.connect(self.stopData)
         self.setDefault.clicked.connect(self.setDefaultConfig)
         self.start.clicked.connect(self.mytimer)
         self.stop.clicked.connect(self.killMytimer)
-        self.sendVideo.clicked.connect(self.startDataTimer)
+        self.sendData.clicked.connect(self.startDataTimer)
+        self.stopData.clicked.connect(self.stopDataTimerandDataSource)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
 
     def connectRFConfigData(self):
@@ -285,9 +315,9 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def startDataTimer(self):
         self.dataTimer.start(1)
-        self.dataTimer.timeout.connect(self.sendData)
+        self.dataTimer.timeout.connect(self.sendDataFromSource)
 
-    def testData(self):
+    """def testData(self):
         data = []
         data.clear()
         for i in range(470):
@@ -308,18 +338,23 @@ class configPage(QMainWindow, Ui_MainWindow):
         except socket.timeout:
             data = self.testData()
         socketSource.close()
-        return data
+        return data"""
 
-    def sendData(self):
-        data = self.dataSource()
-        addr = (self.ipData, self.portData)
-        dataSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #print(data)
-        dataSocket.sendto(data, addr)
-        dataSocket.close()
-        print('data send')
+    def sendDataFromSource(self):
+        global startFlag
+        startFlag = True
+        if not dataQueue.empty():
+            data = dataQueue.get()
+            addr = (self.ipData, self.portData)
+            dataSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            #print(data)
+            dataSocket.sendto(data, addr)
+            dataSocket.close()
+            print('data send')
 
-    def stopData(self):
+    def stopDataTimerandDataSource(self):
+        global startFlag
+        startFlag = False
         self.dataTimer.stop()
         print('data stop')
 
@@ -336,6 +371,8 @@ class configPage(QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     workThread = WorkThread()
     workThread.start()
+    dataThread = DataThread()
+    dataThread.start()
     app = QApplication(sys.argv)
     mainWin = configPage()
     mainWin.show()
