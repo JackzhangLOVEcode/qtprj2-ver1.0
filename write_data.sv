@@ -182,19 +182,5 @@ begin
 	fid_24 = $fopen("F:/realize_PCL/8_XCORR/matlab/dout_i_3.txt");
 	
 end
-
-always@(posedge clk)
-if( dout_en == 1)  
-begin
-	$fwrite(fid_16 ,"%d\n",$signed(dout_I[0]));
-	$fwrite(fid_17 ,"%d\n",$signed(dout_I[1]));
-	$fwrite(fid_18 ,"%d\n",$signed(dout_I[2]));
-	$fwrite(fid_19 ,"%d\n",$signed(dout_I[3]));
-	        
-	$fwrite(fid_20 ,"%d\n",$signed(dout_Q[0]));     
-	$fwrite(fid_21 ,"%d\n",$signed(dout_Q[1]));     
-	$fwrite(fid_22 ,"%d\n",$signed(dout_Q[2]));     
-	$fwrite(fid_24 ,"%d\n",$signed(dout_Q[3]));          
-end 
 */
 endmodule
