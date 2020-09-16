@@ -1,8 +1,9 @@
 import sys, math, socket, time, queue
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-from PyQt5.QtCore import QThread, QTimer
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QThread, QTimer, QPoint, Qt
+from PyQt5.QtGui import QIcon, QPainter, QPixmap, QPen, QColor
+
 
 class WorkThread(QThread):
     # 初始化线程
@@ -60,14 +61,18 @@ class DataThread(QThread):
                     # pass
         socketSource.close()
 
-
-
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(configPage, self).__init__()
         self.setupUi(self)
         self.setWindowTitle('FMC205基带射频配置')
         self.setWindowIcon(QIcon('rss1.ico'))
+        self.init()
+        self.timer = QTimer()
+        self.dataTimer = QTimer()
+        self.bindSingalandSlot()
+
+    def init(self):
         self.TXConfig = []
         self.RXConfig = []
         self.RFConfig = []
@@ -79,12 +84,19 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portRF = 6005
         self.ipData = '192.168.71.174'
         self.portData = 8002
-        self.timer = QTimer()
-        self.dataTimer = QTimer()
+        self.draw = QPainter()
+        self.picture = QPixmap(480, 100)
+        self.end_dot_list = [[0, 0]]
+        self.x_num = 100
+        self.y_num = 5
+        self.x_step = 480 / self.x_num
+        self.y_step = 100 / self.y_num
+
+    def bindSingalandSlot(self):
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
         self.setDefault.clicked.connect(self.setDefaultConfig)
-        self.start.clicked.connect(self.mytimer)
-        self.stop.clicked.connect(self.killMytimer)
+        self.start.clicked.connect(self.statisticalTimer)
+        self.stop.clicked.connect(self.killStatisticalTimer)
         self.sendData.clicked.connect(self.startDataTimer)
         self.stopData.clicked.connect(self.stopDataTimerandDataSource)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
@@ -279,6 +291,36 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.connectDefaultConfig()
         self.sendConfigtoBaseBand()
 
+    def count_dot(self, value):
+        self.beg_x = 0
+        self.beg_y = 100
+        if len(self.end_dot_list) >= (self.x_num+1):
+            self.end_dot_list = self.end_dot_list[-self.x_num: ]
+            for i in self.end_dot_list:
+                i[0] -= self.x_step
+        x = self.end_dot_list[-1][0] + self.x_step
+        y = value
+        self.end_dot_list.append([x, y])
+
+        self.picture.fill(Qt.white)
+        self.read_dot()
+
+    def read_dot(self):
+        for end_dot_list in self.end_dot_list:
+            self.end_x = end_dot_list[0]
+            self.end_y = 100 - end_dot_list[1]
+            self.uptate_show()
+        self.SNR_show.setPixmap(self.picture)
+
+    #绘制函数
+    def uptate_show(self):
+        self.draw.begin(self.picture)
+        self.draw.setPen(QPen(QColor("red"), 1))
+        self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
+        self.draw.end()
+        self.beg_x = self.end_x
+        self.beg_y = self.end_y
+
     def showStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
         self.errbit_show.setText(str(errbit))
@@ -299,46 +341,24 @@ class configPage(QMainWindow, Ui_MainWindow):
         hard_decision_err = int.from_bytes(data[18:19], byteorder='big')
         self.hard_decision_err_show.setText(str(hard_decision_err))
         SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
-        self.SNR_show.setText(str(SNR))
+        self.SNR_current_show.setText(str(SNR))
+        self.count_dot(SNR)
 
     def updateStatistical(self):
         # print('timer run')
         self.showStatistical(dataStatistical)
 
-    def mytimer(self):
+    def statisticalTimer(self):
         self.timer.start(100)
         self.timer.timeout.connect(self.updateStatistical)
 
-    def killMytimer(self):
-        print('timer stop')
+    def killStatisticalTimer(self):
+        print('statistical timer stop')
         self.timer.stop()
 
     def startDataTimer(self):
         self.dataTimer.start(1)
         self.dataTimer.timeout.connect(self.sendDataFromSource)
-
-    """def testData(self):
-        data = []
-        data.clear()
-        for i in range(470):
-            data.extend(int(15658734).to_bytes(3, 'big'))
-        return bytes(data)
-
-    def dataSource(self):
-        hostName = socket.gethostname()
-        ipLocal = socket.gethostbyname(hostName)
-        ipData = 63000
-        buffSize = 1500
-        addr = (ipLocal, ipData)
-        socketSource = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        socketSource.bind(addr)
-        socketSource.settimeout(1)
-        try:
-            data, ipSource = socketSource.recvfrom(buffSize)
-        except socket.timeout:
-            data = self.testData()
-        socketSource.close()
-        return data"""
 
     def sendDataFromSource(self):
         global startFlag

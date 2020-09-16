@@ -36,7 +36,7 @@
      </sizepolicy>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="TX_Config">
      <attribute name="title">
@@ -2072,9 +2072,9 @@
      <widget class="QLabel" name="noise_pwr_sum_show">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>740</x>
         <y>40</y>
-        <width>81</width>
+        <width>80</width>
         <height>18</height>
        </rect>
       </property>
@@ -2130,9 +2130,9 @@
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>70</y>
-        <width>471</width>
-        <height>301</height>
+        <y>90</y>
+        <width>480</width>
+        <height>100</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -2345,6 +2345,41 @@
       </property>
       <property name="text">
        <string>7000</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="SNR_current_label">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>70</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SNR_current</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="SNR_current_show">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>70</y>
+        <width>80</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
