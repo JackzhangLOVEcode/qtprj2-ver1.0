@@ -61,6 +61,43 @@ class DataThread(QThread):
                     # pass
         socketSource.close()
 
+class showConstellation():
+    def __init__(self, length, height, label):
+        self.draw = QPainter()
+        self.picture = QPixmap(length, height)
+        self.beg_x = 0
+        self.beg_y = height
+        self.y_height = height
+        self.end_dot_list = [[0, 0]]
+        self.label = label
+
+    def count_dot(self, data, multiplier=1, addend=0):
+        if len(self.end_dot_list) >= (8192 + 1):
+            self.end_dot_list = self.end_dot_list[-8192: ]
+        x = data[0] * multiplier + addend
+        y = data[1] * multiplier + addend
+        self.end_dot_list.append([x, y])
+
+        self.picture.fill(Qt.white)
+        self.read_dot()
+
+    def read_dot(self):
+        for end_dot_list in self.end_dot_list:
+            self.end_x = end_dot_list[0]
+            self.end_y = self.y_height - end_dot_list[1]
+            self.uptate_show()
+        self.label.setPixmap(self.picture)
+
+    #绘制函数
+    def uptate_show(self):
+        self.draw.begin(self.picture)
+        self.draw.setPen(QPen(QColor("red"), 1))
+        self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
+        self.draw.end()
+        self.beg_x = self.end_x
+        self.beg_y = self.end_y
+
+
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(configPage, self).__init__()
@@ -88,9 +125,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.picture = QPixmap(480, 100)
         self.end_dot_list = [[0, 0]]
         self.x_num = 100
-        self.y_num = 5
         self.x_step = 480 / self.x_num
-        self.y_step = 100 / self.y_num
 
     def bindSingalandSlot(self):
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
