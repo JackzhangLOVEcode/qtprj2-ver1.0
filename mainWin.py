@@ -1,9 +1,16 @@
-import sys, math, socket, time, queue
+import sys, math, socket, time, queue, struct
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtCore import QThread, QTimer, QPoint, Qt
 from PyQt5.QtGui import QIcon, QPainter, QPixmap, QPen, QColor
 
+def bytesToFloat(h1, h2, h3, h4):
+    ba = bytearray()
+    ba.append(h1)
+    ba.append(h2)
+    ba.append(h3)
+    ba.append(h4)
+    return struct.unpack("!f", ba)[0]
 
 class WorkThread(QThread):
     # 初始化线程
@@ -22,7 +29,7 @@ class WorkThread(QThread):
                 self.ipStatistical = socket.gethostbyname(hostname)
                 self.portStatistical = portStatistical
                 addr = (self.ipStatistical, self.portStatistical)
-                buffsize = 1024
+                buffsize = 3000
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 # print('receive data ......')
@@ -65,10 +72,10 @@ class showConstellation():
     def __init__(self, length, height, label):
         self.draw = QPainter()
         self.picture = QPixmap(length, height)
-        self.beg_x = 0
-        self.beg_y = height
+        # self.beg_x = 0
+        # self.beg_y = height
         self.y_height = height
-        self.end_dot_list = [[0, 0]]
+        self.end_dot_list = []
         self.label = label
 
     def count_dot(self, data, multiplier=1, addend=0):
@@ -91,12 +98,10 @@ class showConstellation():
     #绘制函数
     def uptate_show(self):
         self.draw.begin(self.picture)
-        self.draw.setPen(QPen(QColor("red"), 1))
-        self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
+        self.draw.setPen(QPen(QColor("red"), 10))
+        self.draw.drawPoint(QPoint(self.end_x, self.end_y))
+        # self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
         self.draw.end()
-        self.beg_x = self.end_x
-        self.beg_y = self.end_y
-
 
 class configPage(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -123,9 +128,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portData = 8002
         self.draw = QPainter()
         self.picture = QPixmap(480, 100)
-        self.end_dot_list = [[0, 0]]
+        self.end_dot_list = []
         self.x_num = 100
         self.x_step = 480 / self.x_num
+        self.showConstellation = showConstellation(200, 200, self.constellation_show)
 
     def bindSingalandSlot(self):
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
@@ -378,6 +384,15 @@ class configPage(QMainWindow, Ui_MainWindow):
         SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
         self.SNR_current_show.setText(str(SNR))
         self.count_dot(SNR)
+        consData = data[20:]
+        for i in range(256):
+            imData = bytesToFloat(consData[0], consData[1], consData[2], consData[3])
+            print(imData)
+            reData = bytesToFloat(consData[4], consData[5], consData[6], consData[7])
+            print(reData)
+            consData = consData[8: ]
+            imReArray = (imData, reData)
+            self.showConstellation.count_dot(imReArray, 100, 100)
 
     def updateStatistical(self):
         # print('timer run')

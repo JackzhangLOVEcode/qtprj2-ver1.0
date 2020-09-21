@@ -2382,6 +2382,22 @@
        <string/>
       </property>
      </widget>
+     <widget class="QLabel" name="constellation_show">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>220</y>
+        <width>200</width>
+        <height>200</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255)</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QPushButton" name="setDefault">
