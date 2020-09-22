@@ -13,10 +13,9 @@ def bytesToFloat(h1, h2, h3, h4):
     return struct.unpack("!f", ba)[0]
 
 class WorkThread(QThread):
-    # 初始化线程
     def __int__(self):
         super(WorkThread, self).__init__()
-    #线程运行函数
+
     def run(self):
         global dataStatistical
         dataStatistical = bytes([0])
@@ -29,7 +28,7 @@ class WorkThread(QThread):
                 self.ipStatistical = socket.gethostbyname(hostname)
                 self.portStatistical = portStatistical
                 addr = (self.ipStatistical, self.portStatistical)
-                buffsize = 3000
+                buffsize = 33000
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 # print('receive data ......')
@@ -72,35 +71,28 @@ class showConstellation():
     def __init__(self, length, height, label):
         self.draw = QPainter()
         self.picture = QPixmap(length, height)
-        # self.beg_x = 0
-        # self.beg_y = height
         self.y_height = height
-        self.end_dot_list = []
         self.label = label
 
     def count_dot(self, data, multiplier=1, addend=0):
-        if len(self.end_dot_list) >= (8192 + 1):
-            self.end_dot_list = self.end_dot_list[-8192: ]
-        x = data[0] * multiplier + addend
-        y = data[1] * multiplier + addend
-        self.end_dot_list.append([x, y])
 
+        self.data = data
         self.picture.fill(Qt.white)
-        self.read_dot()
-
-    def read_dot(self):
-        for end_dot_list in self.end_dot_list:
-            self.end_x = end_dot_list[0]
-            self.end_y = self.y_height - end_dot_list[1]
+        for i in range(int(len(self.data)/8)):
+            imData = bytesToFloat(self.data[0], self.data[1], self.data[2], self.data[3])
+            reData = bytesToFloat(self.data[4], self.data[5], self.data[6], self.data[7])
+            self.data = self.data[8:]
+            x = imData * multiplier + addend
+            y = reData * multiplier + addend
+            self.end_x = x
+            self.end_y = self.y_height - y
             self.uptate_show()
         self.label.setPixmap(self.picture)
 
-    #绘制函数
     def uptate_show(self):
         self.draw.begin(self.picture)
-        self.draw.setPen(QPen(QColor("red"), 10))
+        self.draw.setPen(QPen(QColor("red"), 2))
         self.draw.drawPoint(QPoint(self.end_x, self.end_y))
-        # self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
         self.draw.end()
 
 class configPage(QMainWindow, Ui_MainWindow):
@@ -112,6 +104,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.init()
         self.timer = QTimer()
         self.dataTimer = QTimer()
+        self.consTimer = QTimer()
         self.bindSingalandSlot()
 
     def init(self):
@@ -339,7 +332,10 @@ class configPage(QMainWindow, Ui_MainWindow):
             self.end_dot_list = self.end_dot_list[-self.x_num: ]
             for i in self.end_dot_list:
                 i[0] -= self.x_step
-        x = self.end_dot_list[-1][0] + self.x_step
+        if len(self.end_dot_list) == 0:
+            x = 0
+        else:
+            x = self.end_dot_list[-1][0] + self.x_step
         y = value
         self.end_dot_list.append([x, y])
 
@@ -385,21 +381,14 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNR_current_show.setText(str(SNR))
         self.count_dot(SNR)
         consData = data[20:]
-        for i in range(256):
-            imData = bytesToFloat(consData[0], consData[1], consData[2], consData[3])
-            print(imData)
-            reData = bytesToFloat(consData[4], consData[5], consData[6], consData[7])
-            print(reData)
-            consData = consData[8: ]
-            imReArray = (imData, reData)
-            self.showConstellation.count_dot(imReArray, 100, 100)
+        self.showConstellation.count_dot(consData, 100, 100)
 
     def updateStatistical(self):
         # print('timer run')
         self.showStatistical(dataStatistical)
 
     def statisticalTimer(self):
-        self.timer.start(100)
+        self.timer.start(10)
         self.timer.timeout.connect(self.updateStatistical)
 
     def killStatisticalTimer(self):
