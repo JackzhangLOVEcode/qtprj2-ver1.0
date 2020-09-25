@@ -3,6 +3,7 @@ from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtCore import QThread, QTimer, QPoint, Qt
 from PyQt5.QtGui import QIcon, QPainter, QPixmap, QPen, QColor
+from numba import jit
 
 def bytesToFloat(h1, h2, h3, h4):
     ba = bytearray()
@@ -41,7 +42,7 @@ class WorkThread(QThread):
 
 class DataThread(QThread):
     def __int__(self):
-        super(WorkThread, self).__init__()
+        super(DataThread, self).__init__()
 
     def run(self):
         global startFlag
@@ -74,6 +75,7 @@ class showConstellation():
         self.y_height = height
         self.label = label
 
+    @jit
     def count_dot(self, data, multiplier=1, addend=0):
 
         self.data = data
