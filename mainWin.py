@@ -1,9 +1,9 @@
-import sys, math, socket, time, queue, struct
+# -*- coding:utf-8 -*-
+import sys, math, socket, time, queue, struct, encodings.idna
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtCore import QThread, QTimer, QPoint, Qt
 from PyQt5.QtGui import QIcon, QPainter, QPixmap, QPen, QColor
-from numba import jit
 
 def bytesToFloat(h1, h2, h3, h4):
     ba = bytearray()
@@ -26,9 +26,7 @@ class WorkThread(QThread):
             try:
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 hostname = socket.gethostname()
-                self.ipStatistical = socket.gethostbyname(hostname)
-                self.portStatistical = portStatistical
-                addr = (self.ipStatistical, self.portStatistical)
+                addr = (socket.gethostbyname(hostname), portStatistical)
                 buffsize = 33000
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
@@ -75,7 +73,6 @@ class showConstellation():
         self.y_height = height
         self.label = label
 
-    @jit
     def count_dot(self, data, multiplier=1, addend=0):
 
         self.data = data
@@ -106,7 +103,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.init()
         self.timer = QTimer()
         self.dataTimer = QTimer()
-        self.consTimer = QTimer()
         self.bindSingalandSlot()
 
     def init(self):
