@@ -6,12 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1101</width>
-    <height>828</height>
+    <width>1271</width>
+    <height>881</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255)</string>
   </property>
   <widget class="QWidget" name="FrftConfig">
    <property name="autoFillBackground">
@@ -23,10 +29,10 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>60</x>
       <y>10</y>
-      <width>1021</width>
-      <height>711</height>
+      <width>1181</width>
+      <height>751</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -34,6 +40,11 @@
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="currentIndex">
      <number>3</number>
@@ -48,23 +59,34 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>41</x>
-        <y>31</y>
-        <width>96</width>
-        <height>22</height>
+        <x>40</x>
+        <y>30</y>
+        <width>102</width>
+        <height>31</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>papr_en</string>
+       <string>Papr使能</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="depapr_thr_obj">
       <property name="geometry">
        <rect>
-        <x>41</x>
-        <y>81</y>
-        <width>83</width>
-        <height>22</height>
+        <x>40</x>
+        <y>90</y>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -86,23 +108,28 @@
      <widget class="QLabel" name="depapr_thr_label">
       <property name="geometry">
        <rect>
-        <x>133</x>
-        <y>81</y>
+        <x>135</x>
+        <y>95</y>
         <width>90</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>depapr_thr</string>
+       <string>Papr门限</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="depapr_gain_obj">
       <property name="geometry">
        <rect>
-        <x>277</x>
-        <y>80</y>
-        <width>74</width>
-        <height>22</height>
+        <x>40</x>
+        <y>490</y>
+        <width>80</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -124,14 +151,19 @@
      <widget class="QLabel" name="depapr_gain_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>80</y>
-        <width>99</width>
+        <x>135</x>
+        <y>493</y>
+        <width>141</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>depapr_gain</string>
+       <string>Papr幅度系数</string>
       </property>
      </widget>
      <widget class="QComboBox" name="MType_tx_obj">
@@ -139,8 +171,8 @@
        <rect>
         <x>40</x>
         <y>190</y>
-        <width>99</width>
-        <height>24</height>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -176,14 +208,19 @@
      <widget class="QLabel" name="MType_tx_label">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>190</y>
-        <width>81</width>
-        <height>18</height>
+        <x>135</x>
+        <y>193</y>
+        <width>131</width>
+        <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>MTpye_tx</string>
+       <string>发端调试方式</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_num_tx_obj">
@@ -191,8 +228,8 @@
        <rect>
         <x>40</x>
         <y>240</y>
-        <width>71</width>
-        <height>25</height>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -217,23 +254,28 @@
      <widget class="QLabel" name="car_num_tx_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>240</y>
-        <width>101</width>
+        <x>135</x>
+        <y>247</y>
+        <width>111</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>car_num_tx</string>
+       <string>子载波控制</string>
       </property>
      </widget>
      <widget class="QDoubleSpinBox" name="Alpha_tx_obj">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>280</y>
-        <width>76</width>
-        <height>25</height>
+        <y>290</y>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="decimals">
@@ -252,23 +294,28 @@
      <widget class="QLabel" name="Alpha_tx_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>280</y>
-        <width>101</width>
+        <x>135</x>
+        <y>295</y>
+        <width>135</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Alpha_tx</string>
+       <string>frft加权系数</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="pilot_factor_obj">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>320</y>
-        <width>71</width>
-        <height>25</height>
+        <y>340</y>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -290,23 +337,28 @@
      <widget class="QLabel" name="pilot_factor_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>320</y>
+        <x>135</x>
+        <y>347</y>
         <width>111</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>pilot_factor</string>
+       <string>导频幅度</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="pss_factor_obj">
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>360</y>
-        <width>71</width>
-        <height>25</height>
+        <y>390</y>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -328,14 +380,19 @@
      <widget class="QLabel" name="pss_factor_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>360</y>
-        <width>101</width>
+        <x>135</x>
+        <y>397</y>
+        <width>98</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>pss_factor</string>
+       <string>前导幅度</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="Sys_enble_obj">
@@ -350,8 +407,19 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Sys_enble</string>
+       <string>系统使能</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="Sys_reset_obj">
@@ -366,21 +434,37 @@
         <height>22</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Sys_reset</string>
+       <string>系统复位</string>
       </property>
      </widget>
      <widget class="QLabel" name="ModeBSorMS_label">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>140</y>
-        <width>101</width>
+        <x>135</x>
+        <y>143</y>
+        <width>61</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>ModeBSorMS</string>
+       <string>BS/MS</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -391,8 +475,8 @@
        <rect>
         <x>40</x>
         <y>140</y>
-        <width>99</width>
-        <height>24</height>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -418,14 +502,19 @@
      <widget class="QLabel" name="ModeUDPorPN_label">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>140</y>
+        <x>135</x>
+        <y>540</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>ModeUDPorPN</string>
+       <string>数据源</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -434,10 +523,10 @@
      <widget class="QComboBox" name="ModeUDPorPN_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>140</y>
-        <width>99</width>
-        <height>24</height>
+        <x>40</x>
+        <y>540</y>
+        <width>80</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -463,14 +552,19 @@
      <widget class="QLabel" name="Base_loop_en_label">
       <property name="geometry">
        <rect>
-        <x>840</x>
-        <y>190</y>
+        <x>790</x>
+        <y>160</y>
         <width>121</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Base_loop_en</string>
+       <string>基带打环使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -479,10 +573,10 @@
      <widget class="QComboBox" name="Base_loop_en_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>190</y>
-        <width>121</width>
-        <height>24</height>
+        <x>660</x>
+        <y>150</y>
+        <width>120</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -508,14 +602,19 @@
      <widget class="QLabel" name="Rx_enb_label">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>190</y>
-        <width>61</width>
+        <x>430</x>
+        <y>95</y>
+        <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Rx_enb</string>
+       <string>接收使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -524,17 +623,17 @@
      <widget class="QComboBox" name="Rx_enb_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>190</y>
-        <width>99</width>
-        <height>24</height>
+        <x>340</x>
+        <y>90</y>
+        <width>80</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
        <bool>true</bool>
       </property>
       <property name="currentText">
-       <string>normal</string>
+       <string>close</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -553,10 +652,10 @@
      <widget class="QComboBox" name="Rx_channel_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>240</y>
+        <x>660</x>
+        <y>200</y>
         <width>111</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -582,14 +681,19 @@
      <widget class="QLabel" name="Rx_channel_label">
       <property name="geometry">
        <rect>
-        <x>830</x>
-        <y>240</y>
+        <x>790</x>
+        <y>200</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Rx_channel</string>
+       <string>接收频道</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -599,9 +703,9 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>400</y>
-        <width>71</width>
-        <height>25</height>
+        <y>440</y>
+        <width>75</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -623,23 +727,28 @@
      <widget class="QLabel" name="Rx_delay_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>400</y>
-        <width>101</width>
-        <height>18</height>
+        <x>135</x>
+        <y>440</y>
+        <width>159</width>
+        <height>35</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Rx_delay</string>
+       <string>同步后数据延时</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="Time_trig2tx_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>240</y>
+        <x>340</x>
+        <y>140</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -661,11 +770,16 @@
      <widget class="QLabel" name="Time_trig2tx_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>240</y>
-        <width>121</width>
-        <height>18</height>
+        <x>430</x>
+        <y>140</y>
+        <width>141</width>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Time_trig2tx</string>
@@ -674,11 +788,16 @@
      <widget class="QLabel" name="Time_tx_hold_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>280</y>
-        <width>111</width>
-        <height>18</height>
+        <x>430</x>
+        <y>190</y>
+        <width>151</width>
+        <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Time_tx_hold</string>
@@ -687,10 +806,10 @@
      <widget class="QSpinBox" name="Time_tx_hold_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>280</y>
+        <x>340</x>
+        <y>190</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -712,11 +831,16 @@
      <widget class="QLabel" name="ms_T_sync2trig_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>320</y>
+        <x>430</x>
+        <y>230</y>
         <width>131</width>
-        <height>18</height>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>ms_T_sync2trig</string>
@@ -725,10 +849,10 @@
      <widget class="QSpinBox" name="ms_T_sync2trig_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>320</y>
+        <x>340</x>
+        <y>240</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -750,11 +874,16 @@
      <widget class="QLabel" name="bs_tdd_time_gap_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>360</y>
-        <width>101</width>
-        <height>18</height>
+        <x>430</x>
+        <y>280</y>
+        <width>171</width>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>bs_tdd_time_gap</string>
@@ -763,10 +892,10 @@
      <widget class="QSpinBox" name="bs_tdd_time_gap_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>360</y>
+        <x>340</x>
+        <y>290</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -788,11 +917,16 @@
      <widget class="QLabel" name="bs_tx_time_gap_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>400</y>
-        <width>131</width>
-        <height>18</height>
+        <x>430</x>
+        <y>340</y>
+        <width>171</width>
+        <height>21</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>bs_tx_time_gap</string>
@@ -801,10 +935,10 @@
      <widget class="QSpinBox" name="bs_tx_time_gap_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>400</y>
+        <x>340</x>
+        <y>340</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -826,11 +960,16 @@
      <widget class="QLabel" name="Trig_gap_cnt_label">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>440</y>
-        <width>111</width>
-        <height>18</height>
+        <x>430</x>
+        <y>390</y>
+        <width>141</width>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Trig_gap_cnt</string>
@@ -839,10 +978,10 @@
      <widget class="QSpinBox" name="Trig_gap_cnt_obj">
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>440</y>
+        <x>340</x>
+        <y>390</y>
         <width>80</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -864,10 +1003,10 @@
      <widget class="QComboBox" name="alway_tx_obj">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>190</y>
-        <width>99</width>
-        <height>24</height>
+        <x>340</x>
+        <y>490</y>
+        <width>90</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -893,14 +1032,19 @@
      <widget class="QLabel" name="alway_tx_label">
       <property name="geometry">
        <rect>
-        <x>610</x>
-        <y>190</y>
-        <width>81</width>
+        <x>440</x>
+        <y>490</y>
+        <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>alway_tx</string>
+       <string>常发使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -909,10 +1053,10 @@
      <widget class="QComboBox" name="tx1_en_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>280</y>
+        <x>660</x>
+        <y>250</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -938,14 +1082,19 @@
      <widget class="QLabel" name="tx1_en_label">
       <property name="geometry">
        <rect>
-        <x>820</x>
-        <y>280</y>
+        <x>780</x>
+        <y>250</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>tx1_en</string>
+       <string>TX1使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -954,10 +1103,10 @@
      <widget class="QComboBox" name="tx2_en_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>320</y>
+        <x>660</x>
+        <y>310</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -983,14 +1132,19 @@
      <widget class="QLabel" name="tx2_en_label">
       <property name="geometry">
        <rect>
-        <x>820</x>
-        <y>320</y>
+        <x>780</x>
+        <y>310</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>tx2_en</string>
+       <string>TX2使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -999,10 +1153,10 @@
      <widget class="QComboBox" name="rx1_en_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
+        <x>660</x>
         <y>360</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1028,14 +1182,19 @@
      <widget class="QLabel" name="rx1_en_label">
       <property name="geometry">
        <rect>
-        <x>820</x>
+        <x>780</x>
         <y>360</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>rx1_en</string>
+       <string>RX1使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1044,10 +1203,10 @@
      <widget class="QComboBox" name="rx2_en_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>400</y>
+        <x>660</x>
+        <y>410</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1073,14 +1232,19 @@
      <widget class="QLabel" name="rx2_en_label">
       <property name="geometry">
        <rect>
-        <x>820</x>
-        <y>400</y>
+        <x>780</x>
+        <y>410</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>rx2_en</string>
+       <string>RX2使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1089,10 +1253,10 @@
      <widget class="QComboBox" name="TDD_EN_obj">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>140</y>
-        <width>99</width>
-        <height>24</height>
+        <x>660</x>
+        <y>90</y>
+        <width>80</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1118,14 +1282,19 @@
      <widget class="QLabel" name="TDD_EN_label">
       <property name="geometry">
        <rect>
-        <x>820</x>
-        <y>140</y>
+        <x>750</x>
+        <y>90</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>TDD_EN</string>
+       <string>TDD模式</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1134,14 +1303,19 @@
      <widget class="QLabel" name="UDP_loop_label">
       <property name="geometry">
        <rect>
-        <x>610</x>
-        <y>140</y>
-        <width>81</width>
+        <x>430</x>
+        <y>440</y>
+        <width>121</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>UDP_loop</string>
+       <string>UDP环路使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1150,10 +1324,10 @@
      <widget class="QComboBox" name="UDP_loop_obj">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>140</y>
-        <width>99</width>
-        <height>24</height>
+        <x>340</x>
+        <y>440</y>
+        <width>80</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1179,7 +1353,7 @@
      <widget class="QLineEdit" name="BBPort_obj">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>320</x>
         <y>610</y>
         <width>71</width>
         <height>41</height>
@@ -1194,12 +1368,12 @@
        <rect>
         <x>10</x>
         <y>620</y>
-        <width>41</width>
+        <width>61</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
-       <string>BBIP</string>
+       <string>基带IP</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1208,7 +1382,7 @@
      <widget class="QLineEdit" name="BBIP_obj">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>90</x>
         <y>610</y>
         <width>121</width>
         <height>41</height>
@@ -1223,12 +1397,12 @@
        <rect>
         <x>230</x>
         <y>620</y>
-        <width>61</width>
+        <width>81</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
-       <string>BBPort</string>
+       <string>基带Port</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1243,13 +1417,18 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>30</y>
-        <width>80</width>
-        <height>18</height>
+        <y>32</y>
+        <width>131</width>
+        <height>25</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>MType_rx</string>
+       <string>接收调试方式</string>
       </property>
      </widget>
      <widget class="QComboBox" name="MType_rx_obj">
@@ -1258,7 +1437,7 @@
         <x>20</x>
         <y>30</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1295,13 +1474,18 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>70</y>
-        <width>61</width>
+        <y>88</y>
+        <width>131</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>agc_en</string>
+       <string>数字AGC使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1311,9 +1495,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>70</y>
+        <y>80</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1340,13 +1524,18 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>110</y>
-        <width>61</width>
+        <y>137</y>
+        <width>111</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>frft_en</string>
+       <string>Frft使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1356,9 +1545,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>110</y>
+        <y>130</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1385,22 +1574,27 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>150</y>
-        <width>101</width>
+        <y>185</y>
+        <width>151</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>car_num_rx</string>
+       <string>收端子载波控制</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_num_rx_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>150</y>
+        <y>180</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -1426,9 +1620,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>190</y>
+        <y>230</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="suffix">
@@ -1442,22 +1636,27 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>190</y>
+        <y>235</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>i_freq_est</string>
+       <string>频偏设置</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="sync_factor_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>230</y>
+        <y>280</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1471,35 +1670,45 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>230</y>
+        <y>287</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>sync_factor</string>
+       <string>同步系数</string>
       </property>
      </widget>
      <widget class="QLabel" name="equa_factor_label">
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>270</y>
+        <y>335</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>equa_factor</string>
+       <string>均衡系数</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="equa_factor_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>270</y>
+        <y>330</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1513,9 +1722,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>310</y>
+        <y>390</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="decimals">
@@ -1535,26 +1744,36 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>310</y>
-        <width>101</width>
-        <height>18</height>
+        <y>390</y>
+        <width>171</width>
+        <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Alpha_rx</string>
+       <string>收端FRFT加权系数</string>
       </property>
      </widget>
      <widget class="QLabel" name="equa_amp_en_label">
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>400</y>
-        <width>101</width>
+        <y>510</y>
+        <width>121</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>equa_amp_en</string>
+       <string>幅度调整使能</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1564,9 +1783,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>400</y>
+        <y>510</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="editable">
@@ -1592,23 +1811,28 @@
      <widget class="QLabel" name="car_thr1_label">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>440</y>
-        <width>101</width>
+        <x>140</x>
+        <y>560</y>
+        <width>161</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>car_thr1</string>
+       <string>干扰检测门限一</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_thr1_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>440</y>
+        <y>560</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1624,23 +1848,28 @@
      <widget class="QLabel" name="mmse_thr_label">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>560</y>
-        <width>101</width>
+        <x>440</x>
+        <y>30</y>
+        <width>141</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>mmse_thr</string>
+       <string>MMSE均衡门限</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="mmse_thr_obj">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>560</y>
+        <x>320</x>
+        <y>30</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1653,23 +1882,28 @@
      <widget class="QLabel" name="car_thr3_label">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>520</y>
-        <width>101</width>
+        <x>140</x>
+        <y>660</y>
+        <width>151</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>car_thr3</string>
+       <string>干扰检测门限三</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_thr3_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>520</y>
+        <y>660</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1682,23 +1916,28 @@
      <widget class="QLabel" name="car_thr2_label">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>480</y>
-        <width>101</width>
+        <x>140</x>
+        <y>610</y>
+        <width>161</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>car_thr2</string>
+       <string>干扰检测门限二</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="car_thr2_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>480</y>
+        <y>610</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -1712,22 +1951,27 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>360</y>
+        <y>460</y>
         <width>101</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>equa_amp</string>
+       <string>幅度调整</string>
       </property>
      </widget>
      <widget class="QSpinBox" name="equa_amp_obj">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>360</y>
+        <y>450</y>
         <width>99</width>
-        <height>24</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="maximum">
@@ -2033,7 +2277,7 @@
      <widget class="QPushButton" name="start">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>290</x>
         <y>540</y>
         <width>112</width>
         <height>34</height>
@@ -2046,7 +2290,7 @@
      <widget class="QPushButton" name="stop">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>420</x>
         <y>540</y>
         <width>112</width>
         <height>34</height>
@@ -2059,11 +2303,16 @@
      <widget class="QLabel" name="noise_pwr_sum_label">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>40</y>
-        <width>131</width>
-        <height>18</height>
+        <x>550</x>
+        <y>73</y>
+        <width>161</width>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>17</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>noise_pwr_sum</string>
@@ -2072,10 +2321,10 @@
      <widget class="QLabel" name="noise_pwr_sum_show">
       <property name="geometry">
        <rect>
-        <x>740</x>
-        <y>40</y>
-        <width>80</width>
-        <height>18</height>
+        <x>730</x>
+        <y>83</y>
+        <width>91</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -2094,10 +2343,10 @@
      <widget class="QLabel" name="singal_pwr_sum_show">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>40</y>
-        <width>81</width>
-        <height>18</height>
+        <x>730</x>
+        <y>43</y>
+        <width>91</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -2116,11 +2365,16 @@
      <widget class="QLabel" name="singal_pwr_sum_label">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>40</y>
-        <width>131</width>
-        <height>18</height>
+        <x>550</x>
+        <y>33</y>
+        <width>171</width>
+        <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>17</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>singal_pwr_sum</string>
@@ -2130,7 +2384,7 @@
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>90</y>
+        <y>160</y>
         <width>480</width>
         <height>100</height>
        </rect>
@@ -2147,8 +2401,8 @@
        <rect>
         <x>31</x>
         <y>51</y>
-        <width>191</width>
-        <height>338</height>
+        <width>261</width>
+        <height>441</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -2189,6 +2443,11 @@
        </item>
        <item row="8" column="0" colspan="2">
         <widget class="QLabel" name="o_freq_est_t_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>o_freq_est_t</string>
          </property>
@@ -2196,6 +2455,11 @@
        </item>
        <item row="4" column="0" colspan="2">
         <widget class="QLabel" name="hard_decision_err_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>hard_decision_err</string>
          </property>
@@ -2235,6 +2499,11 @@
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="errbit_label">
+         <property name="font">
+          <font>
+           <pointsize>19</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>errbit</string>
          </property>
@@ -2242,6 +2511,11 @@
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="tolfrm_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>tolfrm</string>
          </property>
@@ -2249,6 +2523,11 @@
        </item>
        <item row="6" column="0" colspan="2">
         <widget class="QLabel" name="o_freq_est_r_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>o_freq_est_r</string>
          </property>
@@ -2288,6 +2567,11 @@
        </item>
        <item row="10" column="0" colspan="2">
         <widget class="QLabel" name="crc_error_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>crc_error</string>
          </property>
@@ -2295,6 +2579,11 @@
        </item>
        <item row="2" column="0" colspan="2">
         <widget class="QLabel" name="error_dft_label">
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>error_dft</string>
          </property>
@@ -2323,12 +2612,17 @@
        <rect>
         <x>10</x>
         <y>550</y>
-        <width>141</width>
+        <width>181</width>
         <height>18</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>statisticalPort</string>
+       <string>接收统计数据端口</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -2337,7 +2631,7 @@
      <widget class="QLineEdit" name="statisticalPort_obj">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>190</x>
         <y>540</y>
         <width>71</width>
         <height>34</height>
@@ -2350,11 +2644,16 @@
      <widget class="QLabel" name="SNR_current_label">
       <property name="geometry">
        <rect>
-        <x>620</x>
-        <y>70</y>
-        <width>111</width>
+        <x>550</x>
+        <y>123</y>
+        <width>131</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>17</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>SNR_current</string>
@@ -2363,10 +2662,10 @@
      <widget class="QLabel" name="SNR_current_show">
       <property name="geometry">
        <rect>
-        <x>740</x>
-        <y>70</y>
-        <width>80</width>
-        <height>18</height>
+        <x>730</x>
+        <y>120</y>
+        <width>91</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -2386,7 +2685,7 @@
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>220</y>
+        <y>290</y>
         <width>200</width>
         <height>200</height>
        </rect>
@@ -2404,52 +2703,52 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>730</y>
+      <y>770</y>
       <width>112</width>
       <height>34</height>
      </rect>
     </property>
     <property name="text">
-     <string>setDefault</string>
+     <string>发送默认配置</string>
     </property>
    </widget>
    <widget class="QPushButton" name="sendConfig">
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>730</y>
+      <y>770</y>
       <width>112</width>
       <height>34</height>
      </rect>
     </property>
     <property name="text">
-     <string>sendConfig</string>
+     <string>发送当前配置</string>
     </property>
    </widget>
    <widget class="QPushButton" name="sendData">
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>730</y>
+      <y>770</y>
       <width>112</width>
       <height>34</height>
      </rect>
     </property>
     <property name="text">
-     <string>sendData</string>
+     <string>发送数据</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stopData">
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>730</y>
+      <y>770</y>
       <width>112</width>
       <height>34</height>
      </rect>
     </property>
     <property name="text">
-     <string>stopData</string>
+     <string>停止发送数据</string>
     </property>
    </widget>
   </widget>
@@ -2458,8 +2757,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1101</width>
-     <height>30</height>
+     <width>1271</width>
+     <height>23</height>
     </rect>
    </property>
   </widget>
