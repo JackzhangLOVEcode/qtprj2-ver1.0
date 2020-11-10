@@ -5,9 +5,12 @@ from array import array
 from re import match
 from os.path import exists
 from mainWinUI import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout
 from PyQt5.QtCore import QThread, QTimer, QPoint, Qt, pyqtSignal
 from PyQt5.QtGui import QIcon, QPainter, QPixmap, QPen, QColor, QIntValidator, QDoubleValidator
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
 
 fpgalist = ['FPGA1','FPGA2','FPGA3','FPGA4']
 specfile = 'specline.txt'
@@ -40,9 +43,9 @@ def bytesToFloat(h1, h2, h3, h4):
     ba.append(h4)
     return struct.unpack("!f", ba)[0]
 
-class WorkThread(QThread):
+class StatisticThread(QThread):
     def __int__(self):
-        super(WorkThread, self).__init__()
+        super(StatisticThread, self).__init__()
 
     def run(self):
         global dataStatistical
@@ -65,16 +68,17 @@ class WorkThread(QThread):
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
-                # print('receive data ......')
+                #print('receive data ......')
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                # print(data)
+                #print(data)
                 dataStatistical = data
                 # print(dataStatistical)
             except socket.timeout:
                 statisticalSocket.close()
-            except OSError:
-                print("本地IP配置与IP配置文件中的IP不一致！！！")
                 break
+            '''except OSError:
+                print("本地IP配置与IP配置文件中的IP不一致！！！")
+                break'''
 
 class DataThread(QThread):
     def __int__(self):
@@ -104,7 +108,7 @@ class DataThread(QThread):
                     pass
         socketSource.close()
 
-class showConstellation():
+'''class showConstellation():
     def __init__(self, length, height, label):
         self.draw = QPainter()
         self.picture = QPixmap(length, height)
@@ -130,7 +134,13 @@ class showConstellation():
         self.draw.begin(self.picture)
         self.draw.setPen(QPen(QColor("red"), 2))
         self.draw.drawPoint(QPoint(self.end_x, self.end_y))
-        self.draw.end()
+        self.draw.end()'''
+
+class Figure_Canvas(FigureCanvas):
+    def __init__(self,parent=None,width=3.9,height=2.7,dpi=100):
+        self.fig=Figure(figsize=(width,height),dpi=100)
+        super(Figure_Canvas,self).__init__(self.fig)
+        self.ax=self.fig.add_subplot(111)
 
 class configPage(QMainWindow, Ui_MainWindow):
     _signal = pyqtSignal(int)
@@ -275,7 +285,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.groupBox_3.setVisible(False)
         self.textBrowser_recv.setVisible(False)
         self.pushButton_5.setVisible(False)
-        self.constellation_show.setVisible(False)
         # self.setFixedSize(600,788)
         # 同步完毕第一部分
 
@@ -283,20 +292,62 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.TXConfig = []
         self.RXConfig = []
         self.RFConfig = []
+        self.LDPCConfig = []
+        self.IdataIn = []
+        self.QdataIn = []
+        self.IdataOut = []
+        self.QdataOut = []
+        self.IdataPilot = []
+        self.QdataPilot = []
+        self.SNRDataArray = []
         self.TXConfigBytes = bytes()
         self.RXConfigBytes = bytes()
+        self.LDPCConfigBytes = bytes()
         self.ipBB = '192.168.1.84'
         self.portBB = 8000
         self.ipRF = '192.168.1.38'
         self.portRF = 6005
         self.ipData = '192.168.1.84'
         self.portData = 8002
-        self.draw = QPainter()
-        self.picture = QPixmap(480, 100)
-        self.end_dot_list = []
-        self.x_num = 100
-        self.x_step = 480 / self.x_num
-        # self.showConstellation = showConstellation(200, 200, self.constellation_show)
+        self.ipLDPC = '192.168.1.85'
+        self.portLDPC = 8000
+        # self.draw = QPainter()
+        # self.picture = QPixmap(480, 100)
+        # self.end_dot_list = []
+        # self.x_num = 100
+        # self.x_step = 480 / self.x_num
+        self.PrepareIQinCanvas()
+        self.PrepareIQOutCanvas()
+        self.PreparePilotLineCanvas()
+        self.PrepareSNRLineCanvas()
+        self.Reserv_1_obj.setVisible(False)
+        self.Reserv_1_label.setVisible(False)
+        self.Reserv_2_obj.setVisible(False)
+        self.Reserv_2_label.setVisible(False)
+        self.Reserv_3_obj.setVisible(False)
+        self.Reserv_3_label.setVisible(False)
+        self.Reserv_4_obj.setVisible(False)
+        self.Reserv_4_label.setVisible(False)
+        self.Reserv_5_obj.setVisible(False)
+        self.Reserv_5_label.setVisible(False)
+        self.Reserv_6_obj.setVisible(False)
+        self.Reserv_6_label.setVisible(False)
+        self.Reserv_B0_obj.setVisible(False)
+        self.Reserv_B0_label.setVisible(False)
+        self.Reserv_B1_obj.setVisible(False)
+        self.Reserv_B1_label.setVisible(False)
+        self.Reserv_I0_obj.setVisible(False)
+        self.Reserv_I0_label.setVisible(False)
+        self.Reserv_I1_obj.setVisible(False)
+        self.Reserv_I1_label.setVisible(False)
+        self.Reserv_I2_obj.setVisible(False)
+        self.Reserv_I2_label.setVisible(False)
+        self.Reserv_I3_obj.setVisible(False)
+        self.Reserv_I3_label.setVisible(False)
+        self.Reserv_U0_obj.setVisible(False)
+        self.Reserv_U0_label.setVisible(False)
+        self.Reserv_U1_obj.setVisible(False)
+        self.Reserv_U1_label.setVisible(False)
 
     def bindSingalandSlot(self):
         self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
@@ -1175,7 +1226,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         maxLen = self.calculateOFDMSymbleNum(self.car_num_tx_obj.value(), self.MType_tx_obj.currentIndex()) * 12 - 12
         self.TXConfig.extend((maxLen).to_bytes(2, byteorder='big'))
         self.TXConfig.extend((self.tx1_en_obj.currentIndex().to_bytes(1, byteorder='big')))
-        self.TXConfig.extend((self.tx2_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.TXConfig.extend((self.udpfifo_reset_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.rx1_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.rx2_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.TDD_EN_obj.currentIndex()).to_bytes(1, byteorder='big'))
@@ -1205,7 +1256,55 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.car_thr2_obj.value()).to_bytes(4, byteorder='big'))
         self.RXConfig.extend((self.car_thr3_obj.value()).to_bytes(4, byteorder='big'))
         self.RXConfig.extend((self.mmse_thr_obj.value()).to_bytes(4, byteorder='big'))
+        self.RXConfig.extend((self.scale_equa_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.scale_fft_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.phase_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.phase_factor_obj.value()).to_bytes(2, byteorder='big'))
+        self.RXConfig.extend((self.freq_offset_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.LDPC_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.MMSEorLS_obj.currentIndex().to_bytes(1, byteorder='big')))
+        self.RXConfig.extend((self.as_time_trig2tx_obj.value()).to_bytes(3, byteorder='big'))
+        self.RXConfig.extend((self.as_trig2tx_cnt_obj.value()).to_bytes(3, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_B0_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_B1_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_U0_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_U1_obj.value()).to_bytes(1, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_I0_obj.value()).to_bytes(2, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_I1_obj.value()).to_bytes(2, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_I2_obj.value()).to_bytes(2, byteorder='big'))
+        self.RXConfig.extend((self.Reserv_I3_obj.value()).to_bytes(4, byteorder='big'))
         self.RXConfigBytes = bytes(self.RXConfig)
+
+    def connectLDPCConfig(self):
+        modeTable = [0, 13, 26, 39]
+        self.LDPCConfig.clear()
+        flag = 0
+        self.LDPCConfig.extend((flag).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.LDPC_loop_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.Pause_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.Mtype_txldpc_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.Mtype_rxldpc_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.car_num_txldpc_obj.value()).to_bytes(3, byteorder='big'))
+        self.LDPCConfig.extend((self.car_num_rxldpc_obj.value()).to_bytes(3, byteorder='big'))
+        if self.calculateValidBitNum(self.car_num_txldpc_obj.value()) > 7:
+            modeTx = self.calculateValidBitNum(self.car_num_txldpc_obj.value()) - 8 + modeTable[self.Mtype_txldpc_obj.currentIndex()]
+        else:
+            modeTx = 255
+        if self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) > 7:
+            modeRx = self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) - 8 + modeTable[self.Mtype_rxldpc_obj.currentIndex()]
+        else:
+            modeRx = 255
+        self.LDPCConfig.extend((modeTx).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((modeRx).to_bytes(1, byteorder='big'))
+        LDPCreset = 1 if self.LDPC_reset_obj.isChecked() else 0
+        self.LDPCConfig.extend((LDPCreset).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_1_obj.value()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_2_obj.value()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_3_obj.value()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_4_obj.value()).to_bytes(4, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_5_obj.value()).to_bytes(4, byteorder='big'))
+        self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
+        self.LDPCConfigBytes = bytes(self.LDPCConfig)
 
     def connectDefaultConfig(self):
         # 设置发端默认参数
@@ -1233,7 +1332,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Trig_gap_cnt_obj.setValue(100000)
         self.alway_tx_obj.setCurrentIndex(0)
         self.tx1_en_obj.setCurrentIndex(1)
-        self.tx2_en_obj.setCurrentIndex(0)
+        self.udpfifo_reset_obj.setCurrentIndex(0)
         self.rx1_en_obj.setCurrentIndex(1)
         self.rx2_en_obj.setCurrentIndex(0)
         self.TDD_EN_obj.setCurrentIndex(1)
@@ -1254,6 +1353,15 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.car_thr2_obj.setValue(6250000)
         self.car_thr3_obj.setValue(625000000)
         self.mmse_thr_obj.setValue(1000)
+        self.scale_equa_obj.setValue(0)
+        self.scale_fft_obj.setValue(0)
+        self.phase_en_obj.setCurrentIndex(0)
+        self.phase_factor_obj.setValue(0)
+        self.freq_offset_en_obj.setCurrentIndex(0)
+        self.LDPC_en_obj.setCurrentIndex(0)
+        self.MMSEorLS_obj.setCurrentIndex(0)
+        self.as_time_trig2tx_obj.setValue(17339)
+        self.as_trig2tx_cnt_obj.setValue(58735)
 
         # 设置射频参数
         self.Amplifier_obj.setCurrentIndex(0)
@@ -1262,13 +1370,25 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.filter4p5_5G_obj.setCurrentIndex(0)
         self.filter5_5p5G_obj.setCurrentIndex(0)
 
+        #设置LDPC配置参数
+        self.LDPC_loop_obj.setCurrentIndex(0)
+        self.Pause_obj.setCurrentIndex(0)
+        self.Mtype_txldpc_obj.setCurrentIndex(0)
+        self.Mtype_rxldpc_obj.setCurrentIndex(0)
+        self.car_num_txldpc_obj.setValue(0xfffff)
+        self.car_num_rxldpc_obj.setValue(0xfffff)
+        self.LDPC_reset_obj.setChecked(False)
+
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
         self.portBB = int(self.BBPort_obj.text())
         self.ipRF = self.RFIP_obj.text()
         self.portRF = int(self.RFPort_obj.text())
+        self.ipLDPC = self.LDPC_IP_obj.text()
+        self.portLDPC = int(self.LDPC_Port_obj.text())
         addrBB = (self.ipBB, self.portBB)
-        addRF = (self.ipRF, self.portRF)
+        addrRF = (self.ipRF, self.portRF)
+        addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             configSocket.bind((self.ulocalip, 8000))
@@ -1277,7 +1397,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.connectRFConfigData()
         print(self.RFConfig)
         for configRF in self.RFConfig:
-            configSocket.sendto(configRF, addRF)
+            configSocket.sendto(configRF, addrRF)
             print(configRF)
         self.connectTXConfigData()
         print(self.TXConfig)
@@ -1288,13 +1408,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         print(self.RXConfig)
         print(self.RXConfigBytes)
         configSocket.sendto(self.RXConfigBytes, addrBB)
+        self.connectLDPCConfig()
+        print(self.LDPCConfig)
+        configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
         configSocket.close()
 
     def setDefaultConfig(self):
         self.connectDefaultConfig()
         self.sendConfigtoBaseBand()
 
-    def count_dot(self, value):
+    '''def count_dot(self, value):
         self.beg_x = 0
         self.beg_y = 100
         if len(self.end_dot_list) >= (self.x_num+1):
@@ -1325,9 +1448,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
         self.draw.end()
         self.beg_x = self.end_x
-        self.beg_y = self.end_y
+        self.beg_y = self.end_y'''
 
-    def showStatistical(self, data):
+    def showBasebandStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
         self.errbit_show.setText(str(errbit))
         tolfrm = int.from_bytes(data[4:8], byteorder='big')
@@ -1336,25 +1459,180 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.noise_pwr_sum_show.setText(str(noise_pwr_sum))
         singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
         self.singal_pwr_sum_show.setText(str(singal_pwr_sum))
-        o_freq_est_r = int.from_bytes(data[12:14], byteorder='big', signed=True)
-        self.o_freq_est_r_show.setText(str(o_freq_est_r))
+        phase_est = int.from_bytes(data[12:14], byteorder='big', signed=True)
+        self.phase_est_show.setText(str(phase_est/8096*45))
         o_freq_est_t = int.from_bytes(data[14:16], byteorder='big', signed=True)
         self.o_freq_est_t_show.setText(str(o_freq_est_t))
         crc_error = int.from_bytes(data[16:17], byteorder='big')
         self.crc_error_show.setText(str(crc_error))
-        error_dft = int.from_bytes(data[17:18], byteorder='big')
-        self.error_dft_show.setText(str(error_dft))
-        hard_decision_err = int.from_bytes(data[18:19], byteorder='big')
-        self.hard_decision_err_show.setText(str(hard_decision_err))
+        over_flag_rx = int.from_bytes(data[17:18], byteorder='big')
+        self.over_flag_rx_show.setText(str(over_flag_rx))
+        FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
+        self.FIFOEmpty_show.setText(str(FIFOEmpty))
         SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
         self.SNR_current_show.setText(str(SNR))
-        self.count_dot(SNR)
-        #consData = data[20:]
-        #self.showConstellation.count_dot(consData, 100, 100)
+        #self.count_dot(SNR)
+        self.PrepareSNRSamples(SNR)
+        car1 = int.from_bytes(data[19:22], byteorder='big')
+        self.car1_hex_show.setText(hex(car1))
+        car2 = int.from_bytes(data[22:25], byteorder='big')
+        self.car2_hex_show.setText(hex(car2))
+        car3 = int.from_bytes(data[25:28], byteorder='big')
+        self.car3_hex_show.setText(hex(car3))
+        MtypeTable = ['QPSK', '16QAM', '64QAM', '256QAM']
+        Rb_mtype_tx = int.from_bytes(data[28:29], byteorder='big')
+        self.Rb_mtype_tx_show.setText(MtypeTable[Rb_mtype_tx])
+        Rb_mtype_rx = int.from_bytes(data[29:30], byteorder='big')
+        self.Rb_mtype_rx_show.setText(MtypeTable[Rb_mtype_rx])
+        Rb_car_tx = int.from_bytes(data[30:33], byteorder='big')
+        self.Rb_car_tx_show.setText(hex(Rb_car_tx))
+        Rb_car_rx = int.from_bytes(data[33:36], byteorder='big')
+        self.Rb_car_rx_show.setText(hex(Rb_car_rx))
+        rx_frame_cnt = int.from_bytes(data[36:39], byteorder='big')
+        self.cnt_rx_frame_show.setText(str(rx_frame_cnt))
+        tx_frame_cnt = int.from_bytes(data[39:42], byteorder='big')
+        self.cnt_frame_tx_show.setText(str(tx_frame_cnt))
+
+    def showLDPCStatistical(self, data):
+        errbit = int.from_bytes(data[0:4], byteorder='big')
+        self.errbit_show.setText(str(errbit))
+        tolfrm = int.from_bytes(data[4:8], byteorder='big')
+        self.tolfrm_show.setText(str(tolfrm))
+        noise_pwr_sum = int.from_bytes(data[8:10], byteorder='big')
+        self.noise_pwr_sum_show.setText(str(noise_pwr_sum))
+        singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
+        self.singal_pwr_sum_show.setText(str(singal_pwr_sum))
+        phase_est = int.from_bytes(data[12:14], byteorder='big', signed=True)
+        self.phase_est_show.setText(str(phase_est / 8096 * 45))
+        o_freq_est_t = int.from_bytes(data[14:16], byteorder='big', signed=True)
+        self.o_freq_est_t_show.setText(str(o_freq_est_t))
+        crc_error = int.from_bytes(data[16:17], byteorder='big')
+        self.crc_error_show.setText(str(crc_error))
+        over_flag_rx = int.from_bytes(data[17:18], byteorder='big')
+        self.over_flag_rx_show.setText(str(over_flag_rx))
+        FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
+        self.FIFOEmpty_show.setText(str(FIFOEmpty))
+        SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
+        self.SNR_current_show.setText(str(SNR))
+        #self.count_dot(SNR)
+        self.PrepareSNRSamples(SNR)
+        car1 = int.from_bytes(data[19:22], byteorder='big')
+        self.car1_hex_show.setText(hex(car1))
+        car2 = int.from_bytes(data[22:25], byteorder='big')
+        self.car2_hex_show.setText(hex(car2))
+        car3 = int.from_bytes(data[25:28], byteorder='big')
+        self.car3_hex_show.setText(hex(car3))
+        MtypeTable = ['QPSK', '16QAM', '64QAM', '256QAM']
+        Rb_mtype_tx = int.from_bytes(data[28:29], byteorder='big')
+        self.Rb_mtype_tx_show.setText(MtypeTable[Rb_mtype_tx])
+        Rb_mtype_rx = int.from_bytes(data[29:30], byteorder='big')
+        self.Rb_mtype_rx_show.setText(MtypeTable[Rb_mtype_rx])
+        Rb_car_tx = int.from_bytes(data[30:33], byteorder='big')
+        self.Rb_car_tx_show.setText(hex(Rb_car_tx))
+        Rb_car_rx = int.from_bytes(data[33:36], byteorder='big')
+        self.Rb_car_rx_show.setText(hex(Rb_car_rx))
+
+    def PrepareIQinCanvas(self):
+        self.IQinFigure = Figure_Canvas()
+        # self.IQinFigure.ax.spines['top'].set_color('none')
+        # self.IQinFigure.ax.spines['right'].set_color('none')
+        # self.IQinFigure.ax.xaxis.set_ticks_position('bottom')
+        # self.IQinFigure.ax.spines['bottom'].set_position(('data', 0))
+        # self.IQinFigure.ax.yaxis.set_ticks_position('left')
+        # self.IQinFigure.ax.spines['left'].set_position(('data', 0))
+        self.IQinFigureLayout = QGridLayout(self.IQshowFRFTin)
+        self.IQinFigureLayout.addWidget(self.IQinFigure)
+        self.IQinFigure.ax.set_xlim(-0.5, 0.5)
+        self.IQinFigure.ax.set_ylim(-0.5, 0.5)
+
+    def PrepareIQOutCanvas(self):
+        self.IQOutFigure = Figure_Canvas()
+        #self.IQOutFigure.ax.spines['top'].set_color('none')
+        #self.IQOutFigure.ax.spines['right'].set_color('none')
+        #self.IQOutFigure.ax.xaxis.set_ticks_position('bottom')
+        #self.IQOutFigure.ax.spines['bottom'].set_position(('data', 0))
+        #self.IQOutFigure.ax.yaxis.set_ticks_position('left')
+        #self.IQOutFigure.ax.spines['left'].set_position(('data', 0))
+        self.IQOutFigureLayout = QGridLayout(self.IQShowFRFTout)
+        self.IQOutFigureLayout.addWidget(self.IQOutFigure)
+        self.IQOutFigure.ax.set_xlim(-0.5, 0.5)
+        self.IQOutFigure.ax.set_ylim(-0.5, 0.5)
+
+    def PreparePilotLineCanvas(self):
+        self.LineFigure = Figure_Canvas()
+        self.LineFigureLayout = QGridLayout(self.IQshowPilot)
+        self.LineFigureLayout.addWidget(self.LineFigure)
+        self.LineFigure.ax.set_xlim(-1, 1)
+        self.LineFigure.ax.set_ylim(-1, 1)
+        #self.line = Line2D([0], [0])
+
+    def PrepareSNRLineCanvas(self):
+        self.SNRLineFigure = Figure_Canvas()
+        self.SNRLineFigureLayout = QGridLayout(self.SNRshow)
+        self.SNRLineFigureLayout.addWidget(self.SNRLineFigure)
+        self.SNRLineFigure.ax.set_xlim(0, 100)
+        self.SNRLineFigure.ax.set_ylim(0, 50)
+
+    def PrepareSNRSamples(self, value):
+        if len(self.SNRDataArray) >= 100:
+            self.SNRDataArray = self.SNRDataArray[-100: ]
+        self.SNRDataArray.append(value)
+        SNRLine = Line2D(list(range(len(self.SNRDataArray))), self.SNRDataArray)
+        self.SNRLineFigure.ax.add_line(SNRLine)
+        self.SNRLineFigure.draw()
+
+    def getIQdata(self, sourceData, Idata, Qdata, targetLen=1280):
+        for i in range(int(len(sourceData)/4)):
+            ivalue = int.from_bytes(sourceData[0:2], byteorder='big', signed=True)
+            qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
+            Idata.append(ivalue/65535)
+            Qdata.append(qvalue/65535)
+            sourceData = sourceData[4:]
+        if len(Idata) >= targetLen:
+            #print("Idata:", Idata)
+            return True
+        else:
+            return False
+
+    def showStatistical(self, data):
+        flag = int.from_bytes(data[0:1], byteorder='big')
+        print(flag)
+        Statistical = data[1:]
+        if flag == 1:
+            self.showBasebandStatistical(Statistical)
+        elif flag == 2:
+            if(self.getIQdata(Statistical, self.IdataIn, self.QdataIn, 1024) == True):
+                self.IQinFigure.ax.scatter(self.IdataIn, self.QdataIn, 3)
+                self.IQinFigure.draw()
+                #print("IQdata in")
+                self.IdataIn.clear()
+                self.QdataIn.clear()
+        elif flag == 3:
+            if (self.getIQdata(Statistical, self.IdataOut, self.QdataOut, 1024) == True):
+                self.IQOutFigure.ax.scatter(self.IdataOut, self.QdataOut, 3)
+                self.IQOutFigure.draw()
+                #print("IQdata out")
+                self.IdataOut.clear()
+                self.QdataOut.clear()
+        elif flag == 4:
+            if (self.getIQdata(Statistical, self.IdataPilot, self.QdataPilot, 320) == True):
+                self.line = Line2D(self.IdataPilot, self.QdataPilot)
+                self.LineFigure.ax.add_line(self.line)
+                self.LineFigure.draw()
+                #print("IQPilot draw")
+                self.IdataPilot.clear()
+                self.QdataPilot.clear()
+        elif flag == 5:
+            self.showLDPCStatistical(Statistical)
+        else:
+            print("无效的统计数据")
 
     def updateStatistical(self):
         # print('timer run')
-        self.showStatistical(dataStatistical)
+        if len(dataStatistical) > 0:
+            self.showStatistical(dataStatistical)
+        else:
+            print("暂未收到统计数据")
 
     def statisticalTimer(self):
         self.timer.start(10)
@@ -1397,8 +1675,8 @@ class configPage(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    workThread = WorkThread()
-    workThread.start()
+    statisticThread = StatisticThread()
+    statisticThread.start()
     dataThread = DataThread()
     dataThread.start()
     app = QApplication(sys.argv)

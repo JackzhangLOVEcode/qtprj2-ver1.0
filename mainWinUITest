@@ -1,24 +1,26 @@
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from socket import socket, AF_INET, SOCK_DGRAM
 
-class ConfigTable(QTabWidget):
-    def __init__(self, parent=None):
-        super(ConfigTable,self).__init__(parent)
-        self.setWindowTitle("配置选项")
-
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()
-
-        self.addTab(self.tab1, 'TX_Config')
-        self.addTab(self.tab2, 'RX_Config')
-        self.addTab(self.tab3, 'RF_Config')
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    configWin = ConfigTable()
-    configWin.show()
-    sys.exit(app.exec_())
+ip = '127.0.0.1'
+port = 51000
+addr = (ip, port)
+sourceData = []
+sourceData.extend(int(23562).to_bytes(4, byteorder='big'))
+sourceData.extend(int(156).to_bytes(4, byteorder='big'))
+sourceData.extend(int(345).to_bytes(2, byteorder='big'))
+sourceData.extend(int(123).to_bytes(2, byteorder='big'))
+sourceData.extend(int(122).to_bytes(2, byteorder='big'))
+sourceData.extend(int(100).to_bytes(2, byteorder='big'))
+sourceData.extend(int(10).to_bytes(1, byteorder='big'))
+sourceData.extend(int(0).to_bytes(1, byteorder='big'))
+sourceData.extend(int(1).to_bytes(1, byteorder='big'))
+sourceDataBytes = bytes(sourceData)
+#buffsize = 1470
+clientSocket = socket(AF_INET, SOCK_DGRAM)
+sourcePort = 51001
+addr2 = (ip, sourcePort)
+clientSocket.bind(addr2)
+while True:
+    print('send message ......')
+    clientSocket.sendto(sourceDataBytes, addr)
+    print(sourceDataBytes)
+clientSocket.close()
