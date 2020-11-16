@@ -99,7 +99,7 @@
        <string notr="true">background-color: rgb(140, 140, 140);</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -1639,6 +1639,12 @@
        <layout class="QGridLayout" name="gridLayout_23" columnstretch="1,1,0" columnminimumwidth="1,1,0">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_26">
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="title">
            <string>配置区域一</string>
           </property>
@@ -2221,6 +2227,12 @@
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_25">
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="title">
            <string>配置区域二</string>
           </property>
@@ -3035,6 +3047,12 @@
         </item>
         <item row="0" column="2">
          <widget class="QGroupBox" name="groupBox_27">
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="title">
            <string>预留区</string>
           </property>
@@ -3624,7 +3642,7 @@
        <attribute name="title">
         <string>LDPC</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_12">
+       <layout class="QGridLayout" name="gridLayout_12" rowstretch="1,0,0" columnstretch="0,0,0">
         <item row="0" column="2" rowspan="2">
          <widget class="QGroupBox" name="groupBox_14">
           <property name="maximumSize">
@@ -4001,7 +4019,7 @@
            <string>基本配置</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="0" colspan="2">
+           <item row="0" column="0">
             <widget class="QCheckBox" name="LDPC_reset_obj">
              <property name="enabled">
               <bool>true</bool>
@@ -4334,6 +4352,55 @@
              </property>
             </widget>
            </item>
+           <item row="7" column="0">
+            <widget class="QComboBox" name="LDPC_UDPorPN_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>UDP</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>PN</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="LDPC_UDPorPN_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string> UDP or PN</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -4352,205 +4419,7 @@
            <string>配置预留区</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QSpinBox" name="Reserv_1_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="Reserv_1_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_1</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QSpinBox" name="Reserv_2_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="Reserv_2_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_2</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QSpinBox" name="Reserv_3_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="Reserv_3_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_3</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="0">
-            <widget class="QSpinBox" name="Reserv_4_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="Reserv_4_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_4</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
             <widget class="QSpinBox" name="Reserv_5_obj">
              <property name="maximumSize">
               <size>
@@ -4580,7 +4449,7 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="3" column="1">
             <widget class="QLabel" name="Reserv_5_label">
              <property name="maximumSize">
               <size>
@@ -4598,7 +4467,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="4" column="0">
             <widget class="QSpinBox" name="Reserv_6_obj">
              <property name="maximumSize">
               <size>
@@ -4628,7 +4497,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
+           <item row="4" column="1">
             <widget class="QLabel" name="Reserv_6_label">
              <property name="maximumSize">
               <size>
@@ -4643,6 +4512,156 @@
              </property>
              <property name="text">
               <string>Reserv_6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QSpinBox" name="Reserv_3_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="Reserv_3_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QSpinBox" name="Reserv_4_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="Reserv_4_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="sizeIncrement">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_4</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QSpinBox" name="Reserv_2_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="Reserv_2_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_2</string>
              </property>
             </widget>
            </item>

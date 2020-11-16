@@ -320,8 +320,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.PrepareIQOutCanvas()
         self.PreparePilotLineCanvas()
         self.PrepareSNRLineCanvas()
-        self.Reserv_1_obj.setVisible(False)
-        self.Reserv_1_label.setVisible(False)
         self.Reserv_2_obj.setVisible(False)
         self.Reserv_2_label.setVisible(False)
         self.Reserv_3_obj.setVisible(False)
@@ -1298,7 +1296,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend((modeRx).to_bytes(1, byteorder='big'))
         LDPCreset = 1 if self.LDPC_reset_obj.isChecked() else 0
         self.LDPCConfig.extend((LDPCreset).to_bytes(1, byteorder='big'))
-        self.LDPCConfig.extend((self.Reserv_1_obj.value()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend((self.LDPC_UDPorPN_obj.currentIndex()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_2_obj.value()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_3_obj.value()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_4_obj.value()).to_bytes(4, byteorder='big'))
@@ -1378,6 +1376,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.car_num_txldpc_obj.setValue(0xfffff)
         self.car_num_rxldpc_obj.setValue(0xfffff)
         self.LDPC_reset_obj.setChecked(False)
+        self.LDPC_UDPorPN_obj.setCurrentIndex(0)
 
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
