@@ -1473,8 +1473,13 @@ class configPage(QMainWindow, Ui_MainWindow):
         FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
         # print("FIFOEmpty:",data[18:19], FIFOEmpty)
         self.FIFOEmpty_show.setText(str(FIFOEmpty))
-        SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
-        self.SNR_current_show.setText(str(SNR))
+        if (noise_pwr_sum == 0):
+            SNR = 50
+        elif self.MType_rx_obj.currentIndex() == 3:
+            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 13) / noise_pwr_sum))
+        else:
+            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
+        self.SNR_current_show.setText('{:.1f}'.format(SNR))
         # self.count_dot(SNR)
         self.PrepareSNRSamples(SNR)
         car1 = int.from_bytes(data[19:22], byteorder='big')
@@ -1499,44 +1504,65 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.cnt_rx_frame_show.setText(str(rx_frame_cnt))
         tx_frame_cnt = int.from_bytes(data[39:42], byteorder='big')
         self.cnt_frame_tx_show.setText(str(tx_frame_cnt))
+        if tolfrm == 0:
+            BER = 'Invalid'
+            self.BER_show.setText(BER)
+        else:
+            M2bit = [2, 4, 6, 8]
+            M = M2bit[self.MType_rx_obj.currentIndex()]
+            BER = errbit/(((self.calculateValidBitNum(self.car_num_rx_obj.value())*64*M-32)*12)*tolfrm)
+            self.BER_show.setText('{:.2e}'.format(BER))
 
     def showLDPCStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
-        self.errbit_show.setText(str(errbit))
+        self.errbit_show_2.setText(str(errbit))
         tolfrm = int.from_bytes(data[4:8], byteorder='big')
-        self.tolfrm_show.setText(str(tolfrm))
+        self.tolfrm_show_2.setText(str(tolfrm))
         noise_pwr_sum = int.from_bytes(data[8:10], byteorder='big')
-        self.noise_pwr_sum_show.setText(str(noise_pwr_sum))
+        self.noise_pwr_sum_show_2.setText(str(noise_pwr_sum))
         singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
-        self.singal_pwr_sum_show.setText(str(singal_pwr_sum))
+        self.singal_pwr_sum_show_2.setText(str(singal_pwr_sum))
         phase_est = int.from_bytes(data[12:14], byteorder='big', signed=True)
-        self.phase_est_show.setText(str(phase_est / 8096 * 45))
+        self.phase_est_show_2.setText(str(phase_est / 8096 * 45))
         o_freq_est_t = int.from_bytes(data[14:16], byteorder='big', signed=True)
-        self.o_freq_est_t_show.setText(str(o_freq_est_t))
+        self.o_freq_est_t_show_2.setText(str(o_freq_est_t))
         crc_error = int.from_bytes(data[16:17], byteorder='big')
-        self.crc_error_show.setText(str(crc_error))
+        self.crc_error_show_2.setText(str(crc_error))
         over_flag_rx = int.from_bytes(data[17:18], byteorder='big')
-        self.over_flag_rx_show.setText(str(over_flag_rx))
+        self.over_flag_rx_show_2.setText(str(over_flag_rx))
         FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
-        self.FIFOEmpty_show.setText(str(FIFOEmpty))
+        self.FIFOEmpty_show_2.setText(str(FIFOEmpty))
         SNR = 0 if (noise_pwr_sum == 0) else (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
-        self.SNR_current_show.setText(str(SNR))
-        self.PrepareSNRSamples(SNR)
+        self.SNR_current_show_2.setText(str(SNR))
+        # self.PrepareSNRSamples(SNR)
         car1 = int.from_bytes(data[19:22], byteorder='big')
-        self.car1_hex_show.setText(format(car1, 'x').zfill(5))
+        self.car1_hex_show_2.setText(format(car1, 'x').zfill(5))
         car2 = int.from_bytes(data[22:25], byteorder='big')
-        self.car2_hex_show.setText(format(car2, 'x').zfill(5))
+        self.car2_hex_show_2.setText(format(car2, 'x').zfill(5))
         car3 = int.from_bytes(data[25:28], byteorder='big')
-        self.car3_hex_show.setText(format(car3, 'x').zfill(5))
+        self.car3_hex_show_2.setText(format(car3, 'x').zfill(5))
         MtypeTable = ['QPSK', '16QAM', '64QAM', '256QAM']
         Rb_mtype_tx = int.from_bytes(data[28:29], byteorder='big')
-        self.Rb_mtype_tx_show.setText(MtypeTable[Rb_mtype_tx])
+        self.Rb_mtype_tx_show_2.setText(MtypeTable[Rb_mtype_tx])
         Rb_mtype_rx = int.from_bytes(data[29:30], byteorder='big')
-        self.Rb_mtype_rx_show.setText(MtypeTable[Rb_mtype_rx])
+        self.Rb_mtype_rx_show_2.setText(MtypeTable[Rb_mtype_rx])
         Rb_car_tx = int.from_bytes(data[30:33], byteorder='big')
-        self.Rb_car_tx_show.setText(format(Rb_car_tx, 'x').zfill(5))
+        self.Rb_car_tx_show_2.setText(format(Rb_car_tx, 'x').zfill(5))
         Rb_car_rx = int.from_bytes(data[33:36], byteorder='big')
-        self.Rb_car_rx_show.setText(format(Rb_car_rx, 'x').zfill(5))
+        self.Rb_car_rx_show_2.setText(format(Rb_car_rx, 'x').zfill(5))
+        tab = [1148, 1340, 1532, 1596, 1788, 1980, 2044, 2236, 2428, 2492,  2684,  2876,  3068,
+               2428, 2684, 3068, 3324, 3580, 3964, 4220, 4604, 4860, 5116,  5500,  5756,  6140,
+               3580, 4028, 4604, 5052, 5500, 5948, 6396, 6844, 7292, 7740,  8188,  8636,  9212,
+               4860, 5500, 6140, 6652, 7292, 7932, 8572, 9212, 9724, 10364, 11004, 11644, 12284]
+        modeTable = [0, 13, 26, 39]
+        if (self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) > 7) and (tolfrm != 0):
+            modeRx = self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) - 8 + modeTable[
+                self.Mtype_rxldpc_obj.currentIndex()]
+            BER = errbit/(tab[modeRx]*8*tolfrm)
+            self.BER_show_2.setText('{:.2e}'.format(BER))
+        else:
+            BER = 'Invalid'
+            self.BER_show_2.setText(BER)
 
     def PrepareIQinCanvas(self):
         self.IQinFigure = Figure_Canvas()
