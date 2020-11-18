@@ -295,7 +295,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.QdataIn = []
         self.IdataOut = []
         self.QdataOut = []
-        self.IdataPilot = []
         self.QdataPilot = []
         self.SNRDataArray = []
         self.TXConfigBytes = bytes()
@@ -1261,8 +1260,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.MMSEorLS_obj.currentIndex().to_bytes(1, byteorder='big')))
         self.RXConfig.extend((self.as_time_trig2tx_obj.value()).to_bytes(3, byteorder='big'))
         self.RXConfig.extend((self.as_trig2tx_cnt_obj.value()).to_bytes(3, byteorder='big'))
-        self.RXConfig.extend((self.Reserv_B0_obj.value()).to_bytes(1, byteorder='big'))
-        self.RXConfig.extend((self.Reserv_B1_obj.value()).to_bytes(1, byteorder='big'))
+        Reserv_B0 = 1 if self.Reserv_B0_obj.isChecked() else 0
+        self.RXConfig.extend((Reserv_B0).to_bytes(1, byteorder='big'))
+        Reserv_B1 = 1 if self.Reserv_B1_obj.isChecked() else 0
+        self.RXConfig.extend((Reserv_B1).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_U0_obj.value()).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_U1_obj.value()).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I0_obj.value()).to_bytes(2, byteorder='big'))
@@ -1333,6 +1334,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.rx2_en_obj.setCurrentIndex(0)
         self.TDD_EN_obj.setCurrentIndex(1)
         self.UDP_loop_obj.setCurrentIndex(0)
+        self.Reserv_B0_obj.setChecked(False)
+        self.Reserv_B1_obj.setChecked(False)
 
         # 设置收端默认参数
         self.MType_rx_obj.setCurrentIndex(0)
@@ -1473,9 +1476,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         if (noise_pwr_sum == 0):
             SNR = 50
         elif self.MType_rx_obj.currentIndex() == 3:
-            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 13) / noise_pwr_sum))
+            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 10) / noise_pwr_sum))
         else:
-            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 9) / noise_pwr_sum))
+            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 6) / noise_pwr_sum))
         self.SNR_current_show.setText('{:.1f}'.format(SNR))
         # self.count_dot(SNR)
         self.PrepareSNRSamples(SNR)
@@ -1574,12 +1577,6 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def PrepareIQOutCanvas(self):
         self.IQOutFigure = Figure_Canvas()
-        #self.IQOutFigure.ax.spines['top'].set_color('none')
-        #self.IQOutFigure.ax.spines['right'].set_color('none')
-        #self.IQOutFigure.ax.xaxis.set_ticks_position('bottom')
-        #self.IQOutFigure.ax.spines['bottom'].set_position(('data', 0))
-        #self.IQOutFigure.ax.yaxis.set_ticks_position('left')
-        #self.IQOutFigure.ax.spines['left'].set_position(('data', 0))
         self.IQOutFigureLayout = QGridLayout(self.IQShowFRFTout)
         self.IQOutFigureLayout.addWidget(self.IQOutFigure)
 
@@ -1596,21 +1593,22 @@ class configPage(QMainWindow, Ui_MainWindow):
     def PrepareSNRSamples(self, value):
         self.SNRLineFigure.ax.cla()
         self.SNRLineFigure.ax.set_xlim(0, 100)
-        self.SNRLineFigure.ax.set_ylim(0, 50)
+        #self.SNRLineFigure.ax.set_ylim(0, 50)
         if len(self.SNRDataArray) >= 100:
             self.SNRDataArray = self.SNRDataArray[-100:]
         self.SNRDataArray.append(value)
-        SNRLine = Line2D(list(range(len(self.SNRDataArray))), self.SNRDataArray)
-        self.SNRLineFigure.ax.add_line(SNRLine)
+        # SNRLine = Line2D(list(range(len(self.SNRDataArray))), self.SNRDataArray)
+        # self.SNRLineFigure.ax.add_line(SNRLine)
+        self.SNRLineFigure.ax.plot(self.SNRDataArray)
         self.SNRLineFigure.draw()
         self.SNRLineFigure.flush_events()
 
-    def getIQdata(self, sourceData, Idata, Qdata, targetLen=1280, dataType='pilot'):
+    def getIQdata(self, sourceData, Qdata, Idata=[], targetLen=1280, dataType='pilot'):
         for i in range(int(len(sourceData)/4)):
             ivalue = int.from_bytes(sourceData[0:2], byteorder='big', signed=True)
             qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
             if dataType == 'pilot':
-                Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(65535, 2)))
+                Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(2, 26)))
             else:
                 Idata.append(ivalue/65535)
                 Qdata.append(qvalue/65535)
@@ -1628,10 +1626,9 @@ class configPage(QMainWindow, Ui_MainWindow):
             # print(Statistical)
             self.showBasebandStatistical(Statistical)
         elif flag == 2:
-            if(self.getIQdata(Statistical, self.IdataIn, self.QdataIn, 4096, 'IQin') == True):
+            if(self.getIQdata(Statistical, self.QdataIn, self.IdataIn, 4096, 'IQin') == True):
                 self.IQinFigure.ax.cla()
-                self.IQinFigure.ax.set_xlim(-0.3, 0.3)
-                self.IQinFigure.ax.set_ylim(-0.3, 0.3)
+                self.IQinFigure.ax.set_autoscale_on(True)
                 # print("In:", len(self.QdataIn), len(self.IdataIn))
                 self.IQinFigure.ax.scatter(self.IdataIn, self.QdataIn, 3)
                 self.IQinFigure.draw()
@@ -1641,10 +1638,9 @@ class configPage(QMainWindow, Ui_MainWindow):
                 self.IdataIn.clear()
                 self.QdataIn.clear()
         elif flag == 3:
-            if (self.getIQdata(Statistical, self.IdataOut, self.QdataOut, 4096, 'IQout') == True):
+            if (self.getIQdata(Statistical, self.QdataOut, self.IdataOut, 4096, 'IQout') == True):
                 self.IQOutFigure.ax.cla()
-                self.IQOutFigure.ax.set_xlim(-0.3, 0.3)
-                self.IQOutFigure.ax.set_ylim(-0.3, 0.3)
+                self.IQOutFigure.ax.set_autoscale_on(True)
                 # print("Out:", len(self.QdataOut), len(self.IdataOut))
                 self.IQOutFigure.ax.scatter(self.IdataOut, self.QdataOut, 3)
                 self.IQOutFigure.draw()
@@ -1654,19 +1650,13 @@ class configPage(QMainWindow, Ui_MainWindow):
                 self.IdataOut.clear()
                 self.QdataOut.clear()
         elif flag == 4:
-            if (self.getIQdata(Statistical, self.IdataPilot, self.QdataPilot, 1280, 'pilot') == True):
+            if (self.getIQdata(Statistical, self.QdataPilot, [] ,1280, 'pilot') == True):
                 self.LineFigure.ax.cla()
-                self.LineFigure.ax.set_xlim(0, len(self.QdataPilot))
-                self.LineFigure.ax.set_ylim(-0.2, 0.5)
-                self.IdataPilot = list(range(len(self.QdataPilot)))
-                # print("Pilot:", len(self.QdataPilot), len(self.IdataPilot))
-                self.line = Line2D(self.IdataPilot, self.QdataPilot)
-                self.LineFigure.ax.add_line(self.line)
+                self.LineFigure.ax.plot(self.QdataPilot)
                 self.LineFigure.draw()
                 # print("draw Pilot")
                 self.LineFigure.flush_events()
                 #print("IQPilot draw")
-                self.IdataPilot.clear()
                 self.QdataPilot.clear()
         elif flag == 5:
             # print(Statistical)
