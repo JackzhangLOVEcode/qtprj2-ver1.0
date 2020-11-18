@@ -5,7 +5,7 @@ from array import array
 from re import match
 from os.path import exists
 from mainWinUI import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout, QStyleFactory
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QIntValidator, QDoubleValidator
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -48,10 +48,10 @@ class StatisticThread(QThread):
         super(StatisticThread, self).__init__()
 
     def run(self):
-        global dataStatistical
-        dataStatistical = bytes([0])
         global portStatistical
         portStatistical = 7000
+        global statisticalQueue
+        statisticalQueue = queue.Queue(0)
         ipfile = open(specip, 'r', encoding='utf-8')
         str1 = ipfile.readline().strip()
         str2 = ipfile.readline().strip()
@@ -68,17 +68,15 @@ class StatisticThread(QThread):
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
-                #print('receive data ......')
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                #print(data)
-                dataStatistical = data
-                # print(dataStatistical)
+                statisticalQueue.put(data)
+                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
-                statisticalSocket.close()
+                print("数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
-            '''except OSError:
+            except OSError:
                 print("本地IP配置与IP配置文件中的IP不一致！！！")
-                break'''
+                pass
 
 class DataThread(QThread):
     def __int__(self):
@@ -1460,7 +1458,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         # print("singal_pwr_sum",data[10:12], singal_pwr_sum)
         self.singal_pwr_sum_show.setText(str(singal_pwr_sum))
         phase_est = int.from_bytes(data[12:14], byteorder='big', signed=True)
-        self.phase_est_show.setText(str(phase_est/8096*45))
+        self.phase_est_show.setText('{:.1f}'.format(phase_est/8096*45))
         o_freq_est_t = int.from_bytes(data[14:16], byteorder='big', signed=True)
         # print("o_freq_est_t:",data[14:16], o_freq_est_t)
         self.o_freq_est_t_show.setText(str(o_freq_est_t))
@@ -1522,7 +1520,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
         self.singal_pwr_sum_show_2.setText(str(singal_pwr_sum))
         phase_est = int.from_bytes(data[12:14], byteorder='big', signed=True)
-        self.phase_est_show_2.setText(str(phase_est / 8096 * 45))
+        self.phase_est_show_2.setText('{:.1f}'.format(phase_est / 8096 * 45))
         o_freq_est_t = int.from_bytes(data[14:16], byteorder='big', signed=True)
         self.o_freq_est_t_show_2.setText(str(o_freq_est_t))
         crc_error = int.from_bytes(data[16:17], byteorder='big')
@@ -1607,14 +1605,17 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNRLineFigure.draw()
         self.SNRLineFigure.flush_events()
 
-    def getIQdata(self, sourceData, Idata, Qdata, targetLen=1280):
+    def getIQdata(self, sourceData, Idata, Qdata, targetLen=1280, dataType='pilot'):
         for i in range(int(len(sourceData)/4)):
             ivalue = int.from_bytes(sourceData[0:2], byteorder='big', signed=True)
             qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
-            Idata.append(ivalue/65535)
-            Qdata.append(qvalue/65535)
+            if dataType == 'pilot':
+                Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(65535, 2)))
+            else:
+                Idata.append(ivalue/65535)
+                Qdata.append(qvalue/65535)
             sourceData = sourceData[4:]
-        if len(Idata) >= targetLen:
+        if len(Qdata) >= targetLen:
             #print("Idata:", Idata)
             return True
         else:
@@ -1627,36 +1628,43 @@ class configPage(QMainWindow, Ui_MainWindow):
             # print(Statistical)
             self.showBasebandStatistical(Statistical)
         elif flag == 2:
-            if(self.getIQdata(Statistical, self.IdataIn, self.QdataIn, 1024) == True):
+            if(self.getIQdata(Statistical, self.IdataIn, self.QdataIn, 4096, 'IQin') == True):
                 self.IQinFigure.ax.cla()
-                self.IQinFigure.ax.set_xlim(-0.5, 0.5)
-                self.IQinFigure.ax.set_ylim(-0.5, 0.5)
+                self.IQinFigure.ax.set_xlim(-0.3, 0.3)
+                self.IQinFigure.ax.set_ylim(-0.3, 0.3)
+                # print("In:", len(self.QdataIn), len(self.IdataIn))
                 self.IQinFigure.ax.scatter(self.IdataIn, self.QdataIn, 3)
                 self.IQinFigure.draw()
+                # print("draw IQ in")
                 self.IQinFigure.flush_events()
                 #print("IQdata in")
                 self.IdataIn.clear()
                 self.QdataIn.clear()
         elif flag == 3:
-            if (self.getIQdata(Statistical, self.IdataOut, self.QdataOut, 1024) == True):
+            if (self.getIQdata(Statistical, self.IdataOut, self.QdataOut, 4096, 'IQout') == True):
                 self.IQOutFigure.ax.cla()
-                self.IQOutFigure.ax.set_xlim(-0.5, 0.5)
-                self.IQOutFigure.ax.set_ylim(-0.5, 0.5)
+                self.IQOutFigure.ax.set_xlim(-0.3, 0.3)
+                self.IQOutFigure.ax.set_ylim(-0.3, 0.3)
+                # print("Out:", len(self.QdataOut), len(self.IdataOut))
                 self.IQOutFigure.ax.scatter(self.IdataOut, self.QdataOut, 3)
                 self.IQOutFigure.draw()
+                # print("draw IQ out")
                 self.IQOutFigure.flush_events()
                 #print("IQdata out")
                 self.IdataOut.clear()
                 self.QdataOut.clear()
         elif flag == 4:
-            if (self.getIQdata(Statistical, self.IdataPilot, self.QdataPilot, 320) == True):
+            if (self.getIQdata(Statistical, self.IdataPilot, self.QdataPilot, 1280, 'pilot') == True):
                 self.LineFigure.ax.cla()
-                self.LineFigure.ax.set_xlim(-0.5, 0.5)
-                self.LineFigure.ax.set_ylim(-0.5, 0.5)
+                self.LineFigure.ax.set_xlim(0, len(self.QdataPilot))
+                self.LineFigure.ax.set_ylim(-0.2, 0.5)
+                self.IdataPilot = list(range(len(self.QdataPilot)))
+                # print("Pilot:", len(self.QdataPilot), len(self.IdataPilot))
                 self.line = Line2D(self.IdataPilot, self.QdataPilot)
                 self.LineFigure.ax.add_line(self.line)
                 self.LineFigure.draw()
-                # self.LineFigure.flush_events()
+                # print("draw Pilot")
+                self.LineFigure.flush_events()
                 #print("IQPilot draw")
                 self.IdataPilot.clear()
                 self.QdataPilot.clear()
@@ -1667,11 +1675,9 @@ class configPage(QMainWindow, Ui_MainWindow):
             print("无效的统计数据")
 
     def updateStatistical(self):
-        # print('timer run')
-        if len(dataStatistical) > 0:
-            self.showStatistical(dataStatistical)
-        else:
-            print("暂未收到统计数据")
+        if not statisticalQueue.empty():
+            # print("show picture!")
+            self.showStatistical(statisticalQueue.get())
 
     def statisticalTimer(self):
         self.timer.start(10)
@@ -1719,6 +1725,7 @@ if __name__ == "__main__":
     dataThread = DataThread()
     dataThread.start()
     app = QApplication(sys.argv)
+    app.setStyle(QStyleFactory.create('Windows'))
     mainWin = configPage()
     mainWin.show()
     sys.exit(app.exec_())
