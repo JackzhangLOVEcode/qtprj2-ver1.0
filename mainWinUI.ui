@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1388</width>
+    <width>1396</width>
     <height>880</height>
    </rect>
   </property>
@@ -351,113 +351,6 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="stop">
-      <property name="maximumSize">
-       <size>
-        <width>140</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>停止统计数据</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="stopData">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>停止发送数据</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QPushButton" name="sendData">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>发送数据</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="start">
-      <property name="maximumSize">
-       <size>
-        <width>140</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>接收统计数据</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QPushButton" name="sendConfig">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>发送当前配置</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="setDefault">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>发送默认配置</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="2" colspan="4">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
@@ -479,7 +372,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -609,14 +502,14 @@
             <widget class="QComboBox" name="udpfifo_reset_obj">
              <property name="font">
               <font>
-               <pointsize>16</pointsize>
+               <pointsize>18</pointsize>
               </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -665,6 +558,11 @@
         </item>
         <item row="1" column="0">
          <widget class="QGroupBox" name="groupBox_12">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>基带收发配置</string>
           </property>
@@ -869,7 +767,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -945,7 +843,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>TXandRX</string>
@@ -988,7 +886,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -1031,7 +929,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -1101,7 +999,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>UDP</string>
@@ -1165,7 +1063,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -1262,7 +1160,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>normal</string>
@@ -1368,13 +1266,14 @@
              <property name="font">
               <font>
                <pointsize>16</pointsize>
+               <kerning>true</kerning>
               </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>MS</string>
@@ -1473,7 +1372,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>QPSK</string>
@@ -1583,10 +1482,10 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
-              <string>outterLoop</string>
+              <string>外环</string>
              </property>
              <property name="currentIndex">
               <number>0</number>
@@ -1599,12 +1498,12 @@
              </property>
              <item>
               <property name="text">
-               <string>outterLoop</string>
+               <string>外环</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>innerLoop</string>
+               <string>内环</string>
               </property>
              </item>
             </widget>
@@ -1644,10 +1543,10 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
-              <string>channel 0</string>
+              <string>CH 0</string>
              </property>
              <property name="currentIndex">
               <number>0</number>
@@ -1660,12 +1559,12 @@
              </property>
              <item>
               <property name="text">
-               <string>channel 0</string>
+               <string>CH 0</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>channel 1</string>
+               <string>CH 1</string>
               </property>
              </item>
             </widget>
@@ -1729,7 +1628,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>QPSK</string>
@@ -1872,7 +1771,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -2101,7 +2000,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>enable</string>
@@ -2339,7 +2238,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -2403,7 +2302,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -2569,6 +2468,11 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>配置区域二</string>
           </property>
@@ -2692,7 +2596,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -2789,7 +2693,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -2964,7 +2868,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>close</string>
@@ -3250,7 +3154,7 @@
               <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
              <property name="editable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="currentText">
               <string>MMSE</string>
@@ -3388,6 +3292,11 @@
             <width>300</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
           </property>
           <property name="title">
            <string>预留区</string>
@@ -7297,6 +7206,114 @@
       </widget>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="start">
+      <property name="maximumSize">
+       <size>
+        <width>140</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>接收统计数据</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="stop">
+      <property name="maximumSize">
+       <size>
+        <width>140</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>停止统计数据</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="setDefault">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>发送默认配置</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="sendConfig">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>发送当前配置</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QPushButton" name="sendData">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>发送数据</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QPushButton" name="stopData">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>停止发送数据</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -7304,7 +7321,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1388</width>
+     <width>1396</width>
      <height>23</height>
     </rect>
    </property>
