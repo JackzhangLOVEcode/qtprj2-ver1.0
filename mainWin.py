@@ -345,12 +345,18 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Reserv_U1_label.setVisible(False)
 
     def bindSingalandSlot(self):
-        self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
-        self.setDefault.clicked.connect(self.setDefaultConfig)
+        #self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
+        #self.setDefault.clicked.connect(self.setDefaultConfig)
+        self.sendBBConfig.clicked.connect(self.sendConfigtoBaseBand)
+        self.sendRFConfig.clicked.connect(self.sendConfigtoRF)
+        self.sendLDPCConfig.clicked.connect(self.sendConfigtoLDPC)
+        self.setBBDefault.clicked.connect(self.setBBConfig)
+        self.setRFDefault.clicked.connect(self.setRFConfig)
+        self.setLDPCDefault.clicked.connect(self.setLDPCConfig)
         self.start.clicked.connect(self.statisticalTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
-        self.sendData.clicked.connect(self.startDataTimer)
-        self.stopData.clicked.connect(self.stopDataTimerandDataSource)
+        #self.sendData.clicked.connect(self.startDataTimer)
+        #self.stopData.clicked.connect(self.stopDataTimerandDataSource)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
 
     # 以下代码同步于哈工大王老师的代码
@@ -1303,7 +1309,85 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfigBytes = bytes(self.LDPCConfig)
 
-    def connectDefaultConfig(self):
+    def setBBDefaultConfig(self):
+        # 设置发端默认参数
+        self.papr_en_obj.setChecked(True)
+        self.depapr_thr_obj.setValue(38050)
+        self.depapr_gain_obj.setValue(16384)
+        self.MType_tx_obj.setCurrentIndex(0)
+        self.car_num_tx_obj.setValue(0xfffff)
+        self.Alpha_tx_obj.setValue(0.5)
+        self.pilot_factor_obj.setValue(16384)
+        self.pss_factor_obj.setValue(16384)
+        self.ModeBSorMS_obj.setCurrentIndex(1)
+        self.Sys_reset_obj.setChecked(False)
+        self.Sys_enble_obj.setChecked(True)
+        self.ModeUDPorPN_obj.setCurrentIndex(0)
+        self.Base_loop_en_obj.setCurrentIndex(0)
+        self.Rx_enb_obj.setCurrentIndex(0)
+        self.Rx_channel_obj.setCurrentIndex(0)
+        self.Rx_delay_obj.setValue(20)
+        self.Time_trig2tx_obj.setValue(12800)
+        self.Time_tx_hold_obj.setValue(34000)
+        self.ms_T_sync2trig_obj.setValue(21880)
+        self.bs_tdd_time_gap_obj.setValue(100000)
+        self.bs_tx_time_gap_obj.setValue(50000)
+        self.Trig_gap_cnt_obj.setValue(100000)
+        self.alway_tx_obj.setCurrentIndex(0)
+        self.tx1_en_obj.setCurrentIndex(1)
+        self.udpfifo_reset_obj.setCurrentIndex(0)
+        self.rx1_en_obj.setCurrentIndex(1)
+        self.rx2_en_obj.setCurrentIndex(0)
+        self.TDD_EN_obj.setCurrentIndex(1)
+        self.UDP_loop_obj.setCurrentIndex(0)
+        self.Reserv_B0_obj.setChecked(False)
+        self.Reserv_B1_obj.setChecked(False)
+
+        # 设置收端默认参数
+        self.MType_rx_obj.setCurrentIndex(0)
+        self.agc_en_obj.setCurrentIndex(1)
+        self.frft_en_obj.setCurrentIndex(1)
+        self.car_num_rx_obj.setValue(0xfffff)
+        self.i_freq_est_obj.setValue(0)
+        self.sync_factor_obj.setValue(20384)
+        self.equa_factor_obj.setValue(4122)
+        self.Alpha_rx_obj.setValue(0.5)
+        self.equa_amp_obj.setValue(16384)
+        self.equa_amp_en_obj.setCurrentIndex(1)
+        self.car_thr1_obj.setValue(102656)
+        self.car_thr2_obj.setValue(6250000)
+        self.car_thr3_obj.setValue(625000000)
+        self.mmse_thr_obj.setValue(1000)
+        self.scale_equa_obj.setValue(0)
+        self.scale_fft_obj.setValue(0)
+        self.phase_en_obj.setCurrentIndex(1)
+        self.phase_factor_obj.setValue(2048)
+        self.freq_offset_en_obj.setCurrentIndex(1)
+        self.LDPC_en_obj.setCurrentIndex(0)
+        self.MMSEorLS_obj.setCurrentIndex(0)
+        self.as_time_trig2tx_obj.setValue(17339)
+        self.as_trig2tx_cnt_obj.setValue(58735)
+
+    def setRFDefaultConfig(self):
+        # 设置射频参数
+        self.Amplifier_obj.setCurrentIndex(0)
+        self.filter3_3p5G_obj.setCurrentIndex(0)
+        self.filter3p5_4G_obj.setCurrentIndex(0)
+        self.filter4p5_5G_obj.setCurrentIndex(0)
+        self.filter5_5p5G_obj.setCurrentIndex(0)
+
+    def setLDPCDefaultConfig(self):
+        # 设置LDPC配置参数
+        self.LDPC_loop_obj.setCurrentIndex(0)
+        self.Pause_obj.setCurrentIndex(0)
+        self.Mtype_txldpc_obj.setCurrentIndex(0)
+        self.Mtype_rxldpc_obj.setCurrentIndex(0)
+        self.car_num_txldpc_obj.setValue(0xfffff)
+        self.car_num_rxldpc_obj.setValue(0xfffff)
+        self.LDPC_reset_obj.setChecked(False)
+        self.LDPC_UDPorPN_obj.setCurrentIndex(0)
+
+    '''def connectDefaultConfig(self):
         # 设置发端默认参数
         self.papr_en_obj.setChecked(True)
         self.depapr_thr_obj.setValue(38050)
@@ -1377,28 +1461,17 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.car_num_txldpc_obj.setValue(0xfffff)
         self.car_num_rxldpc_obj.setValue(0xfffff)
         self.LDPC_reset_obj.setChecked(False)
-        self.LDPC_UDPorPN_obj.setCurrentIndex(0)
+        self.LDPC_UDPorPN_obj.setCurrentIndex(0)'''
 
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
         self.portBB = int(self.BBPort_obj.text())
-        self.ipRF = self.RFIP_obj.text()
-        self.portRF = int(self.RFPort_obj.text())
-        self.ipLDPC = self.LDPC_IP_obj.text()
-        self.portLDPC = int(self.LDPC_Port_obj.text())
         addrBB = (self.ipBB, self.portBB)
-        addrRF = (self.ipRF, self.portRF)
-        addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             configSocket.bind((self.ulocalip, 8000))
         except OSError:
             print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
-        self.connectRFConfigData()
-        print(self.RFConfig)
-        for configRF in self.RFConfig:
-            configSocket.sendto(configRF, addrRF)
-            print(configRF)
         self.connectTXConfigData()
         print(self.TXConfig)
         print(self.TXConfigBytes)
@@ -1408,14 +1481,50 @@ class configPage(QMainWindow, Ui_MainWindow):
         print(self.RXConfig)
         print(self.RXConfigBytes)
         configSocket.sendto(self.RXConfigBytes, addrBB)
+        configSocket.close()
+
+    def sendConfigtoRF(self):
+        self.ipRF = self.RFIP_obj.text()
+        self.portRF = int(self.RFPort_obj.text())
+        addrRF = (self.ipRF, self.portRF)
+        configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            configSocket.bind((self.ulocalip, 8001))
+        except OSError:
+            print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
+        self.connectRFConfigData()
+        print(self.RFConfig)
+        for configRF in self.RFConfig:
+            configSocket.sendto(configRF, addrRF)
+        configSocket.close()
+
+    def sendConfigtoLDPC(self):
+        self.ipLDPC = self.LDPC_IP_obj.text()
+        self.portLDPC = int(self.LDPC_Port_obj.text())
+        addrLDPC = (self.ipLDPC, self.portLDPC)
+        configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            configSocket.bind((self.ulocalip, 8002))
+        except OSError:
+            print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
         self.connectLDPCConfig()
         print(self.LDPCConfig)
         configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
         configSocket.close()
 
-    def setDefaultConfig(self):
-        self.connectDefaultConfig()
+    def setBBConfig(self):
+        self.setBBDefaultConfig()
         self.sendConfigtoBaseBand()
+    def setRFConfig(self):
+        self.setRFDefaultConfig()
+        self.sendConfigtoRF()
+    def setLDPCConfig(self):
+        self.setLDPCDefaultConfig()
+        self.sendConfigtoLDPC()
+
+    '''def setDefaultConfig(self):
+        self.connectDefaultConfig()
+        self.sendConfigtoBaseBand()'''
 
     '''def count_dot(self, value):
         self.beg_x = 0
