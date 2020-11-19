@@ -104,7 +104,6 @@ class DataThread(QThread):
                 except socket.timeout:
                     # print('dataSocket timeout')
                     pass
-        # socketSource.close()
 
 '''class showConstellation():
     def __init__(self, length, height, label):
