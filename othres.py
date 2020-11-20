@@ -1,7 +1,7 @@
 import socket
 
 
-def getChosenIP(segment: "输入目标网段,格式为字符串"):
+def getChosenIP(segment):
     hostName = socket.gethostname()
     ipAddrInfoList = socket.getaddrinfo(hostName, None, 2)
     ipList = []
@@ -10,5 +10,6 @@ def getChosenIP(segment: "输入目标网段,格式为字符串"):
     for ip in ipList:
         if segment == ip.split(".")[2]:
             return ip
-    print('本机所有网卡无目标网段IP，请检查本机IP设置或者重新设置目标网段！！')
-    return '127.0.0.1'
+    print('本机所有无网段为%s的IP，请检查本机IP设置！！'%segment)
+    print('本机IP为：', ipList)
+    return ipList[0]

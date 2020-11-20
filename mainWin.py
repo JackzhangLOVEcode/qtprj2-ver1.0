@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import sys, math, socket, time, queue, struct, encodings.idna, stopThreading
+import sys, math, socket, time, queue, encodings.idna, stopThreading
 from threading import Thread
 from array import array
 from re import match
@@ -10,7 +10,7 @@ from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QIntValidator, QDoubleValidator
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from matplotlib.lines import Line2D
+from othres import getChosenIP
 
 fpgalist = ['FPGA1','FPGA2','FPGA3','FPGA4']
 specfile = 'specline.txt'
@@ -35,13 +35,13 @@ Iport = 6005
 framedatalen = 235
 zerodata = bytearray([1 for i in range(256)])
 
-def bytesToFloat(h1, h2, h3, h4):
+'''def bytesToFloat(h1, h2, h3, h4):
     ba = bytearray()
     ba.append(h1)
     ba.append(h2)
     ba.append(h3)
     ba.append(h4)
-    return struct.unpack("!f", ba)[0]
+    return struct.unpack("!f", ba)[0]'''
 
 class StatisticThread(QThread):
     def __int__(self):
@@ -52,19 +52,10 @@ class StatisticThread(QThread):
         portStatistical = 7000
         global statisticalQueue
         statisticalQueue = queue.Queue(0)
-        ipfile = open(specip, 'r', encoding='utf-8')
-        str1 = ipfile.readline().strip()
-        str2 = ipfile.readline().strip()
-        pattern = '[1-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
-        if match(pattern, str1) and match(pattern, str2) :
-            ulocalip = str2
-        else:
-            hostname = socket.gethostname()
-            ulocalip = socket.gethostbyname(hostname)
         while True:
             try:
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ulocalip, portStatistical)
+                addr = (ipaddr, portStatistical)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
@@ -72,13 +63,33 @@ class StatisticThread(QThread):
                 statisticalQueue.put(data)
                 # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
-                print("数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            except OSError:
-                print("本地IP配置与IP配置文件中的IP不一致！！！")
+                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
 
-class DataThread(QThread):
+class LDPCStatisticThread(QThread):
+    def __int__(self):
+        super(LDPCStatisticThread, self).__init__()
+
+    def run(self):
+        global LDPCportStatistical
+        LDPCportStatistical = 7010
+        global LDPCstatisticalQueue
+        LDPCstatisticalQueue = queue.Queue(0)
+        while True:
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                addr = (ipaddr, LDPCportStatistical)
+                buffsize = 1500
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(1)
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                LDPCstatisticalQueue.put(data)
+                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+            except socket.timeout:
+                # print("LDPC数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+                pass
+
+'''class DataThread(QThread):
     def __int__(self):
         super(DataThread, self).__init__()
 
@@ -106,7 +117,7 @@ class DataThread(QThread):
                     pass
         # socketSource.close()
 
-'''class showConstellation():
+    class showConstellation():
     def __init__(self, length, height, label):
         self.draw = QPainter()
         self.picture = QPixmap(length, height)
@@ -149,7 +160,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon('rss1.ico'))
         self.init()
         self.timer = QTimer()
-        self.dataTimer = QTimer()
+        # self.dataTimer = QTimer()
+        self.LDPCtimer = QTimer()
         self.bindSingalandSlot()
         # 以下程序同步于哈工大王老师的代码
         self.up_udp_socket = None
@@ -355,9 +367,12 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setLDPCDefault.clicked.connect(self.setLDPCConfig)
         self.start.clicked.connect(self.statisticalTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
+        self.start_LDPC.clicked.connect(self.LDPCStatisticalTimer)
+        self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
         #self.sendData.clicked.connect(self.startDataTimer)
         #self.stopData.clicked.connect(self.stopDataTimerandDataSource)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
+        self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
 
     # 以下代码同步于哈工大王老师的代码
     def ConfigFileExist(self, Filename):
@@ -1387,91 +1402,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPC_reset_obj.setChecked(False)
         self.LDPC_UDPorPN_obj.setCurrentIndex(0)
 
-    '''def connectDefaultConfig(self):
-        # 设置发端默认参数
-        self.papr_en_obj.setChecked(True)
-        self.depapr_thr_obj.setValue(38050)
-        self.depapr_gain_obj.setValue(16384)
-        self.MType_tx_obj.setCurrentIndex(0)
-        self.car_num_tx_obj.setValue(0xfffff)
-        self.Alpha_tx_obj.setValue(0.5)
-        self.pilot_factor_obj.setValue(16384)
-        self.pss_factor_obj.setValue(16384)
-        self.ModeBSorMS_obj.setCurrentIndex(1)
-        self.Sys_reset_obj.setChecked(False)
-        self.Sys_enble_obj.setChecked(True)
-        self.ModeUDPorPN_obj.setCurrentIndex(0)
-        self.Base_loop_en_obj.setCurrentIndex(0)
-        self.Rx_enb_obj.setCurrentIndex(0)
-        self.Rx_channel_obj.setCurrentIndex(0)
-        self.Rx_delay_obj.setValue(20)
-        self.Time_trig2tx_obj.setValue(12800)
-        self.Time_tx_hold_obj.setValue(34000)
-        self.ms_T_sync2trig_obj.setValue(21880)
-        self.bs_tdd_time_gap_obj.setValue(100000)
-        self.bs_tx_time_gap_obj.setValue(50000)
-        self.Trig_gap_cnt_obj.setValue(100000)
-        self.alway_tx_obj.setCurrentIndex(0)
-        self.tx1_en_obj.setCurrentIndex(1)
-        self.udpfifo_reset_obj.setCurrentIndex(0)
-        self.rx1_en_obj.setCurrentIndex(1)
-        self.rx2_en_obj.setCurrentIndex(0)
-        self.TDD_EN_obj.setCurrentIndex(1)
-        self.UDP_loop_obj.setCurrentIndex(0)
-        self.Reserv_B0_obj.setChecked(False)
-        self.Reserv_B1_obj.setChecked(False)
-
-        # 设置收端默认参数
-        self.MType_rx_obj.setCurrentIndex(0)
-        self.agc_en_obj.setCurrentIndex(1)
-        self.frft_en_obj.setCurrentIndex(1)
-        self.car_num_rx_obj.setValue(0xfffff)
-        self.i_freq_est_obj.setValue(0)
-        self.sync_factor_obj.setValue(20384)
-        self.equa_factor_obj.setValue(4122)
-        self.Alpha_rx_obj.setValue(0.5)
-        self.equa_amp_obj.setValue(16384)
-        self.equa_amp_en_obj.setCurrentIndex(1)
-        self.car_thr1_obj.setValue(102656)
-        self.car_thr2_obj.setValue(6250000)
-        self.car_thr3_obj.setValue(625000000)
-        self.mmse_thr_obj.setValue(1000)
-        self.scale_equa_obj.setValue(0)
-        self.scale_fft_obj.setValue(0)
-        self.phase_en_obj.setCurrentIndex(1)
-        self.phase_factor_obj.setValue(2048)
-        self.freq_offset_en_obj.setCurrentIndex(1)
-        self.LDPC_en_obj.setCurrentIndex(0)
-        self.MMSEorLS_obj.setCurrentIndex(0)
-        self.as_time_trig2tx_obj.setValue(17339)
-        self.as_trig2tx_cnt_obj.setValue(58735)
-
-        # 设置射频参数
-        self.Amplifier_obj.setCurrentIndex(0)
-        self.filter3_3p5G_obj.setCurrentIndex(0)
-        self.filter3p5_4G_obj.setCurrentIndex(0)
-        self.filter4p5_5G_obj.setCurrentIndex(0)
-        self.filter5_5p5G_obj.setCurrentIndex(0)
-
-        #设置LDPC配置参数
-        self.LDPC_loop_obj.setCurrentIndex(0)
-        self.Pause_obj.setCurrentIndex(0)
-        self.Mtype_txldpc_obj.setCurrentIndex(0)
-        self.Mtype_rxldpc_obj.setCurrentIndex(0)
-        self.car_num_txldpc_obj.setValue(0xfffff)
-        self.car_num_rxldpc_obj.setValue(0xfffff)
-        self.LDPC_reset_obj.setChecked(False)
-        self.LDPC_UDPorPN_obj.setCurrentIndex(0)'''
-
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
         self.portBB = int(self.BBPort_obj.text())
         addrBB = (self.ipBB, self.portBB)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((self.ulocalip, 8000))
+            configSocket.bind((ipaddr, 8000))
         except OSError:
-            print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
+            print('发送基带配置：IP端口绑定失败')
+            return
         self.connectTXConfigData()
         print(self.TXConfig)
         print(self.TXConfigBytes)
@@ -1482,6 +1422,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         print(self.RXConfigBytes)
         configSocket.sendto(self.RXConfigBytes, addrBB)
         configSocket.close()
+        return
 
     def sendConfigtoRF(self):
         self.ipRF = self.RFIP_obj.text()
@@ -1489,14 +1430,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         addrRF = (self.ipRF, self.portRF)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((self.ulocalip, 8001))
+            configSocket.bind((ipaddr, 8001))
         except OSError:
-            print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
+            print('发送射频配置：IP端口绑定失败')
+            return
         self.connectRFConfigData()
         print(self.RFConfig)
         for configRF in self.RFConfig:
             configSocket.sendto(configRF, addrRF)
         configSocket.close()
+        return
 
     def sendConfigtoLDPC(self):
         self.ipLDPC = self.LDPC_IP_obj.text()
@@ -1504,13 +1447,15 @@ class configPage(QMainWindow, Ui_MainWindow):
         addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((self.ulocalip, 8002))
+            configSocket.bind((ipaddr, 8002))
         except OSError:
-            print('本地IP绑定失败，请核对本地IP与配置文件specip.txt中的设置是否一致')
+            print('发送LDPC设置：IP端口绑定失败')
+            return
         self.connectLDPCConfig()
         print(self.LDPCConfig)
         configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
         configSocket.close()
+        return
 
     def setBBConfig(self):
         self.setBBDefaultConfig()
@@ -1778,15 +1723,29 @@ class configPage(QMainWindow, Ui_MainWindow):
             # print("show picture!")
             self.showStatistical(statisticalQueue.get())
 
+    def updateLDPCStatistical(self):
+        if not LDPCstatisticalQueue.empty():
+            self.showStatistical(LDPCstatisticalQueue.get())
+
     def statisticalTimer(self):
         self.timer.start(10)
+        print('调制解调统计数据开始更新')
         self.timer.timeout.connect(self.updateStatistical)
 
     def killStatisticalTimer(self):
-        print('statistical timer stop')
+        print('停止显示调制解调统计数据')
         self.timer.stop()
 
-    def startDataTimer(self):
+    def LDPCStatisticalTimer(self):
+        self.LDPCtimer.start(10)
+        print('LDPC统计数据开始更新')
+        self.LDPCtimer.timeout.connect(self.updateLDPCStatistical)
+
+    def killLDPCStatisticalTimer(self):
+        print('停止显示LDPC统计数据')
+        self.LDPCtimer.stop()
+
+    '''def startDataTimer(self):
         self.dataTimer.start(1)
         self.dataTimer.timeout.connect(self.sendDataFromSource)
 
@@ -1806,7 +1765,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         global startFlag
         startFlag = False
         self.dataTimer.stop()
-        print('data stop')
+        print('data stop')'''
 
     def setStatisticalPort(self):
         global portStatistical
@@ -1817,13 +1776,22 @@ class configPage(QMainWindow, Ui_MainWindow):
             if(self.statisticalPort_obj.hasFocus()):
                 QMessageBox.information(self, "Tips", "1024 <= statisticalPort < 65535")
 
+    def setLDPCStatisticalPort(self):
+        global LDPCportStatistical
+        port = int(self.LDPCstatisticalPort_obj.text())
+        if 1024 <= port < 65535:
+            LDPCportStatistical = port
+        else:
+            if(self.LDPCstatisticalPort_obj.hasFocus()):
+                QMessageBox.information(self, "Tips", "1024 <= LDPCportStatistical < 65535")
 
+
+ipaddr = getChosenIP('1')
 if __name__ == "__main__":
     statisticThread = StatisticThread()
     statisticThread.start()
-    dataThread = DataThread()
-    dataThread.start()
-    # QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    statisticThreadLDPC = LDPCStatisticThread()
+    statisticThreadLDPC.start()
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Windows'))
     mainWin = configPage()
