@@ -115,35 +115,7 @@ class LDPCStatisticThread(QThread):
                 except socket.timeout:
                     # print('dataSocket timeout')
                     pass
-        # socketSource.close()
-
-    class showConstellation():
-    def __init__(self, length, height, label):
-        self.draw = QPainter()
-        self.picture = QPixmap(length, height)
-        self.y_height = height
-        self.label = label
-
-    def count_dot(self, data, multiplier=1, addend=0):
-
-        self.data = data
-        self.picture.fill(Qt.white)
-        for i in range(int(len(self.data)/8)):
-            imData = bytesToFloat(self.data[0], self.data[1], self.data[2], self.data[3])
-            reData = bytesToFloat(self.data[4], self.data[5], self.data[6], self.data[7])
-            self.data = self.data[8:]
-            x = imData * multiplier + addend
-            y = reData * multiplier + addend
-            self.end_x = x
-            self.end_y = self.y_height - y
-            self.uptate_show()
-        self.label.setPixmap(self.picture)
-
-    def uptate_show(self):
-        self.draw.begin(self.picture)
-        self.draw.setPen(QPen(QColor("red"), 2))
-        self.draw.drawPoint(QPoint(self.end_x, self.end_y))
-        self.draw.end()'''
+        # socketSource.close()'''
 
 class Figure_Canvas(FigureCanvas):
     def __init__(self,parent=None,width=3.9,height=2.7,dpi=100):
@@ -355,22 +327,35 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Reserv_U0_label.setVisible(False)
         self.Reserv_U1_obj.setVisible(False)
         self.Reserv_U1_label.setVisible(False)
+        self.Rx_channel_obj.setVisible(False)
+        self.Rx_channel_label.setVisible(False)
+        self.over_flag_rx_show_2.setVisible(False)
+        self.over_flag_rx_label_2.setVisible(False)
+        self.FIFOEmpty_show_2.setVisible(False)
+        self.FIFOEmpty_label_2.setVisible(False)
+        self.phase_est_show_2.setVisible(False)
+        self.phase_est_label_2.setVisible(False)
+        self.o_freq_est_t_show_2.setVisible(False)
+        self.o_freq_est_t_label_2.setVisible(False)
+        self.singal_pwr_sum_show_2.setVisible(False)
+        self.singal_pwr_sum_label_2.setVisible(False)
+        self.noise_pwr_sum_show_2.setVisible(False)
+        self.noise_pwr_sum_label_2.setVisible(False)
+        self.SNR_current_show_2.setVisible(False)
+        self.SNR_current_label_2.setVisible(False)
+
 
     def bindSingalandSlot(self):
-        #self.sendConfig.clicked.connect(self.sendConfigtoBaseBand)
-        #self.setDefault.clicked.connect(self.setDefaultConfig)
-        self.sendBBConfig.clicked.connect(self.sendConfigtoBaseBand)
+        self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
         self.sendRFConfig.clicked.connect(self.sendConfigtoRF)
-        self.sendLDPCConfig.clicked.connect(self.sendConfigtoLDPC)
-        self.setBBDefault.clicked.connect(self.setBBConfig)
+        #self.sendLDPCConfig.clicked.connect(self.sendConfigtoLDPC)
+        self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
         self.setRFDefault.clicked.connect(self.setRFConfig)
-        self.setLDPCDefault.clicked.connect(self.setLDPCConfig)
+        #self.setLDPCDefault.clicked.connect(self.setLDPCConfig)
         self.start.clicked.connect(self.statisticalTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
         self.start_LDPC.clicked.connect(self.LDPCStatisticalTimer)
         self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
-        #self.sendData.clicked.connect(self.startDataTimer)
-        #self.stopData.clicked.connect(self.stopDataTimerandDataSource)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
         self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
 
@@ -1169,24 +1154,17 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def connectRFConfigData(self):
         self.RFConfig.clear()
-        config = [0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
+        AmplifierConfig = [0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
         if (self.Amplifier_obj.currentIndex() == 1):
-            self.RFConfig.append(bytes(config))
+            self.RFConfig.append(AmplifierConfig)
         else:
-            config[19] = 0x00
-            self.RFConfig.append(bytes(config))
-        if(self.filter3_3p5G_obj.currentIndex() == 1):
-            config = [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01]
-            self.RFConfig.append(bytes(config))
-        if(self.filter3p5_4G_obj.currentIndex() == 1):
-            config = [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-            self.RFConfig.append(bytes(config))
-        if(self.filter4p5_5G_obj.currentIndex() == 1):
-            config = [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00]
-            self.RFConfig.append(bytes(config))
-        if(self.filter5_5p5G_obj.currentIndex() == 1):
-            config = [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
-            self.RFConfig.append(bytes(config))
+            AmplifierConfig[19] = 0x00
+            self.RFConfig.append(AmplifierConfig)
+        filterArray = [[0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]]
+        self.RFConfig.append(filterArray[self.filterOption.currentIndex()])
 
     def calculateValidBitNum(self, car_num):
         car = 0
@@ -1214,7 +1192,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         papr_en = 1 if self.papr_en_obj.isChecked() else 0
         self.TXConfig.extend((papr_en).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.depapr_thr_obj.value()).to_bytes(3, byteorder='big'))
-        self.TXConfig.extend((self.depapr_gain_obj.value()).to_bytes(2, byteorder='big'))
+        depar_gain = int(1/self.depapr_gain_obj.value()*math.pow(2, 14))
+        self.TXConfig.extend((depar_gain).to_bytes(2, byteorder='big'))
         self.TXConfig.extend((self.MType_tx_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.TXConfig.extend((self.car_num_tx_obj.value()).to_bytes(3, byteorder='big'))
         self.TXConfig.extend(int((self.Alpha_tx_obj.value() * 32768)).to_bytes(3, byteorder='big'))
@@ -1266,7 +1245,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.equa_factor_obj.value()).to_bytes(2, byteorder='big'))
         Alpha_rx = int(self.Alpha_rx_obj.value()*32768)
         self.RXConfig.extend((Alpha_rx).to_bytes(3, byteorder='big'))
-        self.RXConfig.extend((self.equa_amp_obj.value()).to_bytes(2, byteorder='big'))
+        equa_amp = int(self.equa_amp_obj.value() * math.pow(2, 14))
+        self.RXConfig.extend((equa_amp).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.equa_amp_en_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.car_thr1_obj.value()).to_bytes(4, byteorder='big'))
         self.RXConfig.extend((self.car_thr2_obj.value()).to_bytes(4, byteorder='big'))
@@ -1300,16 +1280,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend((flag).to_bytes(1, byteorder='big'))
         self.LDPCConfig.extend((self.LDPC_loop_obj.currentIndex()).to_bytes(1, byteorder='big'))
         self.LDPCConfig.extend((self.Pause_obj.currentIndex()).to_bytes(1, byteorder='big'))
-        self.LDPCConfig.extend((self.Mtype_txldpc_obj.currentIndex()).to_bytes(1, byteorder='big'))
-        self.LDPCConfig.extend((self.Mtype_rxldpc_obj.currentIndex()).to_bytes(1, byteorder='big'))
-        self.LDPCConfig.extend((self.car_num_txldpc_obj.value()).to_bytes(3, byteorder='big'))
-        self.LDPCConfig.extend((self.car_num_rxldpc_obj.value()).to_bytes(3, byteorder='big'))
-        if self.calculateValidBitNum(self.car_num_txldpc_obj.value()) > 7:
-            modeTx = self.calculateValidBitNum(self.car_num_txldpc_obj.value()) - 8 + modeTable[self.Mtype_txldpc_obj.currentIndex()]
+        self.LDPCConfig.extend((self.MType_tx_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.MType_rx_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.LDPCConfig.extend((self.car_num_tx_obj.value()).to_bytes(3, byteorder='big'))
+        self.LDPCConfig.extend((self.car_num_rx_obj.value()).to_bytes(3, byteorder='big'))
+        if self.calculateValidBitNum(self.car_num_tx_obj.value()) > 7:
+            modeTx = self.calculateValidBitNum(self.car_num_tx_obj.value()) - 8 + modeTable[self.MType_tx_obj.currentIndex()]
         else:
             modeTx = 255
-        if self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) > 7:
-            modeRx = self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) - 8 + modeTable[self.Mtype_rxldpc_obj.currentIndex()]
+        if self.calculateValidBitNum(self.car_num_rx_obj.value()) > 7:
+            modeRx = self.calculateValidBitNum(self.car_num_rx_obj.value()) - 8 + modeTable[self.MType_rx_obj.currentIndex()]
         else:
             modeRx = 255
         self.LDPCConfig.extend((modeTx).to_bytes(1, byteorder='big'))
@@ -1328,7 +1308,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         # 设置发端默认参数
         self.papr_en_obj.setChecked(True)
         self.depapr_thr_obj.setValue(38050)
-        self.depapr_gain_obj.setValue(16384)
+        self.depapr_gain_obj.setValue(1.0)
         self.MType_tx_obj.setCurrentIndex(0)
         self.car_num_tx_obj.setValue(0xfffff)
         self.Alpha_tx_obj.setValue(0.5)
@@ -1367,7 +1347,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.sync_factor_obj.setValue(20384)
         self.equa_factor_obj.setValue(4122)
         self.Alpha_rx_obj.setValue(0.5)
-        self.equa_amp_obj.setValue(16384)
+        self.equa_amp_obj.setValue(1.0)
         self.equa_amp_en_obj.setCurrentIndex(1)
         self.car_thr1_obj.setValue(102656)
         self.car_thr2_obj.setValue(6250000)
@@ -1386,19 +1366,12 @@ class configPage(QMainWindow, Ui_MainWindow):
     def setRFDefaultConfig(self):
         # 设置射频参数
         self.Amplifier_obj.setCurrentIndex(0)
-        self.filter3_3p5G_obj.setCurrentIndex(0)
-        self.filter3p5_4G_obj.setCurrentIndex(0)
-        self.filter4p5_5G_obj.setCurrentIndex(0)
-        self.filter5_5p5G_obj.setCurrentIndex(0)
+        self.filterOption.setCurrentIndex(0)
 
     def setLDPCDefaultConfig(self):
         # 设置LDPC配置参数
         self.LDPC_loop_obj.setCurrentIndex(0)
         self.Pause_obj.setCurrentIndex(0)
-        self.Mtype_txldpc_obj.setCurrentIndex(0)
-        self.Mtype_rxldpc_obj.setCurrentIndex(0)
-        self.car_num_txldpc_obj.setValue(0xfffff)
-        self.car_num_rxldpc_obj.setValue(0xfffff)
         self.LDPC_reset_obj.setChecked(False)
         self.LDPC_UDPorPN_obj.setCurrentIndex(0)
 
@@ -1413,13 +1386,11 @@ class configPage(QMainWindow, Ui_MainWindow):
             print('发送基带配置：IP端口绑定失败')
             return
         self.connectTXConfigData()
-        print(self.TXConfig)
-        print(self.TXConfigBytes)
+        print("表1配置(基带发端配置)：", self.TXConfig)
         configSocket.sendto((self.TXConfigBytes), addrBB)
         time.sleep(1)
         self.connectRXConfigData()
-        print(self.RXConfig)
-        print(self.RXConfigBytes)
+        print("表2配置(基带收端配置)：", self.RXConfig)
         configSocket.sendto(self.RXConfigBytes, addrBB)
         configSocket.close()
         return
@@ -1435,9 +1406,10 @@ class configPage(QMainWindow, Ui_MainWindow):
             print('发送射频配置：IP端口绑定失败')
             return
         self.connectRFConfigData()
-        print(self.RFConfig)
+        print("表4配置(射频配置)：")
         for configRF in self.RFConfig:
-            configSocket.sendto(configRF, addrRF)
+            print(configRF)
+            configSocket.sendto(bytes(configRF), addrRF)
         configSocket.close()
         return
 
@@ -1452,7 +1424,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             print('发送LDPC设置：IP端口绑定失败')
             return
         self.connectLDPCConfig()
-        print(self.LDPCConfig)
+        print("表8配置(LDPC配置)：", self.LDPCConfig)
         configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
         configSocket.close()
         return
@@ -1460,49 +1432,22 @@ class configPage(QMainWindow, Ui_MainWindow):
     def setBBConfig(self):
         self.setBBDefaultConfig()
         self.sendConfigtoBaseBand()
+
     def setRFConfig(self):
         self.setRFDefaultConfig()
         self.sendConfigtoRF()
+
     def setLDPCConfig(self):
         self.setLDPCDefaultConfig()
         self.sendConfigtoLDPC()
 
-    '''def setDefaultConfig(self):
-        self.connectDefaultConfig()
-        self.sendConfigtoBaseBand()'''
+    def setBBandLDPCConfig(self):
+        self.setBBConfig()
+        self.setLDPCConfig()
 
-    '''def count_dot(self, value):
-        self.beg_x = 0
-        self.beg_y = 100
-        if len(self.end_dot_list) >= (self.x_num+1):
-            self.end_dot_list = self.end_dot_list[-self.x_num: ]
-            for i in self.end_dot_list:
-                i[0] -= self.x_step
-        if len(self.end_dot_list) == 0:
-            x = 0
-        else:
-            x = self.end_dot_list[-1][0] + self.x_step
-        y = value
-        self.end_dot_list.append([x, y])
-
-        self.picture.fill(Qt.white)
-        self.read_dot()
-
-    def read_dot(self):
-        for end_dot_list in self.end_dot_list:
-            self.end_x = end_dot_list[0]
-            self.end_y = 100 - end_dot_list[1]
-            self.uptate_show()
-        self.SNR_show.setPixmap(self.picture)
-
-    #绘制函数
-    def uptate_show(self):
-        self.draw.begin(self.picture)
-        self.draw.setPen(QPen(QColor("red"), 1))
-        self.draw.drawLine(QPoint(self.beg_x, self.beg_y), QPoint(self.end_x, self.end_y))
-        self.draw.end()
-        self.beg_x = self.end_x
-        self.beg_y = self.end_y'''
+    def sendBBandLDPCConfig(self):
+        self.sendConfigtoBaseBand()
+        self.sendConfigtoLDPC()
 
     def showBasebandStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
@@ -1609,9 +1554,9 @@ class configPage(QMainWindow, Ui_MainWindow):
                3580, 4028, 4604, 5052, 5500, 5948, 6396, 6844, 7292, 7740,  8188,  8636,  9212,
                4860, 5500, 6140, 6652, 7292, 7932, 8572, 9212, 9724, 10364, 11004, 11644, 12284]
         modeTable = [0, 13, 26, 39]
-        if (self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) > 7) and (tolfrm != 0):
-            modeRx = self.calculateValidBitNum(self.car_num_rxldpc_obj.value()) - 8 + modeTable[
-                self.Mtype_rxldpc_obj.currentIndex()]
+        if (self.calculateValidBitNum(self.car_num_rx_obj.value()) > 7) and (tolfrm != 0):
+            modeRx = self.calculateValidBitNum(self.car_num_rx_obj.value()) - 8 + modeTable[
+                self.MType_rx_obj.currentIndex()]
             BER = errbit/(tab[modeRx]*8*tolfrm)
             self.BER_show_2.setText('{:.2e}'.format(BER))
         else:
