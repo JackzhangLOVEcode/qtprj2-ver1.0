@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1433</width>
+    <width>1495</width>
     <height>969</height>
    </rect>
   </property>
@@ -27,8 +27,591 @@
     <string notr="true">background-color: rgb(220, 220, 220);
 </string>
    </property>
-   <layout class="QGridLayout" name="gridLayout_13">
-    <item row="0" column="1">
+   <layout class="QGridLayout" name="gridLayout_31">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox_15">
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="title">
+       <string>硬件IP端口配置</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_17">
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="BBPort_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>8000</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="BBIP_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>192.168.1.84</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="BBIP_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>基带IP</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="BBPort_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>基带Port</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="RFIP_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>192.168.1.38</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="RFIP_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>射频IP</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="LDPC_IP_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>LDPC IP</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLineEdit" name="LDPC_Port_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>8000</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="LDPC_Port_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>LDPC Port</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="RFPort_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>17</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>RFPort</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLineEdit" name="LDPC_IP_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>192.168.1.85</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLineEdit" name="RFPort_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>6005</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>调制解调和LDPC配置发送</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_13">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="setBBDefault">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>加载默认配置</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="sendBBConfig">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>发送当前配置</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="groupBox_10">
+      <property name="maximumSize">
+       <size>
+        <width>400</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>射频配置发送</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_30">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="setRFDefault">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>加载默认配置</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QGroupBox" name="groupBox_18">
+      <property name="maximumSize">
+       <size>
+        <width>280</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>LDPC统计接收</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_16">
+       <item row="0" column="0" colspan="2">
+        <widget class="QLineEdit" name="LDPCstatisticalPort_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>7010</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="LDPCstatisticalPort_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>统计端口</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="start_LDPC">
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>接收统计数据</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QPushButton" name="stop_LDPC">
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>停止统计数据</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QGroupBox" name="groupBox_40">
+      <property name="maximumSize">
+       <size>
+        <width>280</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>调制解调统计接收</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_37">
+       <item row="0" column="0" colspan="2">
+        <widget class="QLineEdit" name="statisticalPort_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>7000</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="statisticalPort_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>统计端口</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="start">
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>接收统计数据</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QPushButton" name="stop">
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>停止统计数据</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1" rowspan="5">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -49,13 +632,195 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
         <string>TXRX_Config</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>500</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>LDPC基本配置</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="1" column="1">
+            <widget class="QLabel" name="LDPC_loop_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>LDPC打环</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="LDPC_reset_obj">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>LDPC复位</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="LDPC_loop_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>内环</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>外环</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="Pause_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>数据暂停</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="Pause_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>不暂停</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>暂停</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QComboBox" name="LDPC_UDPorPN_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>UDP</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>PN</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="LDPC_UDPorPN_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string> UDP or PN</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBox_11">
           <property name="maximumSize">
@@ -227,6 +992,275 @@
              </property>
              <property name="textFormat">
               <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>350</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>LDPC配置预留区</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="3" column="0">
+            <widget class="QSpinBox" name="Reserv_5_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="Reserv_5_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QSpinBox" name="Reserv_6_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="Reserv_6_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QSpinBox" name="Reserv_3_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="Reserv_3_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QSpinBox" name="Reserv_4_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="Reserv_4_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="sizeIncrement">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_4</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QSpinBox" name="Reserv_2_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="Reserv_2_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_2</string>
              </property>
             </widget>
            </item>
@@ -1525,519 +2559,6 @@
              </property>
              <property name="value">
               <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QGroupBox" name="groupBox_8">
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>500</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>LDPC基本配置</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="1" column="1">
-            <widget class="QLabel" name="LDPC_loop_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>LDPC打环</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="LDPC_reset_obj">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>LDPC复位</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="LDPC_loop_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>内环</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>外环</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="Pause_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>数据暂停</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="Pause_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>不暂停</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>暂停</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QComboBox" name="LDPC_UDPorPN_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>UDP</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>PN</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="LDPC_UDPorPN_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string> UDP or PN</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QGroupBox" name="groupBox_7">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>350</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>LDPC配置预留区</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="3" column="0">
-            <widget class="QSpinBox" name="Reserv_5_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="Reserv_5_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_5</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QSpinBox" name="Reserv_6_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="Reserv_6_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_6</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QSpinBox" name="Reserv_3_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="Reserv_3_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_3</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QSpinBox" name="Reserv_4_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="Reserv_4_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_4</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QSpinBox" name="Reserv_2_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="Reserv_2_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_2</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QGroupBox" name="groupBox_9">
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>配置发送</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QPushButton" name="setBBDefault">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>加载默认配置</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sendBBConfig">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 255, 255);</string>
-             </property>
-             <property name="text">
-              <string>发送当前配置</string>
              </property>
             </widget>
            </item>
@@ -3732,40 +4253,1022 @@
        <attribute name="title">
         <string>RF_Config</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_15">
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_6">
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>400</height>
-           </size>
-          </property>
+       <layout class="QGridLayout" name="gridLayout_29">
+        <item row="0" column="0" colspan="3">
+         <widget class="QGroupBox" name="groupBox_24">
           <property name="font">
            <font>
             <pointsize>15</pointsize>
            </font>
           </property>
           <property name="title">
-           <string>射频配置</string>
+           <string>基础配置</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_14">
-           <item row="1" column="1">
-            <widget class="QLabel" name="filterOption_label">
+          <layout class="QGridLayout" name="gridLayout_27">
+           <item row="0" column="0">
+            <widget class="QLabel" name="FPGA_option_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <pointsize>16</pointsize>
               </font>
              </property>
              <property name="text">
-              <string>filter3_3p5G</string>
+              <string>FPGA选择：</string>
              </property>
              <property name="textFormat">
               <enum>Qt::PlainText</enum>
              </property>
             </widget>
            </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="FPGA_option_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string>FPGA1</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>FPGA1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>FPGA2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>FPGA3</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>FPGA4</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="FMC_option_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>FMC选择：</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QComboBox" name="FMC_option_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string extracomment="仅支持U7">FMC1</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>FMC1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>FMC2</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="BB_sample_rate_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>基带采样率：</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="BB_sample_rate_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string>采样率五</string>
+             </property>
+             <property name="currentIndex">
+              <number>4</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>采样率一</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>采样率二</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>采样率三</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>采样率四</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>采样率五</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="observation_channel_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>观察通道：</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QComboBox" name="observation_channel_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string>通道二</string>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>通道一</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>通道二</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>通道三</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>通道四</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>通道五</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>通道六</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_22">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>频率选择</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_25">
            <item row="0" column="0">
+            <widget class="QLabel" name="RF_send_freq_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>发送频率:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="RF_send_freq_obj">
+             <property name="maximumSize">
+              <size>
+               <width>160</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string>2.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="RF_send_freq_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>GHz</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="RF_receive_freq_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>接收频率:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="RF_receive_freq_obj">
+             <property name="maximumSize">
+              <size>
+               <width>160</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string>1.6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="RF_receive_freq_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>GHz</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="RF_receive_band_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>侦测频点:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="RF_receive_band_obj">
+             <property name="maximumSize">
+              <size>
+               <width>160</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string>2.0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="RF_receive_band_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>GHz</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QGroupBox" name="groupBox_17">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>时钟选择</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="Ref_Clock_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>参考时钟：</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="Ref_Clock_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string>参考时钟三</string>
+             </property>
+             <property name="currentIndex">
+              <number>2</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>参考时钟一</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>参考时钟二</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>参考时钟三</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>参考时钟四</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="source_Clock_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>时钟源：</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="source_Clock_obj">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string>外供时钟</string>
+             </property>
+             <property name="currentIndex">
+              <number>2</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>TCXO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>OCXO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>外供时钟</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="2" rowspan="2">
+         <widget class="QGroupBox" name="groupBox_16">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>收发通道</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_14">
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="RF_RX1_enable">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>RX1使能</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="RF_RX2_enable">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>RX2使能</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="RF_TX1_enable">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>TX1使能</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="RF_TX2_enable">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>TX2使能</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0" rowspan="2" colspan="2">
+         <widget class="QGroupBox" name="groupBox_21">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>发射衰减</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_24">
+           <item row="0" column="0">
+            <widget class="QLabel" name="RF_TX1_channel_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>TX1衰减:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="RF_TX1_channel_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="RF_TX1_channel_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="RF_TX2_channel_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>TX2衰减:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="RF_TX2_channel_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="RF_TX2_channel_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="6" column="2">
+         <widget class="QGroupBox" name="groupBox_23">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>滤波与功放</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_26">
+           <item row="0" column="0">
+            <widget class="QLabel" name="Amplifier_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>放大器使能</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
             <widget class="QComboBox" name="Amplifier_obj">
              <property name="maximumSize">
               <size>
@@ -3803,6 +5306,21 @@
             </widget>
            </item>
            <item row="1" column="0">
+            <widget class="QLabel" name="filterOption_label">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>滤波器选择</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
             <widget class="QComboBox" name="filterOption">
              <property name="maximumSize">
               <size>
@@ -3849,15 +5367,218 @@
              </item>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="Amplifier_label">
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="2" rowspan="2">
+         <widget class="QGroupBox" name="groupBox_20">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>接收增益</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_19">
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="RF_RX_AGC">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <pointsize>16</pointsize>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
-              <string>Amplifier</string>
+              <string>AGC使能</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="RF_RX1_gain_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>RX1增益:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="RF_RX1_gain_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>30.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="RF_RX1_gain_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="RF_RX2_gain_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>RX2增益:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="RF_RX2_gain_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>30.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="RF_RX2_gain_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
              </property>
              <property name="textFormat">
               <enum>Qt::PlainText</enum>
@@ -3867,25 +5588,22 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_10">
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>100</height>
-           </size>
-          </property>
+        <item row="4" column="3" rowspan="3">
+         <widget class="QGroupBox" name="groupBox_28">
           <property name="font">
            <font>
             <pointsize>15</pointsize>
            </font>
           </property>
           <property name="title">
-           <string>射频配置发送</string>
+           <string>硬件与版本信息</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QPushButton" name="setRFDefault">
+          <layout class="QGridLayout" name="gridLayout_28">
+           <item row="0" column="0">
+            <widget class="QTextBrowser" name="textBrowser"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="setRFDefault_3">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -3898,28 +5616,302 @@
               </font>
              </property>
              <property name="text">
-              <string>加载默认配置</string>
+              <string>读取硬件基本信息</string>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="sendRFConfig">
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="3" rowspan="4">
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>射频配置状态信息</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <item row="0" column="0">
+            <widget class="QTextBrowser" name="textBrowser_2"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="0" rowspan="3" colspan="2">
+         <widget class="QGroupBox" name="groupBox_19">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>观察与侦测接收增益</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="RF_observe_AGC">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>AGC使能</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="RF_ORX1_gain_label">
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
+               <width>100</width>
                <height>30</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <pointsize>14</pointsize>
+               <pointsize>16</pointsize>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 255, 255);</string>
+              <string notr="true"/>
              </property>
              <property name="text">
-              <string>发送当前配置</string>
+              <string>ORX1增益:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="RF_ORX1_gain_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>18</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="RF_ORX1_gain_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="RF_ORX2_gain_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>ORX2增益:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="RF_ORX2_gain_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>18</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="RF_ORX2_gain_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="RF_DRXA_gain_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>DRXA增益:</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="RF_DRXA_gain_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="specialValueText">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>1000</number>
+             </property>
+             <property name="value">
+              <number>52</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="RF_DRXA_gain_label_2">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>dB</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::PlainText</enum>
              </property>
             </widget>
            </item>
@@ -4586,208 +6578,6 @@
              </property>
              <property name="text">
               <string>发端调制</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_18">
-          <property name="maximumSize">
-           <size>
-            <width>280</width>
-            <height>120</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>LDPC统计接收</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_16">
-           <item row="0" column="0" colspan="2">
-            <widget class="QLineEdit" name="LDPCstatisticalPort_obj">
-             <property name="maximumSize">
-              <size>
-               <width>160</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <property name="text">
-              <string>7010</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="LDPCstatisticalPort_label">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>统计端口</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::PlainText</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="start_LDPC">
-             <property name="maximumSize">
-              <size>
-               <width>140</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 255, 255);</string>
-             </property>
-             <property name="text">
-              <string>接收统计数据</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" colspan="2">
-            <widget class="QPushButton" name="stop_LDPC">
-             <property name="maximumSize">
-              <size>
-               <width>140</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>停止统计数据</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QGroupBox" name="groupBox_40">
-          <property name="maximumSize">
-           <size>
-            <width>280</width>
-            <height>120</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>调制解调统计接收</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_37">
-           <item row="0" column="0" colspan="2">
-            <widget class="QLineEdit" name="statisticalPort_obj">
-             <property name="maximumSize">
-              <size>
-               <width>160</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <property name="text">
-              <string>7000</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="statisticalPort_label">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>统计端口</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::PlainText</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="start">
-             <property name="maximumSize">
-              <size>
-               <width>140</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(170, 255, 255);</string>
-             </property>
-             <property name="text">
-              <string>接收统计数据</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" colspan="2">
-            <widget class="QPushButton" name="stop">
-             <property name="maximumSize">
-              <size>
-               <width>140</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>14</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>停止统计数据</string>
              </property>
             </widget>
            </item>
@@ -6016,7 +7806,7 @@
            </font>
           </property>
           <property name="title">
-           <string>FRFT in IQ回传显示</string>
+           <string>WFRFT in IQ回传显示</string>
           </property>
          </widget>
         </item>
@@ -6034,7 +7824,7 @@
            </font>
           </property>
           <property name="title">
-           <string>FRFT out IQ回传显示</string>
+           <string>WFRFT out IQ回传显示</string>
           </property>
          </widget>
         </item>
@@ -6909,287 +8699,6 @@
       </widget>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox_15">
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="title">
-       <string>硬件IP端口配置</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_17">
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="BBPort_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>8000</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="BBIP_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>192.168.1.84</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="BBIP_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>基带IP</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="BBPort_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>基带Port</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLineEdit" name="RFIP_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>192.168.1.38</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="RFIP_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>射频IP</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="LDPC_IP_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>LDPC IP</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLineEdit" name="LDPC_Port_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>8000</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="LDPC_Port_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>LDPC Port</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="RFPort_label">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>17</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>RFPort</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::PlainText</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLineEdit" name="LDPC_IP_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>192.168.1.85</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLineEdit" name="RFPort_obj">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);</string>
-         </property>
-         <property name="text">
-          <string>6005</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -7197,7 +8706,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1433</width>
+     <width>1495</width>
      <height>23</height>
     </rect>
    </property>

@@ -10,7 +10,7 @@ from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QIntValidator, QDoubleValidator
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from othres import getChosenIP
+from othres import getChosenIP, ConnectRFConfig, print_bytes_hex
 
 fpgalist = ['FPGA1','FPGA2','FPGA3','FPGA4']
 specfile = 'specline.txt'
@@ -131,9 +131,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setWindowTitle('FMC205基带射频配置')
         self.setWindowIcon(QIcon('rss1.ico'))
         self.init()
-        self.timer = QTimer()
-        # self.dataTimer = QTimer()
-        self.LDPCtimer = QTimer()
         self.bindSingalandSlot()
         # 以下程序同步于哈工大王老师的代码
         self.up_udp_socket = None
@@ -273,7 +270,7 @@ class configPage(QMainWindow, Ui_MainWindow):
     def init(self):
         self.TXConfig = []
         self.RXConfig = []
-        self.RFConfig = []
+        self.RFConfig = ConnectRFConfig()
         self.LDPCConfig = []
         self.IdataIn = []
         self.QdataIn = []
@@ -292,11 +289,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.portData = 8002
         self.ipLDPC = '192.168.1.85'
         self.portLDPC = 8000
-        # self.draw = QPainter()
-        # self.picture = QPixmap(480, 100)
-        # self.end_dot_list = []
-        # self.x_num = 100
-        # self.x_step = 480 / self.x_num
+        self.timer = QTimer()
+        # self.dataTimer = QTimer()
+        self.LDPCtimer = QTimer()
         self.PrepareIQinCanvas()
         self.PrepareIQOutCanvas()
         self.PreparePilotLineCanvas()
@@ -347,17 +342,37 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def bindSingalandSlot(self):
         self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
-        self.sendRFConfig.clicked.connect(self.sendConfigtoRF)
-        #self.sendLDPCConfig.clicked.connect(self.sendConfigtoLDPC)
+        # self.sendRFConfig.clicked.connect(self.sendConfigtoRF)
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
         self.setRFDefault.clicked.connect(self.setRFConfig)
-        #self.setLDPCDefault.clicked.connect(self.setLDPCConfig)
         self.start.clicked.connect(self.statisticalTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
         self.start_LDPC.clicked.connect(self.LDPCStatisticalTimer)
         self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
         self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
+        self.RF_send_freq_obj.returnPressed.connect(self.RFSendFreqChanged)
+        self.RF_receive_freq_obj.returnPressed.connect(self.RFReceiveFreqChanged)
+        self.RF_receive_band_obj.returnPressed.connect(self.RFReceiveBandChanged)
+        self.RF_TX1_channel_obj.valueChanged.connect(self.RFTXChannelChanged)
+        self.RF_TX2_channel_obj.valueChanged.connect(self.RFTXChannelChanged)
+        self.RF_RX_AGC.stateChanged.connect(self.RFRXGainChanged)
+        self.RF_RX1_gain_obj.valueChanged.connect(self.RFRXGainChanged)
+        self.RF_RX2_gain_obj.valueChanged.connect(self.RFRXGainChanged)
+        self.RF_observe_AGC.stateChanged.connect(self.RFORXGainChanged)
+        self.RF_ORX1_gain_obj.valueChanged.connect(self.RFORXGainChanged)
+        self.RF_ORX2_gain_obj.valueChanged.connect(self.RFORXGainChanged)
+        self.RF_DRXA_gain_obj.valueChanged.connect(self.RFDRXGainChanged)
+        self.RF_TX1_enable.stateChanged.connect(self.RFTRChannelChanged)
+        self.RF_TX2_enable.stateChanged.connect(self.RFTRChannelChanged)
+        self.RF_RX1_enable.stateChanged.connect(self.RFTRChannelChanged)
+        self.RF_RX2_enable.stateChanged.connect(self.RFTRChannelChanged)
+        self.BB_sample_rate_obj.activated.connect(self.BBSampleRateChanged)
+        self.Ref_Clock_obj.activated.connect(self.RFClockChanged)
+        self.source_Clock_obj.activated.connect(self.RFClockChanged)
+        self.observation_channel_obj.activated.connect(self.RFObservationChannelChanged)
+        self.Amplifier_obj.activated.connect(self.RFAmplifierChanged)
+        self.filterOption.activated.connect(self.RFFilterChanged)
 
     # 以下代码同步于哈工大王老师的代码
     def ConfigFileExist(self, Filename):
@@ -1152,20 +1167,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         return
     # 同步完毕第二部分
 
-    def connectRFConfigData(self):
-        self.RFConfig.clear()
-        AmplifierConfig = [0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
-        if (self.Amplifier_obj.currentIndex() == 1):
-            self.RFConfig.append(AmplifierConfig)
-        else:
-            AmplifierConfig[19] = 0x00
-            self.RFConfig.append(AmplifierConfig)
-        filterArray = [[0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01],
-                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00],
-                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]]
-        self.RFConfig.append(filterArray[self.filterOption.currentIndex()])
-
     def calculateValidBitNum(self, car_num):
         car = 0
         for i in range((car_num).bit_length()):
@@ -1367,6 +1368,29 @@ class configPage(QMainWindow, Ui_MainWindow):
         # 设置射频参数
         self.Amplifier_obj.setCurrentIndex(0)
         self.filterOption.setCurrentIndex(0)
+        self.FPGA_option_obj.setCurrentIndex(0)
+        self.FMC_option_obj.setCurrentIndex(0)
+        self.RF_send_freq_obj.setText('2.5')
+        self.RF_receive_freq_obj.setText('1.6')
+        self.RF_receive_band_obj.setText('2.0')
+        self.RF_TX1_channel_obj.setValue(10.0)
+        self.RF_TX2_channel_obj.setValue(10.0)
+        self.RF_RX_AGC.setChecked(False)
+        self.RF_RX1_gain_obj.setValue(30.0)
+        self.RF_RX2_gain_obj.setValue(30.0)
+        self.RF_observe_AGC.setChecked(False)
+        self.RF_ORX1_gain_obj.setValue(18)
+        self.RF_ORX2_gain_obj.setValue(18)
+        self.RF_DRXA_gain_obj.setValue(52)
+        self.RF_RX1_enable.setChecked(True)
+        self.RF_RX2_enable.setChecked(True)
+        self.RF_TX1_enable.setChecked(True)
+        self.RF_TX2_enable.setChecked(True)
+        self.BB_sample_rate_obj.setCurrentIndex(4)
+        self.Ref_Clock_obj.setCurrentIndex(2)
+        self.source_Clock_obj.setCurrentIndex(2)
+        self.observation_channel_obj.setCurrentIndex(1)
+
 
     def setLDPCDefaultConfig(self):
         # 设置LDPC配置参数
@@ -1395,7 +1419,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         configSocket.close()
         return
 
-    def sendConfigtoRF(self):
+    def sendConfigtoRF(self, data):
         self.ipRF = self.RFIP_obj.text()
         self.portRF = int(self.RFPort_obj.text())
         addrRF = (self.ipRF, self.portRF)
@@ -1403,13 +1427,23 @@ class configPage(QMainWindow, Ui_MainWindow):
         try:
             configSocket.bind((ipaddr, 8001))
         except OSError:
-            print('发送射频配置：IP端口绑定失败')
+            self.textBrowser_2.append("<font color='red'>"+"发送射频配置：IP端口绑定失败")
             return
-        self.connectRFConfigData()
-        print("表4配置(射频配置)：")
-        for configRF in self.RFConfig:
-            print(configRF)
-            configSocket.sendto(bytes(configRF), addrRF)
+        self.textBrowser_2.append("发送配置数据：")
+        self.textBrowser_2.append(print_bytes_hex(data))
+        configSocket.sendto(data, addrRF)
+        configSocket.settimeout(0.05)
+        try:
+            configData, addr = configSocket.recvfrom(1500)
+        except socket.timeout:
+            self.textBrowser_2.append("<font color='red'>"+"硬件未响应，配置失败！！")
+            configSocket.close()
+            return
+        if configData == data:
+            self.textBrowser_2.append("<font color='green'>"+"配置成功！")
+        else:
+            self.textBrowser_2.append("<font color='red'>"+"上位机与硬件配置不一致，配置失败！！硬件返回配置为：")
+            self.textBrowser_2.append(print_bytes_hex(configData))
         configSocket.close()
         return
 
@@ -1435,7 +1469,19 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def setRFConfig(self):
         self.setRFDefaultConfig()
-        self.sendConfigtoRF()
+        self.RFSendFreqChanged()
+        self.RFReceiveFreqChanged()
+        self.RFReceiveBandChanged()
+        self.RFTXChannelChanged()
+        self.RFRXGainChanged()
+        self.RFORXGainChanged()
+        self.RFDRXGainChanged()
+        self.RFTRChannelChanged()
+        self.BBSampleRateChanged()
+        self.RFClockChanged()
+        self.RFObservationChannelChanged()
+        self.RFAmplifierChanged()
+        self.RFFilterChanged()
 
     def setLDPCConfig(self):
         self.setLDPCDefaultConfig()
@@ -1448,6 +1494,143 @@ class configPage(QMainWindow, Ui_MainWindow):
     def sendBBandLDPCConfig(self):
         self.sendConfigtoBaseBand()
         self.sendConfigtoLDPC()
+
+    def RFSendFreqChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[5]
+        RFSendFreq = float(self.RF_send_freq_obj.text())
+        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFSendFreq)
+        self.textBrowser_2.append("<font color='blue'>"+"配置发送频率")
+        self.sendConfigtoRF(data)
+
+    def RFReceiveFreqChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[6]
+        RFReceiveFreq = float(self.RF_receive_freq_obj.text())
+        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveFreq)
+        self.textBrowser_2.append("<font color='blue'>"+"设置接收频率")
+        self.sendConfigtoRF(data)
+
+    def RFReceiveBandChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[7]
+        RFReceiveband = float(self.RF_receive_band_obj.text())
+        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveband)
+        self.textBrowser_2.append("<font color='blue'>"+"设置侦听频率")
+        self.sendConfigtoRF(data)
+
+    def RFTXChannelChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[8]
+        RFTXChannel1Attenuation = float(self.RF_TX1_channel_obj.value())
+        RFTXChannel2Attenuation = float(self.RF_TX2_channel_obj.value())
+        data = self.RFConfig.connectTXAttenuationInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFTXChannel1Attenuation, RFTXChannel2Attenuation)
+        self.textBrowser_2.append("<font color='blue'>"+"设置发射衰减")
+        self.sendConfigtoRF(data)
+
+    def RFRXGainChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[9]
+        AGC = 1 if self.RF_RX_AGC.isChecked() else 0
+        RX1Gain = float(self.RF_RX1_gain_obj.value())
+        RX2Gain = float(self.RF_RX2_gain_obj.value())
+        step = 0.5
+        data = self.RFConfig.connectRXGainInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, AGC, RX1Gain, RX2Gain, step)
+        self.textBrowser_2.append("<font color='blue'>"+"设置接收增益")
+        self.sendConfigtoRF(data)
+
+    def RFORXGainChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[10]
+        AGC = 1 if self.RF_observe_AGC.isChecked() else 0
+        ORX1Gain = float(self.RF_ORX1_gain_obj.value())
+        ORX2Gain = float(self.RF_ORX2_gain_obj.value())
+        step = 1
+        data = self.RFConfig.connectRXGainInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, AGC, ORX1Gain, ORX2Gain, step)
+        self.textBrowser_2.append("<font color='blue'>"+"设置观察接收增益")
+        self.sendConfigtoRF(data)
+
+    def RFDRXGainChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[11]
+        DRXgain = float(self.RF_DRXA_gain_obj.value())
+        data = self.RFConfig.connectDetectionRXGainInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, DRXgain)
+        self.textBrowser_2.append("<font color='blue'>"+"设置侦测接收增益")
+        self.sendConfigtoRF(data)
+
+    def RFTRChannelChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[12]
+        RX1Channel = 1 if self.RF_RX1_enable.isChecked() else 0
+        RX2Channel = 1 if self.RF_RX2_enable.isChecked() else 0
+        TX1Channel = 1 if self.RF_TX1_enable.isChecked() else 0
+        TX2Channel = 1 if self.RF_TX2_enable.isChecked() else 0
+        data = self.RFConfig.connectTXRXEnableInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RX1Channel, RX2Channel, TX1Channel, TX2Channel)
+        self.textBrowser_2.append("<font color='blue'>"+"设置收发通道使能")
+        self.sendConfigtoRF(data)
+
+    def BBSampleRateChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[13]
+        sampleRate = int(self.BB_sample_rate_obj.currentIndex())
+        data = self.RFConfig.connectBaseBandSampleRateInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, sampleRate)
+        self.textBrowser_2.append("<font color='blue'>"+"设置基带采样率")
+        self.sendConfigtoRF(data)
+
+    def RFClockChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[14]
+        RefClock = int(self.Ref_Clock_obj.currentIndex())
+        sourceClock = int(self.source_Clock_obj.currentIndex())
+        data = self.RFConfig.connectClockInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RefClock, sourceClock)
+        self.textBrowser_2.append("<font color='blue'>"+"设置时钟源选择")
+        self.sendConfigtoRF(data)
+
+    def RFObservationChannelChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[15]
+        observationChannel = int(self.observation_channel_obj.currentIndex())
+        data = self.RFConfig.connectObservationChannelInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, observationChannel)
+        self.textBrowser_2.append("<font color='blue'>"+"设置观察通道选择")
+        self.sendConfigtoRF(data)
+
+    def RFAmplifierChanged(self):
+        amplifierArray = [[0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+                          [0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]]
+        data = bytes(amplifierArray[self.Amplifier_obj.currentIndex()])
+        self.textBrowser_2.append("<font color='blue'>"+"配置放大器")
+        self.sendConfigtoRF(data)
+
+    def RFFilterChanged(self):
+        filterArray = [[0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00],
+                       [0x81, 0x02, 0x10, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]]
+        data = bytes(filterArray[self.filterOption.currentIndex()])
+        self.textBrowser_2.append("<font color='blue'>"+"配置滤波器")
+        self.sendConfigtoRF(data)
 
     def showBasebandStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
