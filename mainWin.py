@@ -1401,7 +1401,11 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
-        self.portBB = int(self.BBPort_obj.text())
+        try:
+            self.portBB = int(self.BBPort_obj.text())
+        except ValueError:
+            print("基带端口配置无效")
+            return
         addrBB = (self.ipBB, self.portBB)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
@@ -1421,7 +1425,11 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def sendConfigtoRF(self, data):
         self.ipRF = self.RFIP_obj.text()
-        self.portRF = int(self.RFPort_obj.text())
+        try:
+            self.portRF = int(self.RFPort_obj.text())
+        except ValueError:
+            self.textBrowser_2.append("<font color='red'>" + "射频端口配置无效")
+            return
         addrRF = (self.ipRF, self.portRF)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
@@ -1449,7 +1457,11 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def sendConfigtoLDPC(self):
         self.ipLDPC = self.LDPC_IP_obj.text()
-        self.portLDPC = int(self.LDPC_Port_obj.text())
+        try:
+            self.portLDPC = int(self.LDPC_Port_obj.text())
+        except ValueError:
+            print("LDPC端口配置无效")
+            return
         addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
@@ -1500,30 +1512,39 @@ class configPage(QMainWindow, Ui_MainWindow):
         FPGAOption = int(self.FPGA_option_obj.currentIndex())
         FMCOption = 1
         RegisterAddr = self.RFConfig.addrhead[5]
-        RFSendFreq = float(self.RF_send_freq_obj.text())
-        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFSendFreq)
-        self.textBrowser_2.append("<font color='blue'>"+"配置发送频率")
-        self.sendConfigtoRF(data)
+        try:
+            RFSendFreq = float(self.RF_send_freq_obj.text())
+            data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFSendFreq)
+            self.textBrowser_2.append("<font color='blue'>"+"配置发送频率")
+            self.sendConfigtoRF(data)
+        except ValueError:
+            self.textBrowser_2.append("<font color='red'>" + "发送频率配置无效")
 
     def RFReceiveFreqChanged(self):
         WR_bit = 1
         FPGAOption = int(self.FPGA_option_obj.currentIndex())
         FMCOption = 1
         RegisterAddr = self.RFConfig.addrhead[6]
-        RFReceiveFreq = float(self.RF_receive_freq_obj.text())
-        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveFreq)
-        self.textBrowser_2.append("<font color='blue'>"+"设置接收频率")
-        self.sendConfigtoRF(data)
+        try:
+            RFReceiveFreq = float(self.RF_receive_freq_obj.text())
+            data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveFreq)
+            self.textBrowser_2.append("<font color='blue'>"+"设置接收频率")
+            self.sendConfigtoRF(data)
+        except ValueError:
+            self.textBrowser_2.append("<font color='red'>" + "接收频率配置无效")
 
     def RFReceiveBandChanged(self):
         WR_bit = 1
         FPGAOption = int(self.FPGA_option_obj.currentIndex())
         FMCOption = 1
         RegisterAddr = self.RFConfig.addrhead[7]
-        RFReceiveband = float(self.RF_receive_band_obj.text())
-        data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveband)
-        self.textBrowser_2.append("<font color='blue'>"+"设置侦听频率")
-        self.sendConfigtoRF(data)
+        try:
+            RFReceiveband = float(self.RF_receive_band_obj.text())
+            data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveband)
+            self.textBrowser_2.append("<font color='blue'>"+"设置侦听频率")
+            self.sendConfigtoRF(data)
+        except ValueError:
+            self.textBrowser_2.append("<font color='red'>" + "侦听频率配置无效")
 
     def RFTXChannelChanged(self):
         WR_bit = 1
@@ -1897,25 +1918,30 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def setStatisticalPort(self):
         global portStatistical
-        port = int(self.statisticalPort_obj.text())
-        if 1024 <= port < 65535:
-            portStatistical = port
-        else:
-            if(self.statisticalPort_obj.hasFocus()):
-                QMessageBox.information(self, "Tips", "1024 <= statisticalPort < 65535")
+        try:
+            port = int(self.statisticalPort_obj.text())
+            if 1024 <= port < 65535:
+                portStatistical = port
+            else:
+                if(self.statisticalPort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= statisticalPort < 65535")
+        except ValueError:
+            print("调制解调统计端口配置无效")
 
     def setLDPCStatisticalPort(self):
         global LDPCportStatistical
-        port = int(self.LDPCstatisticalPort_obj.text())
-        if 1024 <= port < 65535:
-            LDPCportStatistical = port
-        else:
-            if(self.LDPCstatisticalPort_obj.hasFocus()):
-                QMessageBox.information(self, "Tips", "1024 <= LDPCportStatistical < 65535")
+        try:
+            port = int(self.LDPCstatisticalPort_obj.text())
+            if 1024 <= port < 65535:
+                LDPCportStatistical = port
+            else:
+                if(self.LDPCstatisticalPort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= LDPCportStatistical < 65535")
+        except ValueError:
+            print("LDPC统计端口配置无效")
 
-
-ipaddr = getChosenIP('1')
 if __name__ == "__main__":
+    ipaddr = getChosenIP('1')
     statisticThread = StatisticThread()
     statisticThread.start()
     statisticThreadLDPC = LDPCStatisticThread()
