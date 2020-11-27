@@ -324,8 +324,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Reserv_U1_label.setVisible(False)
         self.Rx_channel_obj.setVisible(False)
         self.Rx_channel_label.setVisible(False)
-        self.over_flag_rx_show_2.setVisible(False)
-        self.over_flag_rx_label_2.setVisible(False)
         self.FIFOEmpty_show_2.setVisible(False)
         self.FIFOEmpty_label_2.setVisible(False)
         self.phase_est_show_2.setVisible(False)
@@ -342,7 +340,6 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def bindSingalandSlot(self):
         self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
-        # self.sendRFConfig.clicked.connect(self.sendConfigtoRF)
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
         self.setRFDefault.clicked.connect(self.setRFConfig)
         self.start.clicked.connect(self.statisticalTimer)
@@ -373,7 +370,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.observation_channel_obj.activated.connect(self.RFObservationChannelChanged)
         self.Amplifier_obj.activated.connect(self.RFAmplifierChanged)
         self.filterOption.activated.connect(self.RFFilterChanged)
-
+        self.RFCalibration.clicked.connect(self.RFCalibrationStatusChanged)
     # 以下代码同步于哈工大王老师的代码
     def ConfigFileExist(self, Filename):
         if exists(Filename):
@@ -1423,7 +1420,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         configSocket.close()
         return
 
-    def sendConfigtoRF(self, data):
+    def sendConfigtoRF(self, data, feedbacktime=0.1):
         self.ipRF = self.RFIP_obj.text()
         try:
             self.portRF = int(self.RFPort_obj.text())
@@ -1440,7 +1437,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.textBrowser_2.append("发送配置数据：")
         self.textBrowser_2.append(print_bytes_hex(data))
         configSocket.sendto(data, addrRF)
-        configSocket.settimeout(0.05)
+        configSocket.settimeout(feedbacktime)
         try:
             configData, addr = configSocket.recvfrom(1500)
         except socket.timeout:
@@ -1516,7 +1513,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             RFSendFreq = float(self.RF_send_freq_obj.text())
             data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFSendFreq)
             self.textBrowser_2.append("<font color='blue'>"+"配置发送频率")
-            self.sendConfigtoRF(data)
+            self.sendConfigtoRF(data, feedbacktime=0.5)
         except ValueError:
             self.textBrowser_2.append("<font color='red'>" + "发送频率配置无效")
 
@@ -1529,7 +1526,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             RFReceiveFreq = float(self.RF_receive_freq_obj.text())
             data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveFreq)
             self.textBrowser_2.append("<font color='blue'>"+"设置接收频率")
-            self.sendConfigtoRF(data)
+            self.sendConfigtoRF(data, feedbacktime=0.5)
         except ValueError:
             self.textBrowser_2.append("<font color='red'>" + "接收频率配置无效")
 
@@ -1636,6 +1633,19 @@ class configPage(QMainWindow, Ui_MainWindow):
         data = self.RFConfig.connectObservationChannelInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, observationChannel)
         self.textBrowser_2.append("<font color='blue'>"+"设置观察通道选择")
         self.sendConfigtoRF(data)
+
+    def RFCalibrationStatusChanged(self):
+        WR_bit = 1
+        FPGAOption = int(self.FPGA_option_obj.currentIndex())
+        FMCOption = 1
+        RegisterAddr = self.RFConfig.addrhead[16]
+        calibrationValue = 1
+        self.RF_Config.hide()
+        QMessageBox.information(self, "提示：","射频硬件校准中，请等待......")
+        self.textBrowser_2.append("<font color='blue'>" + "硬件校准:")
+        data = self.RFConfig.connectCalibrationInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, calibrationValue)
+        self.sendConfigtoRF(data, feedbacktime=10)
+        self.RF_Config.show()
 
     def RFAmplifierChanged(self):
         amplifierArray = [[0x81, 0x02, 0x10, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],

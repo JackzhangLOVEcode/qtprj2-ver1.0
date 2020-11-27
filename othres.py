@@ -22,7 +22,7 @@ def print_bytes_hex(data):
 
 class ConnectRFConfig():
     def __init__(self):
-        self.addrhead = [0x00, 0x01, 0x02, 0x03, 0x04, 0x10, 0x11, 0x12, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E]
+        self.addrhead = [0x00, 0x01, 0x02, 0x03, 0x04, 0x10, 0x11, 0x12, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F]
         self.txConfig = bytearray(20)
         self.fpgaAddr = [0x101, 0x102, 0x103, 0x104]
 
@@ -96,6 +96,13 @@ class ConnectRFConfig():
         self.setBaseInfo(fpgaindex, wrinfo)
         self.connectRegisterInfo(fmcinfo, registerinfo)
         self.txConfig[16:] = int(channel).to_bytes(4, byteorder='big')
+        return self.txConfig
+
+    def connectCalibrationInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo, value):
+        """用于组织校准配置数据"""
+        self.setBaseInfo(fpgaindex, wrinfo)
+        self.connectRegisterInfo(fmcinfo, registerinfo)
+        self.txConfig[16:] = int(value).to_bytes(4, byteorder='big')
         return self.txConfig
 
     def getHardwareAndVersionInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo):
