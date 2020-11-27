@@ -277,6 +277,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.IdataOut = []
         self.QdataOut = []
         self.QdataPilot = []
+        self.QdataSpectrum = []
+        self.IdataSpectrum = []
         self.SNRDataArray = []
         self.TXConfigBytes = bytes()
         self.RXConfigBytes = bytes()
@@ -295,11 +297,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.PrepareIQinCanvas()
         self.PrepareIQOutCanvas()
         self.PreparePilotLineCanvas()
+        self.PrepareSpectrumLineCanvas()
+        self.PrepareSpectrumIdata()
         self.PrepareSNRLineCanvas()
-        self.Reserv_2_obj.setVisible(False)
-        self.Reserv_2_label.setVisible(False)
-        self.Reserv_3_obj.setVisible(False)
-        self.Reserv_3_label.setVisible(False)
         self.Reserv_4_obj.setVisible(False)
         self.Reserv_4_label.setVisible(False)
         self.Reserv_5_obj.setVisible(False)
@@ -1295,8 +1295,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         LDPCreset = 1 if self.LDPC_reset_obj.isChecked() else 0
         self.LDPCConfig.extend((LDPCreset).to_bytes(1, byteorder='big'))
         self.LDPCConfig.extend((self.LDPC_UDPorPN_obj.currentIndex()).to_bytes(2, byteorder='big'))
-        self.LDPCConfig.extend((self.Reserv_2_obj.value()).to_bytes(2, byteorder='big'))
-        self.LDPCConfig.extend((self.Reserv_3_obj.value()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend(int(self.FFTManual_obj.currentIndex()).to_bytes(2, byteorder='big'))
+        self.LDPCConfig.extend(int(self.FFTTrigger_obj.currentIndex()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_4_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_5_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
@@ -1315,23 +1315,23 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.ModeBSorMS_obj.setCurrentIndex(1)
         self.Sys_reset_obj.setChecked(False)
         self.Sys_enble_obj.setChecked(True)
-        self.ModeUDPorPN_obj.setCurrentIndex(0)
-        self.Base_loop_en_obj.setCurrentIndex(0)
+        self.ModeUDPorPN_obj.setCurrentIndex(1)
+        self.Base_loop_en_obj.setCurrentIndex(1)
         self.Rx_enb_obj.setCurrentIndex(0)
         self.Rx_channel_obj.setCurrentIndex(0)
         self.Rx_delay_obj.setValue(20)
-        self.Time_trig2tx_obj.setValue(12800)
-        self.Time_tx_hold_obj.setValue(34000)
-        self.ms_T_sync2trig_obj.setValue(21880)
+        self.Time_trig2tx_obj.setValue(13000)
+        self.Time_tx_hold_obj.setValue(40000)
+        self.ms_T_sync2trig_obj.setValue(23880)
         self.bs_tdd_time_gap_obj.setValue(100000)
         self.bs_tx_time_gap_obj.setValue(50000)
         self.Trig_gap_cnt_obj.setValue(100000)
         self.alway_tx_obj.setCurrentIndex(0)
-        self.tx1_en_obj.setCurrentIndex(1)
+        self.tx1_en_obj.setCurrentIndex(0)
         self.udpfifo_reset_obj.setCurrentIndex(0)
         self.rx1_en_obj.setCurrentIndex(1)
         self.rx2_en_obj.setCurrentIndex(0)
-        self.TDD_EN_obj.setCurrentIndex(1)
+        self.TDD_EN_obj.setCurrentIndex(0)
         self.UDP_loop_obj.setCurrentIndex(0)
         self.Reserv_B0_obj.setChecked(False)
         self.Reserv_B1_obj.setChecked(False)
@@ -1356,7 +1356,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.phase_en_obj.setCurrentIndex(1)
         self.phase_factor_obj.setValue(2048)
         self.freq_offset_en_obj.setCurrentIndex(1)
-        self.LDPC_en_obj.setCurrentIndex(0)
+        self.LDPC_en_obj.setCurrentIndex(1)
         self.MMSEorLS_obj.setCurrentIndex(0)
         self.as_time_trig2tx_obj.setValue(17339)
         self.as_trig2tx_cnt_obj.setValue(58735)
@@ -1395,6 +1395,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Pause_obj.setCurrentIndex(0)
         self.LDPC_reset_obj.setChecked(False)
         self.LDPC_UDPorPN_obj.setCurrentIndex(0)
+        self.FFTManual_obj.setCurrentIndex(0)
+        self.FFTTrigger_obj.setCurrentIndex(0)
 
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
@@ -1798,6 +1800,21 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LineFigureLayout = QGridLayout(self.IQshowPilot)
         self.LineFigureLayout.addWidget(self.LineFigure)
 
+    def PrepareSpectrumLineCanvas(self):
+        self.SpectrumLineFigure = Figure_Canvas()
+        self.SpectrumLineLayout = QGridLayout(self.SpectrumDetection)
+        self.SpectrumLineLayout.addWidget(self.SpectrumLineFigure)
+
+    def PrepareSpectrumIdata(self):
+        self.IdataSpectrum.clear()
+        data = list(range(2048))
+        for element in data:
+            if element <= 1024:
+                newElement = 1024 - element
+            else:
+                newElement = 2048 - element + 1024
+            self.IdataSpectrum.append(newElement)
+
     def PrepareSNRLineCanvas(self):
         self.SNRLineFigure = Figure_Canvas()
         self.SNRLineFigureLayout = QGridLayout(self.SNRshow)
@@ -1822,6 +1839,8 @@ class configPage(QMainWindow, Ui_MainWindow):
             qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
             if dataType == 'pilot':
                 Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(2, 26)))
+            elif dataType == 'spectrum':
+                Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)))
             else:
                 Idata.append(ivalue/65535)
                 Qdata.append(qvalue/65535)
@@ -1874,6 +1893,14 @@ class configPage(QMainWindow, Ui_MainWindow):
         elif flag == 5:
             # print(Statistical)
             self.showLDPCStatistical(Statistical)
+        elif flag == 6:
+            if (self.getIQdata(Statistical, self.QdataSpectrum, [], 2048, 'spectrum') == True):
+                self.SpectrumLineFigure.ax.cla()
+                self.SpectrumLineFigure.ax.set_autoscale_on(True)
+                self.SpectrumLineFigure.ax.plot(self.IdataSpectrum, self.QdataSpectrum)
+                self.SpectrumLineFigure.draw()
+                self.SpectrumLineFigure.flush_events()
+                self.QdataSpectrum.clear()
         else:
             print("无效的统计数据")
 
