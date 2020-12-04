@@ -9,8 +9,9 @@ def getChosenIP(segment):
         ipList.append(item[4][0])
     for ip in ipList:
         if segment == ip.split(".")[2]:
+            print('IP匹配成功！！本机IP为：', ip)
             return ip
-    print('本机所有无网段为%s的IP，请检查本机IP设置！！'%segment)
+    print('本机无网段为%s的IP，请检查本机IP设置！！'%segment)
     print('本机IP为：', ipList)
     return ipList[0]
 
@@ -18,7 +19,6 @@ def print_bytes_hex(data):
     lin = ['%02X' % i for i in data]
     # print(" ".join(lin))
     return " ".join(lin)
-
 
 class ConnectRFConfig():
     def __init__(self):

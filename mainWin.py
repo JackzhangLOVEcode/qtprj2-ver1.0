@@ -1,13 +1,10 @@
 # -*- coding:utf-8 -*-
-import sys, math, socket, time, queue, encodings.idna, stopThreading
-from threading import Thread
+import sys, math, socket, queue, time, datetime, encodings.idna
 from array import array
-from re import match
-from os.path import exists
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout, QStyleFactory
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
-from PyQt5.QtGui import QIcon, QIntValidator, QDoubleValidator
+from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from othres import getChosenIP, ConnectRFConfig, print_bytes_hex
@@ -65,6 +62,7 @@ class StatisticThread(QThread):
             except socket.timeout:
                 # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
+            statisticalSocket.close()
 
 class LDPCStatisticThread(QThread):
     def __int__(self):
@@ -88,7 +86,38 @@ class LDPCStatisticThread(QThread):
             except socket.timeout:
                 # print("LDPC数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
+            statisticalSocket.close()
 
+class SpectrumStatisticThread(QThread):
+    def __int__(self):
+        super(SpectrumStatisticThread, self).__init__()
+
+    '''def buildUdpSocket(self, port, buffsize):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setblocking(True) #设置阻塞模式
+        self.socket.settimeout(1)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, buffsize * 80)
+        addr = (ipaddr, port)
+        self.socket.bind(addr)'''
+
+    def run(self):
+        global SpectrumPortStatistical
+        SpectrumPortStatistical = 7020
+        global SpectrumStatisticalQueue
+        SpectrumStatisticalQueue = queue.Queue(0)
+        while True:
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                addr = (ipaddr, SpectrumPortStatistical)
+                buffsize = 1500
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(1)
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                SpectrumStatisticalQueue.put(data)
+            except socket.timeout:
+                # print("频谱数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+                pass
+            statisticalSocket.close()
 '''class DataThread(QThread):
     def __int__(self):
         super(DataThread, self).__init__()
@@ -132,140 +161,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon('rss1.ico'))
         self.init()
         self.bindSingalandSlot()
-        # 以下程序同步于哈工大王老师的代码
-        self.up_udp_socket = None
-        self.down_udp_socket = None
-        self.down_sever_th = None
-        self.up_sever_th = None
-        self.info_sever_th = None  ## 用于应答，暂时没用
-        self.num = 0
-        self.tnum = 0
-        self.delayworking = False
-        self.serialnum = 0
-        self.rxbuffer = bytearray([0 for i in range(framedatalen)]) * 256
-        self.started = False  ##通信机数据开始接收
-        self.confirm = [False] * 256  # 用于收数据段的确认
-        self.lastlen = 0  # 用于适配物理层网络口的数据大小，补零操作
-        self.frameno = 0  # 用于记录数据段的序号
-        self.framenum = 0  # 用于记录UDP数据包切成数据段的总数
-        self.frameserialno = 0  # 用于记录UDP包的序号
-
-        if self.ConfigFileExist(specfile):
-            self.ReadConfigFile()
-        else:
-            self.setDefaultPara()
-
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-        for litem in fpgalist:
-            self.comboBox.addItem(litem)
-        self.comboBox_2.addItem('config模式')
-        self.comboBox_2.addItem('FPGA工作模式')
-        self.comboBox_2.addItem('侦测频点')
-
-        self.comboBox_3.addItem('外供时钟')
-        self.comboBox_3.addItem('TCOX')
-        self.comboBox_3.addItem('OCOX')
-
-        self.comboBox_4.addItem('本振源ORX1')
-        self.comboBox_4.addItem('本振源ORX2')
-        self.comboBox_4.addItem('本振源ORX3')
-
-        self.DisplayConfigPara()
-        self.sendtobuffer()
-        self._signal.connect(self.txsignalslot)
-
-        self.pushButton.clicked.connect(self.exitproc)                  # app exit
-
-        self.lineEdit.editingFinished.connect(self.ipaddrchanged)       # ip changed
-        self.lineEdit_14.editingFinished.connect(self.uipaddrchanged)       # ip changed
-
-        self.lineEdit_2.editingFinished.connect(self.rxFreqChanged)     #接收频率改变
-        self.lineEdit_3.editingFinished.connect(self.txFreqChanged)     #发射频率改变
-
-        self.checkBox_5.stateChanged.connect(self.TRstateChanged)       #收发使能状态改变
-        self.checkBox_6.stateChanged.connect(self.TRstateChanged)       #同上
-        self.checkBox_7.stateChanged.connect(self.TRstateChanged)       #同上
-        self.checkBox_8.stateChanged.connect(self.TRstateChanged)       #同上
-        self.comboBox.currentIndexChanged.connect(self.FpgaSelectionChanged)    #Fpag选择改变 new function
-        self.comboBox_2.currentIndexChanged.connect(self.SpecModeChanged)       #配置模式改变
-        self.comboBox_4.currentIndexChanged.connect(self.DetChannelChanged)     #观察通道改变
-        self.comboBox_3.currentIndexChanged.connect(self.ClockChanged)          #时钟改变
-
-        self.checkBox_10.stateChanged.connect(self.RxsuppstateChanged)
-        self.checkBox_9.stateChanged.connect(self.TxsuppstateChanged)
-        self.checkBox_11.stateChanged.connect(self.firstCRCchanged)
-
-        self.checkBox_2.stateChanged.connect(self.AGC_GhangedProc)          #AGC使能关联函数
-        self.lineEdit_6.editingFinished.connect(self.AGC_GhangedProc)       #同上
-        self.lineEdit_8.editingFinished.connect(self.AGC_GhangedProc)       #同上
-        self.checkBox_4.stateChanged.connect(self.ORXAGC_GhangedProc)       #ORXAGC使能关联函数
-        self.lineEdit_10.editingFinished.connect(self.ORXAGC_GhangedProc)  # 同上
-        self.lineEdit_12.editingFinished.connect(self.ORXAGC_GhangedProc)  # 同上
-        self.pushButton_4.clicked.connect(self.servLink)
-        self.pushButton_5.clicked.connect(self.clearData)
-        self.lineEdit_15.editingFinished.connect(self.cportchanged)
-        pFrqIncValidator = QIntValidator()
-        pFrqIncValidator.setRange(0, 150)
-
-        pdetFreqValidator = QIntValidator()
-        pdetFreqValidator.setRange(0, 50)
-
-        self.lineEdit_4.setValidator(pdetFreqValidator)
-
-        self.lineEdit_6.setValidator(pFrqIncValidator)
-        self.lineEdit_7.setValidator(pFrqIncValidator)
-        self.lineEdit_8.setValidator(pFrqIncValidator)
-        self.lineEdit_9.setValidator(pFrqIncValidator)
-        self.lineEdit_10.setValidator(pFrqIncValidator)
-        self.lineEdit_11.setValidator(pFrqIncValidator)
-        self.lineEdit_12.setValidator(pFrqIncValidator)
-
-        pDoubleValidator = QDoubleValidator()
-        pDoubleValidator.setRange(-100, 100)
-        pDoubleValidator.setNotation(QDoubleValidator.StandardNotation)
-        pDoubleValidator.setDecimals(4)
-
-        self.lineEdit_2.setValidator(pDoubleValidator)
-        self.lineEdit_3.setValidator(pDoubleValidator)
-
-        ipstr = socket.gethostbyname(socket.gethostname())
-        print(ipstr)
-
-        if self.ConfigFileExist(specip):
-            if self.ReadipFile():
-                #pass
-                print('读取网卡地址成功:'+self.ulocalip + '& ' +self.dlocalip)
-            else:
-                print('按缺省地址启动！')
-                self.ulocalip = ipstr
-                self.dlocalip = ipstr
-        else:
-            print('按缺省地址启动！')
-            self.ulocalip = ipstr
-            self.dlocalip = ipstr
-        self.pushButton.setEnabled(False)
-        self.pushButton.setVisible(False)
-
-        self.statusbar = self.statusBar()
-        self.statusbar.showMessage('Ready!')
-
-        self.ptimer = QTimer()
-        self.ptimer.timeout.connect(self.update_connection)
-        self.firsttimer = QTimer()
-        self.firsttimer.timeout.connect(self.channelconnect)    # 通信机联络,确定通道建立
-        self.channelstate = False                               # 记录当前状态
-
-        self.info_udp_server_start()        #信息服务端 server 自动启动接收反馈信息
-        self.downsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.upsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-        self.checkBox_11.setVisible(False)
-        self.groupBox_3.setVisible(False)
-        self.textBrowser_recv.setVisible(False)
-        self.pushButton_5.setVisible(False)
-        # self.setFixedSize(600,788)
-        # 同步完毕第一部分
 
     def init(self):
         self.TXConfig = []
@@ -294,30 +189,24 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.timer = QTimer()
         # self.dataTimer = QTimer()
         self.LDPCtimer = QTimer()
+        self.spectrumTimer = QTimer()
+        self.RFFrequencyReceived = 1.6
         self.PrepareIQinCanvas()
         self.PrepareIQOutCanvas()
         self.PreparePilotLineCanvas()
         self.PrepareSpectrumLineCanvas()
         self.PrepareSpectrumIdata()
         self.PrepareSNRLineCanvas()
-        self.Reserv_4_obj.setVisible(False)
-        self.Reserv_4_label.setVisible(False)
         self.Reserv_5_obj.setVisible(False)
         self.Reserv_5_label.setVisible(False)
         self.Reserv_6_obj.setVisible(False)
         self.Reserv_6_label.setVisible(False)
-        #self.Reserv_B0_obj.setVisible(False)
-        #self.Reserv_B0_label.setVisible(False)
-        #self.Reserv_B1_obj.setVisible(False)
-        #self.Reserv_B1_label.setVisible(False)
         self.Reserv_I0_obj.setVisible(False)
         self.Reserv_I0_label.setVisible(False)
         self.Reserv_I1_obj.setVisible(False)
         self.Reserv_I1_label.setVisible(False)
         self.Reserv_I2_obj.setVisible(False)
         self.Reserv_I2_label.setVisible(False)
-        self.Reserv_I3_obj.setVisible(False)
-        self.Reserv_I3_label.setVisible(False)
         self.Reserv_U0_obj.setVisible(False)
         self.Reserv_U0_label.setVisible(False)
         self.Reserv_U1_obj.setVisible(False)
@@ -337,7 +226,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNR_current_show_2.setVisible(False)
         self.SNR_current_label_2.setVisible(False)
 
-
     def bindSingalandSlot(self):
         self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
@@ -346,8 +234,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.stop.clicked.connect(self.killStatisticalTimer)
         self.start_LDPC.clicked.connect(self.LDPCStatisticalTimer)
         self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
+        self.start_spectrum.clicked.connect(self.startSpectrumTimer)
+        self.stop_spectrum.clicked.connect(self.killSpectrumTimer)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
         self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
+        self.spectrumPort_obj.editingFinished.connect(self.setSpectrumStatisticalPort)
         self.RF_send_freq_obj.returnPressed.connect(self.RFSendFreqChanged)
         self.RF_receive_freq_obj.returnPressed.connect(self.RFReceiveFreqChanged)
         self.RF_receive_band_obj.returnPressed.connect(self.RFReceiveBandChanged)
@@ -371,798 +262,14 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Amplifier_obj.activated.connect(self.RFAmplifierChanged)
         self.filterOption.activated.connect(self.RFFilterChanged)
         self.RFCalibration.clicked.connect(self.RFCalibrationStatusChanged)
-    # 以下代码同步于哈工大王老师的代码
-    def ConfigFileExist(self, Filename):
-        if exists(Filename):
-            return True
-        else:
-            return False
-
-    def ReadipFile(self):
-        ipfile = open(specip,'r',encoding='utf-8')
-        str1 = ipfile.readline().strip()
-        #ipaddr = str.split('.')
-        str2 = ipfile.readline().strip()
-        pattern = '[1-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
-        if match(pattern,str1) and match(pattern,str2) :
-            self.dlocalip = str1
-            self.ulocalip = str2
-            return  True
-        else:
-            return False
-
-    def ReadConfigFile(self):
-        txfile = open(specfile,'r',encoding='utf-8')
-        str = txfile.readline().strip()
-        ipaddr = str.split('.')
-        self.ip1 = int(ipaddr[0])
-        self.ip2 = int(ipaddr[1])
-        self.ip3 = int(ipaddr[2])
-        self.ip4 = int(ipaddr[3].rstrip())
-        self.ipaddr = str
-        ip1 = self.ip1
-        ip2 = self.ip2
-        ip3 = self.ip3
-        ip4 = self.ip4
-
-        str = txfile.readline()
-        self.rxfreq = float(str.rstrip())
-        str = txfile.readline()
-        self.txfreq = float(str.rstrip())
-        str = txfile.readline()
-        self.detfrq = float(str.rstrip())
-        str = txfile.readline()
-        self.rx1_inc = int(str.rstrip())
-        str = txfile.readline()
-        self.rx2_inc = int(str.rstrip())
-        str = txfile.readline()
-        self.tx1_dec = int(str.rstrip())
-        str = txfile.readline()
-        self.tx2_dec = int(str.rstrip())
-        str = txfile.readline()
-        self.orx1_inc = int(str.rstrip())
-        str = txfile.readline()
-        self.orx2_inc = int(str.rstrip())
-        str = txfile.readline()
-        self.snrx_inc =  int(str.rstrip())
-        str = txfile.readline()
-        indextemp = str.split(',')
-        self.cb_index1 = int(indextemp[0])
-        self.fpgasel = self.cb_index1
-        self.cb_index2 = int(indextemp[1])
-        self.specmode = self.cb_index2
-        self.cb_index3 = int(indextemp[2])
-        self.detchl = self.cb_index3
-        self.cb_index4 = int(indextemp[3].strip())
-        self.clocksel = self.cb_index4
-        str = txfile.readline()
-        booltemp = str.split(',')
-        self.agc_bool = bool(int(booltemp[0]))
-        self.orxagc_bool = bool(int(booltemp[1]))
-        self.rx1_enable = bool(int(booltemp[2]))
-        self.rx2_enable = bool(int(booltemp[3]))
-        self.tx1_enable = bool(int(booltemp[4]))
-        self.tx2_enable = bool(int(booltemp[5]))
-        self.rxsupp = bool(int(booltemp[6]))
-        self.txsupp = bool(int(booltemp[7]))
-        self.firstcrc = bool(int(booltemp[8].rstrip()))
-
-        str = txfile.readline().strip()
-        ipaddr = str.split('.')
-        self.uip1 = int(ipaddr[0])
-        self.uip2 = int(ipaddr[1])
-        self.uip3 = int(ipaddr[2])
-        self.uip4 = int(ipaddr[3].rstrip())
-        self.uipaddr = str.rstrip()
-
-        str = txfile.readline().strip()
-        self.cport = int(str)
-        txfile.close()
-        return
-
-    def setDefaultPara(self):
-        self.ipaddr = '127.0.0.1'
-        self.uipaddr = '127.0.0.1'
-        self.ip1 = 192
-        self.ip2 = 168
-        self.ip3 = 0
-        self.ip4 = 1
-        self.uip1 = 192
-        self.uip2 = 168
-        self.uip3 = 0
-        self.uip4 = 2
-
-        ip1 = self.ip1
-        ip2 = self.ip2
-        ip3 = self.ip3
-        ip4 = self.ip4
-
-        self.fpgasel = 3
-        self.cb_index1 = self.fpgasel
-        self.specmode = 1
-        self.cb_index2 = self.specmode
-        self.rxfreq = 1.2
-        self.txfreq = 1.3
-        self.detfrq = 1.4
-        self.detchl = 2
-        self.cb_index3 = self.detchl
-
-        self.agc_bool = True
-        self.rx1_inc = 40
-        self.tx1_dec = 100
-        self.rx2_inc = 40
-        self.tx2_dec = 100
-
-        self.orxagc_bool = True
-        self.orx1_inc = 40
-        self.orx2_inc = 40
-        self.snrx_inc = 40
-
-        self.rx1_enable = True
-        self.tx1_enable = True
-        self.rx2_enable = False
-        self.tx2_enable = False
-        self.rxsupp = False
-        self.txsupp = False
-        self.clocksel = 2
-        self.cb_index4 = self.clocksel
-        self.crct_enable = False
-        self.cport = 5000
-        self.firstcrc = False
-
-    def DisplayConfigPara(self):
-        self.lineEdit.setText('%s.%s.%s.%s'%(self.ip1,self.ip2,self.ip3,self.ip4))
-        self.lineEdit_14.setText('%s.%s.%s.%s'%(self.uip1,self.uip2,self.uip3,self.uip4))
-
-        self.lineEdit_2.setText(str(self.rxfreq))
-        self.lineEdit_3.setText(str(self.txfreq))
-        self.lineEdit_4.setText(str(self.detfrq))
-        self.lineEdit_6.setText(str(self.rx1_inc))
-        self.lineEdit_7.setText(str(self.tx1_dec))
-        self.lineEdit_8.setText(str(self.rx2_inc))
-        self.lineEdit_9.setText(str(self.tx2_dec))
-        self.lineEdit_10.setText(str(self.orx1_inc))
-        self.lineEdit_11.setText(str(self.snrx_inc))
-        self.lineEdit_12.setText(str(self.orx2_inc))
-
-
-        if self.agc_bool==True:
-            self.checkBox_2.setChecked(True)
-        else:
-            self.checkBox_2.setChecked(False)
-
-        if self.orxagc_bool == True:
-            self.checkBox_4.setChecked(True)
-        else:
-            self.checkBox_4.setChecked(False)
-
-        if self.rx1_enable == True:
-            self.checkBox_5.setChecked(True)
-        else:
-            self.checkBox_5.setChecked(False)
-
-        if self.rx2_enable == True:
-            self.checkBox_6.setChecked(True)
-        else:
-            self.checkBox_6.setChecked(False)
-
-        if self.tx1_enable == True:
-            self.checkBox_7.setChecked(True)
-        else:
-            self.checkBox_7.setChecked(False)
-
-        if self.tx2_enable == True:
-            self.checkBox_8.setChecked(True)
-        else:
-            self.checkBox_8.setChecked(False)
-
-        if self.rxsupp == True:
-            self.checkBox_10.setChecked(True)
-        else:
-            self.checkBox_10.setChecked(False)
-
-        if self.txsupp == True:
-            self.checkBox_9.setChecked(True)
-        else:
-            self.checkBox_9.setChecked(False)
-        if self.firstcrc == True:
-            self.checkBox_11.setChecked(True)
-        else:
-            self.checkBox_11.setChecked(False)
-
-        self.lineEdit_4.setEnabled(False)
-        self.comboBox.setCurrentIndex(self.cb_index1)
-        self.comboBox_2.setEnabled(False)
-        self.comboBox_2.setCurrentIndex(self.cb_index2)
-        self.comboBox_4.setEnabled(False)
-        self.comboBox_4.setCurrentIndex(self.cb_index3)
-        self.comboBox_3.setEnabled(False)
-        self.comboBox_3.setCurrentIndex(self.cb_index4)
-        self.checkBox.setEnabled(False)
-        self.lineEdit_15.setText(str(self.cport))
-
-    def sendtobuffer(self):
-        for i in range(16):
-            bufaddr[i] = addrhead[i]
-        for i in range(20):
-            txdata[i] = 0x00
-
-    def txsignalslot(self, parameter):
-        print(str(parameter))
-        print('slot called')
-        WR_bit = 1  # maybe changed sometimes
-        txdata[0] = WR_bit * (2 ** 7) + 1
-        txdata[1] = self.comboBox.currentIndex() + 0x01
-        txdata[2] = 0x10
-        self.s.sendto(txdata, (self.ipaddr, self.cport))
-        print(self.ipaddr + ":8001:")
-        for i in range(20):
-            print('[%02x]' % txdata[i])
-        return
-
-    def exitproc(self):
-        sender = self.sender()
-        self.s.close()
-        self.savetofile()
-        self.delayworking = False
-        self.up_udp_close()
-        self.down_udp_close()
-        qApp = QApplication.instance()
-        qApp.quit()
-
-    def ipaddrchanged(self):
-        print('ip changed')
-        ipstr = self.lineEdit.text()
-        pattern = '[1-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
-        if match(pattern, ipstr):
-            self.ipaddr = ipstr
-            partip = ipstr.split('.')
-            self.ip1 = int(partip[0])
-            self.ip2 = int(partip[1])
-            self.ip3 = int(partip[2])
-            self.ip4 = int(partip[3])
-            ip1 = self.ip1
-            ip2 = self.ip2
-            ip3 = self.ip3
-            ip4 = self.ip4
-
-        else:
-            self.lineEdit.setText(self.ipaddr)
-            QMessageBox.information(self, ('地址错误!'), ("""地址错误提示"""), \
-                                    QMessageBox.StandardButton(QMessageBox.Yes))
-
-    def uipaddrchanged(self):
-        print('uip changed')
-        ipstr = self.lineEdit_14.text()
-        pattern = '[1-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
-        if match(pattern,ipstr) :
-            self.uipaddr = ipstr
-            partip = ipstr.split('.')
-            self.uip1 = int(partip[0])
-            self.uip2 = int(partip[1])
-            self.uip3 = int(partip[2])
-            self.uip4 = int(partip[3])
-        else:
-            self.lineEdit_14.setText(self.uipaddr)
-            QMessageBox.information(self,('地址错误!'),("""地址错误提示"""),\
-                                    QMessageBox.StandardButton(QMessageBox.Yes))
-
-    def LongvTochar(self,  freq):
-        lgv = int(freq * 10 ** 7)
-        midh = int(lgv / (256 * 256))
-        midl = int(lgv % (256 * 256))
-        bh1 = int(midh / 256)
-        bh2 = int(midh % 256)
-        bh3 = int(midl / 256)
-        bh4 = int(midl % 256)
-
-        txdata[16] = bh1
-        txdata[17] = bh2
-        txdata[18] = bh3
-        txdata[19] = bh4
-
-    def rxFreqChanged(self):
-        self.rxfreq = float(str(self.lineEdit_2.text()).rstrip())
-        self.LongvTochar(self.rxfreq)
-        txdata[3] = 0x11
-        self._signal.emit(2)  # 2:接收频率改变信号 proc
-
-    def txFreqChanged(self):
-        self.txfreq = float(str(self.lineEdit_3.text().rstrip()))
-        self.LongvTochar(self.txfreq)
-        txdata[3] = 0x10
-        self._signal.emit(3)  # 3:发射频率改变信号 proc
-
-    def TRstateChanged(self):
-        self.rx1_enable = self.checkBox_5.isChecked()
-        self.rx2_enable = self.checkBox_6.isChecked()
-        self.tx1_enable = self.checkBox_7.isChecked()
-        self.tx2_enable = self.checkBox_8.isChecked()
-        txdata[3] = 0x1b
-        txdata[16] = 0x00
-        txdata[17] = 0x00
-        txdata[18] = 0x00
-        txdata[19] = int(self.rx1_enable)*8 + int(self.rx2_enable)*4 + int(self.tx1_enable)*2 + int(self.tx2_enable)
-
-        self._signal.emit(4)    #4:收发使能状态改变信号
-
-    def FpgaSelectionChanged(self):#Fpag选择改变处理函数
-        self.cb_index1 = self.comboBox.currentIndex()
-        self.fpgasel = self.cb_index1
-        return
-
-    def SpecModeChanged(self):       #配置模式改变处理函数
-        self.cb_index2 = self.comboBox_2.currentIndex()
-        self.specmode = self.cb_index2
-        return
-
-    def DetChannelChanged(self):     #观察通道改变处理函数
-        self.cb_index3 = self.comboBox_4.currentIndex()
-        self.detchl = self.cb_index3
-        return
-
-    def ClockChanged(self):          #时钟改变处理函数
-        self.cb_index4 = self.comboBox_3.currentIndex()
-        self.clocksel = self.cb_index4
-        return
-
-    def RxsuppstateChanged(self):
-        self.rxsupp = self.checkBox_10.isChecked()
-        return
-
-    def TxsuppstateChanged(self):
-        self.txsupp = self.checkBox_9.isChecked()
-        return
-
-    def firstCRCchanged(self):
-        self.firstcrc = self.checkBox_11.isChecked()
-        return
-
-    def AGC_GhangedProc(self):
-        self.agc_bool = self.checkBox_2.isChecked()
-        self.rx1_inc = int(self.lineEdit_6.text().strip())
-        self.rx2_inc = int(self.lineEdit_8.text().strip())
-        txdata[3] = 0x18
-        txdata[16] = 0x00
-        txdata[17] = int(self.agc_bool)
-        txdata[18] = int(self.rx1_inc * 2)
-        txdata[19] = int(self.rx2_inc * 2)
-
-        self._signal.emit(5)  # 5:AGC使能改变发送接收通道增益
-        return
-
-    def ORXAGC_GhangedProc(self):
-        self.orxagc_bool = self.checkBox_4.isChecked()
-        self.orx1_inc = int(self.lineEdit_10.text().strip())
-        self.orx2_inc = int(self.lineEdit_12.text().strip())
-        txdata[3] = 0x19
-        txdata[16] = 0x00
-        txdata[17] = int(self.orxagc_bool)
-        txdata[18] = int(self.orx1_inc)
-        txdata[19] = int(self.orx2_inc)
-
-        self._signal.emit(6)  # 6:ORXAGC使能改变发送接收通道增益
-        return
-
-    def up_udp_server_start(self):
-        """
-        开启上行 UDP服务端方法
-        :return:
-        """
-        self.up_udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            port = 8001
-            address = (self.ulocalip, port)
-            self.up_udp_socket.bind(address)
-            msg = '上行 UDP 打开。。。'
-            #print(msg)
-        except Exception as ret:
-            msg = '上行 UDP 没有打开，请检查网络'
-
-        else:
-            self.up_sever_th = Thread(target=self.up_udp_server_concurrency)
-            self.up_sever_th.start()
-            msg = '上行UDP服务端正在监听端口:{}\n'.format(port)
-        print(msg)
-
-    def up_udp_server_concurrency(self):
-        """
-        上行UDP通信线程，转发板卡数据，加上行数据头
-        :return:
-        """
-        buf = bytes.fromhex('7f 7f 7f 7f')
-        while True:
-            data = self.up_udp_socket.recv(1500)
-            framelen = len(data)
-            print("通信机 长度："+ str(framelen))
-            if framelen < 4:
-                continue
-            if framelen > 0 and framelen <= 20:
-                if data[3] == 0x10:
-                    displaymsg = '发射频率设置成功！'
-
-                elif data[3] == 0x11:
-                    displaymsg = '接收频率设置成功！'
-                elif data[3] == 0x18:
-                    displaymsg = '接收增益设置成功！'
-                elif data[3] == 0x19:
-                    displaymsg = '观察接收增益设置成功！'
-                elif data[3] == 0x1a:
-                    displaymsg = '侦测接收增益设置成功！'
-                elif data[3] == 0x1b:
-                    displaymsg = '收发通道使能设置成功！'
-                else:
-                    displaymsg = '其他数据'
-                self.statusbar.showMessage(displaymsg)
-                continue
-            elif framelen == 239:
-                serialnum = data[0]
-                fno = data[1]
-                fnum = data[2]
-                lastlen = data[3]
-
-                if fno == 0:
-                    self.frameserialno = serialnum
-                    self.frameno = fno
-                    self.framenum = fnum
-                    self.lastlen = lastlen
-                    self.started = True
-                if self.started == False:
-                    print('not catch frame head!')
-                    continue
-
-                if fno != self.frameno or serialnum != self.frameserialno:
-                    self.started = False
-                    continue
-                self.frameno += 1
-
-                self.rxbuffer[framedatalen*fno:framedatalen*fno+239] = bytearray(data[4:])
-                self.confirm[fno] = True
-
-                if fno == fnum and serialnum == self.frameserialno:
-                    if False not in self.confirm[:fnum+1]:
-                        if self.rxbuffer[2] == 0x04:
-                            self.rxbuffer[2] = 0x05
-                        buftemp = buf + self.rxbuffer[:fnum*framedatalen+self.lastlen]
-                        crcdata = self.rxbuffer[3:fnum*framedatalen+self.lastlen-2]
-                        wcrcbytes = self.crc16(str(crcdata))
-                        self.upsock.sendto(buftemp, (self.uipaddr, Uport))
-                        '''if wcrcbytes == int(self.rxbuffer[fnum*framedatalen+self.lastlen-1]+self.rxbuffer[fnum*framedatalen+self.lastlen-2]*256):
-                            self.upsock.sendto(buftemp, (self.uipaddr, Uport))
-                        else:
-                            print('crc error 1')'''
-                    else:
-                        print('Drop 1 fr!')
-                    self.frameno = 0
-                    self.framenum = 0
-                    self.started = False
-                    self.Clearconfirm()
-
-            else:
-                print('其它长度数据：'+ str(framelen) )
-                self.num = self.num + 1
-
-    def up_udp_close(self):
-        """
-        功能函数，关闭上行网络连接
-        :return:
-        """
-        try:
-            stopThreading.stop_thread(self.up_sever_th)
-        except Exception:
-            print('关闭upd错')
-            pass
-        try:
-            self.up_udp_socket.close()
-            if self.delayworking is False:
-                msg = '已断开网络\n'
-                print(msg)
-                #self.linked = False
-        except Exception as ret:
-            pass
-
-    def Clearconfirm(self):
-        for i in range(256):
-            self.confirm[i] =  False
-
-    def crc16(self, buffer):
-        c, treat, bcrc, wcrc = 0, 0, 0, 0
-        for i in range(len(buffer)):
-            c = ord(buffer[i])
-            for j in range(8):
-                treat = c & 0x80
-                c <<= 1
-                bcrc = (wcrc >> 8) & 0x80
-                wcrc <<= 1
-                wcrc %= (0xffff + 1)
-                if treat != bcrc:
-                    wcrc ^= 0x1021
-        return wcrc
-
-    def servLink(self):
-        """
-        启动上下行数据通信UDP通路，暂时关闭上行ip地址编辑功能，切换按钮名称
-        """
-        if not self.delayworking:
-            self.up_udp_server_start()
-            self.down_udp_server_start()
-            #self.pushButton_link.setWindowTitle('断开')
-            print('Udp opened ')
-            self.delayworking = True
-            self.pushButton_4.setText('停止')
-            self.lineEdit_14.setEnabled(False)
-            self.ptimer.start(3000)  ##周期发送给控制机联络信息
-        else:
-            self.delayworking = False
-            self.up_udp_close()
-            self.down_udp_close()
-            print('Udp closed')
-            self.pushButton_4.setText('转发')
-            self.lineEdit_14.setEnabled(True)
-
-            self.ptimer.stop()         ##周期发送给控制机联络信息
-
-    def down_udp_server_start(self):
-        """
-        开启下行UDP服务端方法
-        :return:
-        """
-        self.down_udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            port = Dport
-            address = (self.dlocalip, port)
-            self.down_udp_socket.bind(address)
-            msg = '下行UDP打开...'
-            print(msg)
-        except Exception as ret:
-            msg = '下行UDP没打开，请检查网络'
-            #print(msg)
-        else:
-            self.down_sever_th = Thread(target=self.down_udp_server_concurrency)
-            self.down_sever_th.start()
-            msg = 'UDP服务端正在监听端口:{}\n'.format(port)
-        print(msg)
-
-    def down_udp_server_concurrency(self):
-        """
-        下行UDP通信线程，用于转发控制服务器数据给板卡
-        :return:
-        """
-        buf = bytes.fromhex('7f 7f 7f 7f')
-        while True:
-            answerbuf = bytearray([0x0, 0x0, 0x0, 0x0, 0x0, 0x0])
-            data = self.down_udp_socket.recv(1500)
-            framelen = len(data)
-            print(framelen)
-            if framelen > 9:
-                pass
-            else:
-                continue
-            if framelen == 10 and data[6] == 0:     ##联机信号，直接回复给控制机
-                sendbuf = buf + bytes(data)[4:]
-                try:
-                    self.upsock.sendto(sendbuf, (self.uipaddr, Uport))
-                except:
-                    print('error 05')
-                self.tnum = self.tnum + 1
-                continue
-            elif framelen == 11 and data[6] == 0x02:  ##资源申请指令 order = 0x02
-                answerbuf[0] = 0x0a
-                answerbuf[2] = 0x02
-                res = int(data[8]*256 +data[7])     ##控制机数据低位在前，高位在后
-                #print(res)
-                if res <=10 :
-                    answerbuf[3] = 1
-                    self.statusbar.showMessage('资源申请应答成功')
-                else:
-                    answerbuf[3] = 2
-                    self.statusbar.showMessage('资源申请应答失败')
-                sendbuf = buf + bytes(answerbuf)
-                try:
-                    self.upsock.sendto(sendbuf, (self.uipaddr, Uport))
-                except:
-                    print('error 06')
-
-                self.tnum = self.tnum + 1
-                continue
-            else:
-                receivedata = bytearray(data)
-                crcdata = bytearray(data)[7:framelen - 2]
-                wcrcbytes = self.crc16(str(crcdata))
-                if wcrcbytes != int(data[-1] * 256 + data[-2]):
-                    receivedata[framelen - 1] = int(wcrcbytes % 256)
-                    receivedata[framelen - 2] = int(wcrcbytes / 256)
-                    print(
-                        'data {} crc:'.format(wcrcbytes) + str(int(wcrcbytes % 256)) + '  ' + str(int(wcrcbytes / 256)))
-
-                oneframedata = bytes(data)[4:]
-                tlength = len(oneframedata)
-                partnum = int(tlength / framedatalen)
-                lastlen = int(tlength % framedatalen)
-                sframedata = bytearray(b'')
-                sframedata.append((self.serialnum))
-                if lastlen == 0:
-                    totalnum = partnum - 1
-                else:
-                    totalnum = partnum
-                print('totalnum = {} serilno = {} lastlen ={}'.format(totalnum,self.serialnum,lastlen))
-                for i in range(totalnum + 1):
-                    if i == 0:
-                        sframedata.append(i)
-                        sframedata.append(totalnum)
-                        sframedata.append(lastlen)
-                    else:
-                        sframedata[1] = i
-                    if i == totalnum:
-                        sendframe = bytes(sframedata) + bytes(oneframedata[i * framedatalen:]) + bytes(zerodata[:(framedatalen - lastlen)])
-                        self.serialnum = (self.serialnum + 1) % 256
-                    else:
-                        sendframe = sframedata + oneframedata[i * framedatalen:(i + 1) * framedatalen]
-                    print(len(sendframe))
-
-                    try:                                    ##其他指令转发给收发信机--通信机
-                        self.downsock.sendto(sendframe, (self.ipaddr, self.cport))
-                    except:
-                        print('error 07')
-                    time.sleep(0.001)
-
-            self.tnum = self.tnum + 1
-
-    def down_udp_close(self):
-        """
-        功能函数，关闭下行UDP通信
-        :return:
-        """
-        try:
-            stopThreading.stop_thread(self.down_sever_th)
-        except Exception:
-            print('关闭upd错')
-            pass
-        try:
-            self.down_udp_socket.close()
-            if self.delayworking is False:
-                msg = '已断开网络\n'
-                print(msg)
-        except Exception as ret:
-            pass
-
-    def clearData(self):
-        self.textBrowser_recv.clearHistory()
-        self.textBrowser_recv.clear()
-        self.num  = 0
-        self.tnum = 0
-
-    def cportchanged(self):
-        self.cport = int(self.lineEdit_15.text())
-
-    def update_connection(self):
-        condata =bytearray([0x7f,0x7f,0x7f,0x7f,0x0b, 0x0, 0x01, 0x0a,0x0, 0xcb, 0xef])
-        sendbuf = bytes(condata)
-        self.upsock.sendto(sendbuf, (self.uipaddr, Uport))
-        return
-
-    def channelconnect(self):
-        ##发送接受频率信息来确定联络状态
-        self.rxFreqChanged()
-    def info_udp_server_start(self):
-        """
-        开启下行UDP服务端方法
-        :return:
-        """
-        self.info_udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            port = Iport
-            address = (self.dlocalip, port)
-            self.info_udp_socket.bind(address)
-            msg = '信息UDP打开'
-            print(msg)
-        except Exception as ret:
-            msg = '信息UDP没打开，请检查网络'
-            print(msg)
-        else:
-            self.info_sever_th = Thread(target=self.info_udp_server_concurrency)
-            self.info_sever_th.start()
-            msg = '信息UDP服务端正在监听端口:{}\n'.format(port)
-            print(msg)
-
-    def info_udp_server_concurrency(self):
-        """
-        下行UDP通信线程，用于转发控制服务器数据给板卡
-        :return:
-        """
-        infosock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        while True:
-            data = self.info_udp_socket.recv(1500)
-            framelen = len(data)
-            print(framelen)
-            if framelen > 0 and framelen <= 20:
-                if data[3] == 0x10:
-                    displaymsg = '发射频率设置成功！'
-                if data[3] == 0x11:
-                    displaymsg = '接收频率设置成功！'
-                if data[3] == 0x18:
-                    displaymsg = '接收增益设置成功！'
-                if data[3] == 0x19:
-                    displaymsg = '观察接收增益设置成功！'
-                if data[3] == 0x1a:
-                    displaymsg = '侦测接收增益设置成功！'
-                if data[3] == 0x1b:
-                    displaymsg = '收发通道使能设置成功！'
-                self.statusbar.showMessage(displaymsg)
-            else:
-                continue
-
-    def info_udp_close(self):
-        """
-        功能函数，关闭下行UDP通信
-        :return:
-        """
-        try:
-            stopThreading.stop_thread(self.info_sever_th)
-        except Exception:
-            print('关闭信息server upd错')
-            pass
-        try:
-            self.info_udp_socket.close()
-            if self.delayworking is False:
-                msg = '已断开信息udp\n'
-                print(msg)
-        except Exception as ret:
-            pass
-
 
     def closeEvent(self,event):
         reply = QMessageBox.information(self, '警告',"系统将退出，是否确认?", QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.up_udp_close()
-            self.down_udp_close()
-            self.info_udp_close()
-            self.delayworking = False
-
-            self.savetofile()
-
             event.accept()
         else:
             event.ignore()
-
-    def savetofile(self):
-        txfile = open(specfile,'w',encoding='utf-8')
-        str = self.lineEdit.text()
-        txfile.write(str+'\n')
-        str = self.lineEdit_2.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_3.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_4.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_6.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_8.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_7.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_9.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_10.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_12.text()
-        txfile.write(str + '\n')
-        str = self.lineEdit_11.text()
-        txfile.write(str + '\n')
-        #txfile.close()
-        txfile.write('%s,%s,%s,%s\n'%(self.cb_index1,self.cb_index2,self.cb_index3,self.cb_index4))
-        txfile.write('%s,%s,%s,%s,%s,%s,%s,%s,%s\n'%(int(self.agc_bool),int(self.orxagc_bool),\
-                            int(self.rx1_enable),int(self.rx2_enable),int(self.tx1_enable), \
-                            int(self.tx2_enable),int(self.rxsupp),int(self.txsupp),int(self.firstcrc)))
-        str = self.lineEdit_14.text()
-        txfile.write(str+'\n')
-
-        str = self.lineEdit_15.text()
-        txfile.write(str+'\n')
-        txfile.close()
-        return
-    # 同步完毕第二部分
 
     def calculateValidBitNum(self, car_num):
         car = 0
@@ -1268,7 +375,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.Reserv_I0_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I1_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I2_obj.value()).to_bytes(2, byteorder='big'))
-        self.RXConfig.extend((self.Reserv_I3_obj.value()).to_bytes(4, byteorder='big'))
+        localIPArray = list(map(int, ipaddr.split(".")))
+        self.RXConfig = self.RXConfig + localIPArray
         self.RXConfigBytes = bytes(self.RXConfig)
 
     def connectLDPCConfig(self):
@@ -1297,7 +405,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend((self.LDPC_UDPorPN_obj.currentIndex()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend(int(self.FFTManual_obj.currentIndex()).to_bytes(2, byteorder='big'))
         self.LDPCConfig.extend(int(self.FFTTrigger_obj.currentIndex()).to_bytes(2, byteorder='big'))
-        self.LDPCConfig.extend((self.Reserv_4_obj.value()).to_bytes(4, byteorder='big'))
+        localIPArray = list(map(int, ipaddr.split(".")))
+        self.LDPCConfig = self.LDPCConfig + localIPArray
         self.LDPCConfig.extend((self.Reserv_5_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfigBytes = bytes(self.LDPCConfig)
@@ -1476,11 +585,11 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def setBBConfig(self):
         self.setBBDefaultConfig()
-        self.sendConfigtoBaseBand()
+        # self.sendConfigtoBaseBand()
 
     def setRFConfig(self):
         self.setRFDefaultConfig()
-        self.RFSendFreqChanged()
+        '''self.RFSendFreqChanged()
         self.RFReceiveFreqChanged()
         self.RFReceiveBandChanged()
         self.RFTXChannelChanged()
@@ -1492,11 +601,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RFClockChanged()
         self.RFObservationChannelChanged()
         self.RFAmplifierChanged()
-        self.RFFilterChanged()
+        self.RFFilterChanged()'''
 
     def setLDPCConfig(self):
         self.setLDPCDefaultConfig()
-        self.sendConfigtoLDPC()
+        # self.sendConfigtoLDPC()
 
     def setBBandLDPCConfig(self):
         self.setBBConfig()
@@ -1525,8 +634,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         FMCOption = 1
         RegisterAddr = self.RFConfig.addrhead[6]
         try:
-            RFReceiveFreq = float(self.RF_receive_freq_obj.text())
-            data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, RFReceiveFreq)
+            self.RFFrequencyReceived = float(self.RF_receive_freq_obj.text())
+            data = self.RFConfig.connectFreqInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, self.RFFrequencyReceived)
             self.textBrowser_2.append("<font color='blue'>"+"设置接收频率")
             self.sendConfigtoRF(data, feedbacktime=0.5)
         except ValueError:
@@ -1643,7 +752,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         RegisterAddr = self.RFConfig.addrhead[16]
         calibrationValue = 1
         self.RF_Config.hide()
-        QMessageBox.information(self, "提示：","射频硬件校准中，请等待......")
+        QMessageBox.information(self, "提示：", "射频硬件校准中，请等待......")
         self.textBrowser_2.append("<font color='blue'>" + "硬件校准:")
         data = self.RFConfig.connectCalibrationInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, calibrationValue)
         self.sendConfigtoRF(data, feedbacktime=10)
@@ -1809,11 +918,15 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.IdataSpectrum.clear()
         data = list(range(2048))
         for element in data:
-            if element <= 1024:
-                newElement = 1024 - element
+            if element <= 1022:
+                newElement = 1022 - element
             else:
-                newElement = 2048 - element + 1024
+                newElement = 3070 - element
             self.IdataSpectrum.append(newElement)
+        for i in range(2048):
+            newElement02 = 2047 - self.IdataSpectrum[i]
+            self.IdataSpectrum[i] = newElement02*125/2048 - 125/2
+
 
     def PrepareSNRLineCanvas(self):
         self.SNRLineFigure = Figure_Canvas()
@@ -1840,13 +953,15 @@ class configPage(QMainWindow, Ui_MainWindow):
             if dataType == 'pilot':
                 Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(2, 26)))
             elif dataType == 'spectrum':
-                Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)))
+                if ivalue != 0 or qvalue != 0:
+                    Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)) - 96)
+                else:
+                    Qdata.append(-126)
             else:
                 Idata.append(ivalue/65535)
                 Qdata.append(qvalue/65535)
             sourceData = sourceData[4:]
         if len(Qdata) >= targetLen:
-            #print("Idata:", Idata)
             return True
         else:
             return False
@@ -1861,60 +976,77 @@ class configPage(QMainWindow, Ui_MainWindow):
             if(self.getIQdata(Statistical, self.QdataIn, self.IdataIn, 4096, 'IQin') == True):
                 self.IQinFigure.ax.cla()
                 self.IQinFigure.ax.set_autoscale_on(True)
-                # print("In:", len(self.QdataIn), len(self.IdataIn))
                 self.IQinFigure.ax.scatter(self.IdataIn, self.QdataIn, 3)
                 self.IQinFigure.draw()
-                # print("draw IQ in")
                 self.IQinFigure.flush_events()
-                #print("IQdata in")
                 self.IdataIn.clear()
                 self.QdataIn.clear()
         elif flag == 3:
             if (self.getIQdata(Statistical, self.QdataOut, self.IdataOut, 4096, 'IQout') == True):
                 self.IQOutFigure.ax.cla()
                 self.IQOutFigure.ax.set_autoscale_on(True)
-                # print("Out:", len(self.QdataOut), len(self.IdataOut))
                 self.IQOutFigure.ax.scatter(self.IdataOut, self.QdataOut, 3)
                 self.IQOutFigure.draw()
-                # print("draw IQ out")
                 self.IQOutFigure.flush_events()
-                #print("IQdata out")
                 self.IdataOut.clear()
                 self.QdataOut.clear()
         elif flag == 4:
-            if (self.getIQdata(Statistical, self.QdataPilot, [] ,1280, 'pilot') == True):
+            # print(len(self.QdataPilot))
+            if len(self.QdataPilot) == 1280:
                 self.LineFigure.ax.cla()
+                self.LineFigure.ax.set_autoscale_on(True)
                 self.LineFigure.ax.plot(self.QdataPilot)
                 self.LineFigure.draw()
                 # print("draw Pilot")
                 self.LineFigure.flush_events()
-                #print("IQPilot draw")
                 self.QdataPilot.clear()
+            else:
+                self.QdataPilot.clear()
+            self.getIQdata(Statistical, self.QdataPilot, [], 1280, 'pilot')
+
         elif flag == 5:
             # print(Statistical)
             self.showLDPCStatistical(Statistical)
         elif flag == 6:
-            if (self.getIQdata(Statistical, self.QdataSpectrum, [], 2048, 'spectrum') == True):
+            if len(self.QdataSpectrum) == 2048:
                 self.SpectrumLineFigure.ax.cla()
+                self.SpectrumLineFigure.ax.set_xlabel("Frequcy(MHz)")
                 self.SpectrumLineFigure.ax.set_autoscale_on(True)
-                self.SpectrumLineFigure.ax.plot(self.IdataSpectrum, self.QdataSpectrum)
+                IdataSpectrum = list(map(lambda x: x + self.RFFrequencyReceived*1000, self.IdataSpectrum))
+                self.SpectrumLineFigure.ax.plot(IdataSpectrum, self.QdataSpectrum)
+                # print("draw Spectrum!!")
                 self.SpectrumLineFigure.draw()
                 self.SpectrumLineFigure.flush_events()
                 self.QdataSpectrum.clear()
+            else:
+                self.QdataSpectrum.clear()
+            self.getIQdata(Statistical, self.QdataSpectrum, [], 2048, 'spectrum')
+        elif flag == 7:
+            self.getIQdata(Statistical, self.QdataSpectrum, [], 2048, 'spectrum')
+            self.SpectrumLineFigure.ax.cla()
+            self.SpectrumLineFigure.flush_events()
+        elif flag == 8:
+            self.getIQdata(Statistical, self.QdataPilot, [], 1280, 'pilot')
+            # print("receive data")
+            self.LineFigure.ax.cla()
+            self.LineFigure.flush_events()
         else:
             print("无效的统计数据")
 
     def updateStatistical(self):
         if not statisticalQueue.empty():
-            # print("show picture!")
             self.showStatistical(statisticalQueue.get())
 
     def updateLDPCStatistical(self):
         if not LDPCstatisticalQueue.empty():
             self.showStatistical(LDPCstatisticalQueue.get())
 
+    def updateSpectrumStatistical(self):
+        if not SpectrumStatisticalQueue.empty():
+            self.showStatistical(SpectrumStatisticalQueue.get())
+
     def statisticalTimer(self):
-        self.timer.start(10)
+        self.timer.start(1)
         print('调制解调统计数据开始更新')
         self.timer.timeout.connect(self.updateStatistical)
 
@@ -1923,13 +1055,22 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.timer.stop()
 
     def LDPCStatisticalTimer(self):
-        self.LDPCtimer.start(10)
+        self.LDPCtimer.start(1)
         print('LDPC统计数据开始更新')
         self.LDPCtimer.timeout.connect(self.updateLDPCStatistical)
 
     def killLDPCStatisticalTimer(self):
         print('停止显示LDPC统计数据')
         self.LDPCtimer.stop()
+
+    def startSpectrumTimer(self):
+        self.spectrumTimer.start(1)
+        print("频谱检测开始更新")
+        self.spectrumTimer.timeout.connect(self.updateSpectrumStatistical)
+
+    def killSpectrumTimer(self):
+        print("停止显示频谱检测")
+        self.spectrumTimer.stop()
 
     '''def startDataTimer(self):
         self.dataTimer.start(1)
@@ -1977,12 +1118,26 @@ class configPage(QMainWindow, Ui_MainWindow):
         except ValueError:
             print("LDPC统计端口配置无效")
 
+    def setSpectrumStatisticalPort(self):
+        global SpectrumPortStatistical
+        try:
+            port = int(self.spectrumPort_obj.text())
+            if 1024 <= port < 65535:
+                SpectrumPortStatistical = port
+            else:
+                if(self.spectrumPort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= SpectrumPortStatistical < 65535")
+        except ValueError:
+            print("频谱检测端口配置无效")
+
 if __name__ == "__main__":
     ipaddr = getChosenIP('1')
     statisticThread = StatisticThread()
     statisticThread.start()
     statisticThreadLDPC = LDPCStatisticThread()
     statisticThreadLDPC.start()
+    spectrumThread = SpectrumStatisticThread()
+    spectrumThread.start()
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Windows'))
     mainWin = configPage()
