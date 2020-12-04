@@ -517,7 +517,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         addrBB = (self.ipBB, self.portBB)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((ipaddr, 8000))
+            configSocket.bind((ipaddr, 9000))
         except OSError:
             print('发送基带配置：IP端口绑定失败')
             return
@@ -541,7 +541,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         addrRF = (self.ipRF, self.portRF)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((ipaddr, 8001))
+            configSocket.bind((ipaddr, 9001))
         except OSError:
             self.textBrowser_2.append("<font color='red'>"+"发送射频配置：IP端口绑定失败")
             return
@@ -573,7 +573,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            configSocket.bind((ipaddr, 8002))
+            configSocket.bind((ipaddr, 9002))
         except OSError:
             print('发送LDPC设置：IP端口绑定失败')
             return
