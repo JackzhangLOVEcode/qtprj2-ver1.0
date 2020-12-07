@@ -7,7 +7,7 @@ from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from othres import getChosenIP, ConnectRFConfig, print_bytes_hex
+from othres import getChosenIP, ConnectRFConfig, print_bytes_hex, getStatisticalPort
 
 '''def bytesToFloat(h1, h2, h3, h4):
     ba = bytearray()
@@ -22,8 +22,8 @@ class StatisticThread(QThread):
         super(StatisticThread, self).__init__()
 
     def run(self):
-        global portStatistical
-        portStatistical = 7000
+        # global portStatistical
+        # portStatistical = 7000
         global statisticalQueue
         statisticalQueue = queue.Queue(0)
         while True:
@@ -46,8 +46,8 @@ class LDPCStatisticThread(QThread):
         super(LDPCStatisticThread, self).__init__()
 
     def run(self):
-        global LDPCportStatistical
-        LDPCportStatistical = 7010
+        #global LDPCportStatistical
+        #LDPCportStatistical = 7010
         global LDPCstatisticalQueue
         LDPCstatisticalQueue = queue.Queue(0)
         while True:
@@ -78,8 +78,8 @@ class SpectrumStatisticThread(QThread):
         self.socket.bind(addr)'''
 
     def run(self):
-        global SpectrumPortStatistical
-        SpectrumPortStatistical = 7020
+        # global SpectrumPortStatistical
+        # SpectrumPortStatistical = 7020
         global SpectrumStatisticalQueue
         SpectrumStatisticalQueue = queue.Queue(0)
         while True:
@@ -101,8 +101,8 @@ class IQThread(QThread):
         super(IQThread, self).__init__()
 
     def run(self):
-        global portIQ
-        portIQ = 7001
+        # global portIQ
+        # portIQ = 7001
         global IQQueue
         IQQueue = queue.Queue(0)
         while True:
@@ -199,6 +199,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.PrepareSpectrumLineCanvas()
         self.PrepareSpectrumIdata()
         self.PrepareSNRLineCanvas()
+        self.statisticalPort_obj.setText(str(portStatistical))
+        self.LDPCstatisticalPort_obj.setText(str(LDPCportStatistical))
+        self.spectrumPort_obj.setText(str(SpectrumPortStatistical))
+        self.IQPort_obj.setText(str(portIQ))
         self.Reserv_5_obj.setVisible(False)
         self.Reserv_5_label.setVisible(False)
         self.Reserv_6_obj.setVisible(False)
@@ -1169,6 +1173,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             print("IQ端口配置无效")
 
 if __name__ == "__main__":
+    portStatistical, LDPCportStatistical, SpectrumPortStatistical, portIQ = getStatisticalPort()
     ipaddr = getChosenIP('1')
     statisticThread = StatisticThread()
     statisticThread.start()

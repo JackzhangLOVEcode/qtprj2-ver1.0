@@ -1,6 +1,5 @@
 import socket
 
-
 def getChosenIP(segment):
     hostName = socket.gethostname()
     ipAddrInfoList = socket.getaddrinfo(hostName, None, 2)
@@ -14,6 +13,23 @@ def getChosenIP(segment):
     print('本机无网段为%s的IP，请检查本机IP设置！！'%segment)
     print('本机IP为：', ipList)
     return ipList[0]
+
+portFile = 'setPort.txt'
+def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=7001):
+    try:
+        port = open(portFile, 'r', encoding='utf-8')
+        Line1 = port.readline().strip()
+        MDport = int(Line1.split(":")[1])
+        Line2 = port.readline().strip()
+        LDPCport = int(Line2.split(":")[1])
+        Line3 = port.readline().strip()
+        SpectrumPort = int(Line3.split(":")[1])
+        Line4 = port.readline().strip()
+        IQport = int(Line4.split(":")[1])
+    except FileNotFoundError:
+        print("提示：未设置统计端口port，以默认端口启动")
+        return MDport, LDPCport, SpectrumPort, IQport
+    return MDport, LDPCport, SpectrumPort, IQport
 
 def print_bytes_hex(data):
     lin = ['%02X' % i for i in data]
@@ -133,3 +149,4 @@ if __name__ == "__main__":
     print_bytes_hex(config.connectClockInfo(0, 1, 1, config.addrhead[14], 2, 1))  # 设置参考时钟选择
     print("设置观察通道选择")
     print_bytes_hex(config.connectObservationChannelInfo(0, 1, 1, config.addrhead[15], 2))  # 设置观察通道选择
+    getStatisticalPort()
