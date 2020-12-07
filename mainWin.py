@@ -9,29 +9,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from othres import getChosenIP, ConnectRFConfig, print_bytes_hex
 
-fpgalist = ['FPGA1','FPGA2','FPGA3','FPGA4']
-specfile = 'specline.txt'
-specbin = 'specbin.bin'
-specip = 'specip.txt'
-txdata = bytearray(20)
-bufaddr = bytearray(16)
-bufdata = bytearray(16*4)
-rxdata = bytearray(20)
-lindex = 0
-txindex = 0
-addrhead = array('b',[0x00,0x01,0x02,0x03,0x04,0x10,0x11,0x12,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E])
-ip1 = 192
-ip2 = 168
-ip3 = 0
-ip4 = 104
-PORT = 6005
-Uport = 8888
-
-Dport = 9999
-Iport = 6005
-framedatalen = 235
-zerodata = bytearray([1 for i in range(256)])
-
 '''def bytesToFloat(h1, h2, h3, h4):
     ba = bytearray()
     ba.append(h1)
@@ -118,6 +95,30 @@ class SpectrumStatisticThread(QThread):
                 # print("频谱数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
+class IQThread(QThread):
+    def __int__(self):
+        super(IQThread, self).__init__()
+
+    def run(self):
+        global portIQ
+        portIQ = 7001
+        global IQQueue
+        IQQueue = queue.Queue(0)
+        while True:
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                addr = (ipaddr, portIQ)
+                buffsize = 1500
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(1)
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                IQQueue.put(data)
+                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+            except socket.timeout:
+                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+                pass
+            statisticalSocket.close()
 '''class DataThread(QThread):
     def __int__(self):
         super(DataThread, self).__init__()
@@ -190,6 +191,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         # self.dataTimer = QTimer()
         self.LDPCtimer = QTimer()
         self.spectrumTimer = QTimer()
+        self.IQtimer = QTimer()
         self.RFFrequencyReceived = 1.6
         self.PrepareIQinCanvas()
         self.PrepareIQOutCanvas()
@@ -231,7 +233,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
         self.setRFDefault.clicked.connect(self.setRFConfig)
         self.start.clicked.connect(self.statisticalTimer)
+        self.start.clicked.connect(self.startIQTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
+        self.stop.clicked.connect(self.killIQTimer)
         self.start_LDPC.clicked.connect(self.LDPCStatisticalTimer)
         self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
         self.start_spectrum.clicked.connect(self.startSpectrumTimer)
@@ -239,6 +243,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
         self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
         self.spectrumPort_obj.editingFinished.connect(self.setSpectrumStatisticalPort)
+        self.IQPort_obj.editingFinished.connect(self.setIQPort)
         self.RF_send_freq_obj.returnPressed.connect(self.RFSendFreqChanged)
         self.RF_receive_freq_obj.returnPressed.connect(self.RFReceiveFreqChanged)
         self.RF_receive_band_obj.returnPressed.connect(self.RFReceiveBandChanged)
@@ -516,11 +521,11 @@ class configPage(QMainWindow, Ui_MainWindow):
             return
         addrBB = (self.ipBB, self.portBB)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
+        '''try:
             configSocket.bind((ipaddr, 9000))
         except OSError:
             print('发送基带配置：IP端口绑定失败')
-            return
+            return'''
         self.connectTXConfigData()
         print("表1配置(基带发端配置)：", self.TXConfig)
         configSocket.sendto((self.TXConfigBytes), addrBB)
@@ -540,11 +545,11 @@ class configPage(QMainWindow, Ui_MainWindow):
             return
         addrRF = (self.ipRF, self.portRF)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
+        '''try:
             configSocket.bind((ipaddr, 9001))
         except OSError:
             self.textBrowser_2.append("<font color='red'>"+"发送射频配置：IP端口绑定失败")
-            return
+            return'''
         self.textBrowser_2.append("发送配置数据：")
         self.textBrowser_2.append(print_bytes_hex(data))
         configSocket.sendto(data, addrRF)
@@ -572,11 +577,11 @@ class configPage(QMainWindow, Ui_MainWindow):
             return
         addrLDPC = (self.ipLDPC, self.portLDPC)
         configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
+        '''try:
             configSocket.bind((ipaddr, 9002))
         except OSError:
             print('发送LDPC设置：IP端口绑定失败')
-            return
+            return'''
         self.connectLDPCConfig()
         print("表8配置(LDPC配置)：", self.LDPCConfig)
         configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
@@ -973,7 +978,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             # print(Statistical)
             self.showBasebandStatistical(Statistical)
         elif flag == 2:
-            if(self.getIQdata(Statistical, self.QdataIn, self.IdataIn, 4096, 'IQin') == True):
+            if(self.getIQdata(Statistical, self.QdataIn, self.IdataIn, 2048, 'IQin') == True):
                 self.IQinFigure.ax.cla()
                 self.IQinFigure.ax.set_autoscale_on(True)
                 self.IQinFigure.ax.scatter(self.IdataIn, self.QdataIn, 3)
@@ -982,7 +987,7 @@ class configPage(QMainWindow, Ui_MainWindow):
                 self.IdataIn.clear()
                 self.QdataIn.clear()
         elif flag == 3:
-            if (self.getIQdata(Statistical, self.QdataOut, self.IdataOut, 4096, 'IQout') == True):
+            if (self.getIQdata(Statistical, self.QdataOut, self.IdataOut, 2048, 'IQout') == True):
                 self.IQOutFigure.ax.cla()
                 self.IQOutFigure.ax.set_autoscale_on(True)
                 self.IQOutFigure.ax.scatter(self.IdataOut, self.QdataOut, 3)
@@ -1045,6 +1050,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         if not SpectrumStatisticalQueue.empty():
             self.showStatistical(SpectrumStatisticalQueue.get())
 
+    def updateIQStatistical(self):
+        if not IQQueue.empty():
+            self.showStatistical(IQQueue.get())
+
     def statisticalTimer(self):
         self.timer.start(1)
         print('调制解调统计数据开始更新')
@@ -1071,6 +1080,15 @@ class configPage(QMainWindow, Ui_MainWindow):
     def killSpectrumTimer(self):
         print("停止显示频谱检测")
         self.spectrumTimer.stop()
+
+    def startIQTimer(self):
+        self.IQtimer.start(1)
+        print("IQ显示开始更新")
+        self.IQtimer.timeout.connect(self.updateIQStatistical)
+
+    def killIQTimer(self):
+        print("停止IQ显示更新")
+        self.IQtimer.stop()
 
     '''def startDataTimer(self):
         self.dataTimer.start(1)
@@ -1099,7 +1117,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         try:
             port = int(self.statisticalPort_obj.text())
             if 1024 <= port < 65535:
-                portStatistical = port
+                if port != int(self.IQPort_obj.text()):
+                    portStatistical = port
+                else:
+                    if (self.statisticalPort_obj.hasFocus()):
+                        QMessageBox.information(self, "Warnning", "该端口已被占用！")
             else:
                 if(self.statisticalPort_obj.hasFocus()):
                     QMessageBox.information(self, "Tips", "1024 <= statisticalPort < 65535")
@@ -1130,6 +1152,22 @@ class configPage(QMainWindow, Ui_MainWindow):
         except ValueError:
             print("频谱检测端口配置无效")
 
+    def setIQPort(self):
+        global portIQ
+        try:
+            port = int(self.IQPort_obj.text())
+            if 1024 <= port < 65535:
+                if port != int(self.statisticalPort_obj.text()):
+                    portIQ = port
+                else:
+                    if (self.IQPort_obj.hasFocus()):
+                        QMessageBox.information(self, "Warnning", "该端口已被占用！")
+            else:
+                if(self.spectrumPort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= SpectrumPortStatistical < 65535")
+        except ValueError:
+            print("IQ端口配置无效")
+
 if __name__ == "__main__":
     ipaddr = getChosenIP('1')
     statisticThread = StatisticThread()
@@ -1138,6 +1176,8 @@ if __name__ == "__main__":
     statisticThreadLDPC.start()
     spectrumThread = SpectrumStatisticThread()
     spectrumThread.start()
+    IQdataThread = IQThread()
+    IQdataThread.start()
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Windows'))
     mainWin = configPage()

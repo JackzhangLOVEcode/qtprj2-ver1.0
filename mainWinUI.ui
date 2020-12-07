@@ -544,8 +544,8 @@
       <property name="title">
        <string>调制解调统计接收</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_37">
-       <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_34">
+       <item row="0" column="0">
         <widget class="QLineEdit" name="statisticalPort_obj">
          <property name="maximumSize">
           <size>
@@ -566,7 +566,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="1">
         <widget class="QLabel" name="statisticalPort_label">
          <property name="maximumSize">
           <size>
@@ -580,14 +580,56 @@
           </font>
          </property>
          <property name="text">
-          <string>统计端口</string>
+          <string>：系统</string>
          </property>
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="0" column="2">
+        <widget class="QLineEdit" name="IQPort_obj">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>7001</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="IQPort_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>：IQ</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
         <widget class="QPushButton" name="start">
          <property name="maximumSize">
           <size>
@@ -608,7 +650,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1" colspan="2">
+       <item row="1" column="2" colspan="2">
         <widget class="QPushButton" name="stop">
          <property name="maximumSize">
           <size>
@@ -650,7 +692,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
