@@ -119,6 +119,48 @@ class IQThread(QThread):
                 # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
+class SSSysThread(QThread):
+    def __int__(self):
+        super(SSSysThread, self).__init__()
+
+    def run(self):
+        global SSSysQueue
+        SSSysQueue = queue.Queue(0)
+        while True:
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                addr = (ipaddr, portSSSys)
+                buffsize = 1500
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(1)
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                SSSysQueue.put(data)
+            except socket.timeout:
+                pass
+            statisticalSocket.close()
+
+class SSCorrValueThread(QThread):
+    def __int__(self):
+        super(SSCorrValueThread, self).__init__()
+
+    def run(self):
+        global SSCorrValueQueue
+        SSCorrValueQueue = queue.Queue(0)
+        while True:
+            try:
+                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                addr = (ipaddr, portCorrValue)
+                buffsize = 1500
+                statisticalSocket.bind(addr)
+                statisticalSocket.settimeout(1)
+                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                SSCorrValueQueue.put(data)
+                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+            except socket.timeout:
+                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
+                pass
+            statisticalSocket.close()
 '''class DataThread(QThread):
     def __int__(self):
         super(DataThread, self).__init__()
@@ -168,6 +210,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig = []
         self.RFConfig = ConnectRFConfig()
         self.LDPCConfig = []
+        self.SSConfig = []
         self.IdataIn = []
         self.QdataIn = []
         self.IdataOut = []
@@ -176,27 +219,36 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.QdataSpectrum = []
         self.IdataSpectrum = []
         self.SNRDataArray = []
+        self.CorrValue01 = []
+        self.CorrValue02 = []
         self.TXConfigBytes = bytes()
         self.RXConfigBytes = bytes()
         self.LDPCConfigBytes = bytes()
+        self.SSConfigBytes = bytes()
         self.ipBB = '192.168.1.84'
         self.portBB = 8000
         self.ipRF = '192.168.1.38'
         self.portRF = 6005
-        self.ipData = '192.168.1.84'
-        self.portData = 8002
-        self.ipLDPC = '192.168.1.85'
+        # self.ipData = '192.168.1.84'
+        # self.portData = 8002
+        self.ipLDPC = '192.168.1.90'
         self.portLDPC = 8000
+        self.ipSS = '192.168.1.93'
+        self.portSS = 8003
         self.timer = QTimer()
         # self.dataTimer = QTimer()
         self.LDPCtimer = QTimer()
         self.spectrumTimer = QTimer()
         self.IQtimer = QTimer()
+        self.SStimer01 = QTimer()
+        self.SStimer02 = QTimer()
         self.RFFrequencyReceived = 1.6
         self.PrepareIQinCanvas()
         self.PrepareIQOutCanvas()
         self.PreparePilotLineCanvas()
         self.PrepareSpectrumLineCanvas()
+        self.PrepareCorrValue01Canvas()
+        self.PrepareCorrValue02Canvas()
         self.PrepareSpectrumIdata()
         self.PrepareSNRLineCanvas()
         self.statisticalPort_obj.setText(str(portStatistical))
@@ -236,6 +288,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
         self.setRFDefault.clicked.connect(self.setRFConfig)
+        self.sendSpreadConfig.clicked.connect(self.sendSSConfig)
+        self.setSpreadDefault.clicked.connect(self.setSSDefaultConfig)
         self.start.clicked.connect(self.statisticalTimer)
         self.start.clicked.connect(self.startIQTimer)
         self.stop.clicked.connect(self.killStatisticalTimer)
@@ -244,10 +298,14 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.stop_LDPC.clicked.connect(self.killLDPCStatisticalTimer)
         self.start_spectrum.clicked.connect(self.startSpectrumTimer)
         self.stop_spectrum.clicked.connect(self.killSpectrumTimer)
+        self.startSysData.clicked.connect(self.startSSTimer)
+        self.stopSysData.clicked.connect(self.killSSTimer)
         self.statisticalPort_obj.editingFinished.connect(self.setStatisticalPort)
         self.LDPCstatisticalPort_obj.editingFinished.connect(self.setLDPCStatisticalPort)
         self.spectrumPort_obj.editingFinished.connect(self.setSpectrumStatisticalPort)
         self.IQPort_obj.editingFinished.connect(self.setIQPort)
+        self.SysPort_obj.editingFinished.connect(self.setSSSysPort)
+        self.CorrValuePort_obj.editingFinished.connect(self.setSSCorrValuePort)
         self.RF_send_freq_obj.returnPressed.connect(self.RFSendFreqChanged)
         self.RF_receive_freq_obj.returnPressed.connect(self.RFReceiveFreqChanged)
         self.RF_receive_band_obj.returnPressed.connect(self.RFReceiveBandChanged)
@@ -420,6 +478,42 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfigBytes = bytes(self.LDPCConfig)
 
+    def connectSSConfig(self):
+        self.SSConfig.clear()
+        flag = 0
+        self.SSConfig.extend(int(flag).to_bytes(1, byteorder='big'))
+        self.SSConfig.extend(int(self.Source_select_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        self.SSConfig.extend(int(self.ZC_select_obj.currentIndex()).to_bytes(1, byteorder='big'))
+        Rst = 1 if self.RST_obj.isChecked() else 0
+        self.SSConfig.extend(int(Rst).to_bytes(1, byteorder='big'))
+        self.SSConfig.extend(int(self.ZC32_T_obj.value()).to_bytes(3, byteorder='big'))
+        self.SSConfig.extend(int(0).to_bytes(4, byteorder='big'))
+        self.SSConfig.extend(int(self.Statis_num_obj.value()).to_bytes(2, byteorder='big'))
+        self.SSConfig.extend(int(0).to_bytes(4, byteorder='big'))
+        self.SSConfig.extend(int(self.ZC128_T_obj.value()).to_bytes(3, byteorder='big'))
+        self.SSConfig.extend(int(0).to_bytes(3, byteorder='big'))
+        self.SSConfig.extend(int(self.ZC32_Value_obj.value()).to_bytes(4, byteorder='big'))
+        self.SSConfig.extend(int(self.ZC128_Value_obj.value()).to_bytes(4, byteorder='big'))
+        SSIp = list(map(int, self.BBIP_obj.text().split(".")))
+        self.SSConfig = self.SSConfig + SSIp
+        localIp = list(map(int, ipaddr.split(".")))
+        self.SSConfig = self.SSConfig + localIp
+        self.SSConfig.extend(int(0).to_bytes(28, byteorder='big'))
+        self.SSConfigBytes = bytes(self.SSConfig)
+
+    def setSSDefaultConfig(self):
+        self.Source_select_obj.setCurrentIndex(0)
+        self.ZC_select_obj.setCurrentIndex(0)
+        self.RST_obj.setChecked(False)
+        self.ZC32_T_obj.setValue(83333)
+        self.Statis_num_obj.setValue(1000)
+        self.ZC128_T_obj.setValue(625000)
+        self.ZC32_Value_obj.setValue(24575)
+        self.ZC128_Value_obj.setValue(24575)
+
+        self.BBIP_obj.setText('192.168.1.93')
+        self.BBPort_obj.setText('8003')
+
     def setBBDefaultConfig(self):
         # 设置发端默认参数
         self.papr_en_obj.setChecked(True)
@@ -478,6 +572,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.MMSEorLS_obj.setCurrentIndex(0)
         self.as_time_trig2tx_obj.setValue(17339)
         self.as_trig2tx_cnt_obj.setValue(58735)
+
+        self.BBIP_obj.setText('192.168.1.84')
+        self.BBPort_obj.setText('8000')
 
     def setRFDefaultConfig(self):
         # 设置射频参数
@@ -589,6 +686,21 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.connectLDPCConfig()
         print("表8配置(LDPC配置)：", self.LDPCConfig)
         configSocket.sendto(self.LDPCConfigBytes, addrLDPC)
+        configSocket.close()
+        return
+
+    def sendSSConfig(self):
+        self.ipSS = self.BBIP_obj.text()
+        try:
+            self.portSS = int(self.BBPort_obj.text())
+        except ValueError:
+            print("扩频端口配置无效")
+            return
+        addrSS= (self.ipSS, self.portSS)
+        configSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.connectSSConfig()
+        print("扩频配置：", self.SSConfig)
+        configSocket.sendto(self.SSConfigBytes, addrSS)
         configSocket.close()
         return
 
@@ -897,6 +1009,27 @@ class configPage(QMainWindow, Ui_MainWindow):
             BER = 'Invalid'
             self.BER_show_2.setText(BER)
 
+    def showSSSysdata(self, data):
+        Frame_Num32 = int.from_bytes(data[8:10], byteorder='big')
+        self.Frame_num32_obj.setText(str(Frame_Num32))
+        Frame_Num128 = int.from_bytes(data[10:12], byteorder='big')
+        self.Frame_num128_obj.setText(str(Frame_Num128))
+        Biterr_num32 = int.from_bytes(data[19:22], byteorder='big')
+        self.Biterr_num32_obj.setText(str(Biterr_num32))
+        Biterr_num128 = int.from_bytes(data[22:25], byteorder='big')
+        self.Biterr_num128_obj.setText(str(Biterr_num128))
+        if Frame_Num32 != 0:
+            Biterr_rate32 = Biterr_num32/(Frame_Num32 * 239 * 8)
+            self.Biterr_rate32_obj.setText('{:.2e}'.format(Biterr_rate32))
+        else:
+            self.Biterr_rate32_obj.setText("无效")
+
+        if Frame_Num128 != 0:
+            Biterr_rate128 = Biterr_num128/(Frame_Num128 * 239 * 8)
+            self.Biterr_rate128_obj.setText('{:.2e}'.format(Biterr_rate128))
+        else:
+            self.Biterr_rate128_obj.setText("无效")
+
     def PrepareIQinCanvas(self):
         self.IQinFigure = Figure_Canvas()
         # self.IQinFigure.ax.spines['top'].set_color('none')
@@ -936,6 +1069,15 @@ class configPage(QMainWindow, Ui_MainWindow):
             newElement02 = 2047 - self.IdataSpectrum[i]
             self.IdataSpectrum[i] = newElement02*125/2048 - 125/2
 
+    def PrepareCorrValue01Canvas(self):
+        self.CorrValue01LineFigure = Figure_Canvas()
+        self.CorrValue01LineLayout = QGridLayout(self.Corr_Value_ZC1)
+        self.CorrValue01LineLayout.addWidget(self.CorrValue01LineFigure)
+
+    def PrepareCorrValue02Canvas(self):
+        self.CorrValue02LineFigure = Figure_Canvas()
+        self.CorrValue02LineLayout = QGridLayout(self.Corr_Value_ZC2)
+        self.CorrValue02LineLayout.addWidget(self.CorrValue02LineFigure)
 
     def PrepareSNRLineCanvas(self):
         self.SNRLineFigure = Figure_Canvas()
@@ -957,18 +1099,21 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def getIQdata(self, sourceData, Qdata, Idata=[], targetLen=1280, dataType='pilot'):
         for i in range(int(len(sourceData)/4)):
-            ivalue = int.from_bytes(sourceData[0:2], byteorder='big', signed=True)
-            qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
-            if dataType == 'pilot':
-                Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(2, 26)))
-            elif dataType == 'spectrum':
-                if ivalue != 0 or qvalue != 0:
-                    Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)) - 96)
-                else:
-                    Qdata.append(-126)
+            if dataType == 'corrValue01' or dataType == 'corrValue02':
+                Qdata.append(int.from_bytes(sourceData[0:4], byteorder='big'))
             else:
-                Idata.append(ivalue/65535)
-                Qdata.append(qvalue/65535)
+                ivalue = int.from_bytes(sourceData[0:2], byteorder='big', signed=True)
+                qvalue = int.from_bytes(sourceData[2:4], byteorder='big', signed=True)
+                if dataType == 'pilot':
+                    Qdata.append((math.pow(ivalue, 2) + math.pow(qvalue, 2))/(math.pow(2, 26)))
+                elif dataType == 'spectrum':
+                    if ivalue != 0 or qvalue != 0:
+                        Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)) - 96)
+                    else:
+                        Qdata.append(-126)
+                else:
+                    Idata.append(ivalue/65535)
+                    Qdata.append(qvalue/65535)
             sourceData = sourceData[4:]
         if len(Qdata) >= targetLen:
             return True
@@ -1039,6 +1184,42 @@ class configPage(QMainWindow, Ui_MainWindow):
             # print("receive data")
             self.LineFigure.ax.cla()
             self.LineFigure.flush_events()
+        elif flag == 10:
+            self.showSSSysdata(Statistical)
+        elif flag == 14:
+            if len(self.CorrValue01) == 1280:
+                self.CorrValue01LineFigure.ax.cla()
+                self.CorrValue01LineFigure.ax.set_autoscale_on(True)
+                self.CorrValue01LineFigure.ax.plot(self.CorrValue01)
+                threshold = [self.ZC32_Value_obj.value(), self.ZC128_Value_obj.value()]
+                self.CorrValue01LineFigure.ax.plot([threshold[self.ZC_select_obj.currentIndex()]]*1280)
+                self.CorrValue01LineFigure.draw()
+                self.CorrValue01LineFigure.flush_events()
+                self.CorrValue01.clear()
+            else:
+                self.CorrValue01.clear()
+            self.getIQdata(Statistical, self.CorrValue01, [], 1280, 'corrValue01')
+        elif flag == 18:
+            self.getIQdata(Statistical, self.CorrValue01, [], 1280, 'corrValue01')
+            self.CorrValue01LineFigure.ax.cla()
+            self.CorrValue01LineFigure.flush_events()
+        elif flag == 15:
+            if len(self.CorrValue02) == 1280:
+                self.CorrValue02LineFigure.ax.cla()
+                self.CorrValue02LineFigure.ax.set_autoscale_on(True)
+                self.CorrValue02LineFigure.ax.plot(self.CorrValue02)
+                threshold = [self.ZC32_Value_obj.value(), self.ZC128_Value_obj.value()]
+                self.CorrValue02LineFigure.ax.plot([threshold[self.ZC_select_obj.currentIndex()]]*1280)
+                self.CorrValue02LineFigure.draw()
+                self.CorrValue02LineFigure.flush_events()
+                self.CorrValue02.clear()
+            else:
+                self.CorrValue02.clear()
+            self.getIQdata(Statistical, self.CorrValue02, [], 1280, 'corrValue02')
+        elif flag == 17:
+            self.getIQdata(Statistical, self.CorrValue02, [], 1280, 'corrValue02')
+            self.CorrValue02LineFigure.ax.cla()
+            self.CorrValue02LineFigure.flush_events()
         else:
             print("无效的统计数据")
 
@@ -1058,8 +1239,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         if not IQQueue.empty():
             self.showStatistical(IQQueue.get())
 
+    def updateSSSysStatistical(self):
+        if not SSSysQueue.empty():
+            self.showStatistical(SSSysQueue.get())
+
+    def updateSSCorrValueStatistical(self):
+        if not SSCorrValueQueue.empty():
+            self.showStatistical(SSCorrValueQueue.get())
+
     def statisticalTimer(self):
-        self.timer.start(1)
+        self.timer.start(0)
         print('调制解调统计数据开始更新')
         self.timer.timeout.connect(self.updateStatistical)
 
@@ -1093,6 +1282,18 @@ class configPage(QMainWindow, Ui_MainWindow):
     def killIQTimer(self):
         print("停止IQ显示更新")
         self.IQtimer.stop()
+
+    def startSSTimer(self):
+        print("扩频数据显示开始更新")
+        self.SStimer01.start(1)
+        self.SStimer02.start(1)
+        self.SStimer01.timeout.connect(self.updateSSSysStatistical)
+        self.SStimer02.timeout.connect(self.updateSSCorrValueStatistical)
+
+    def killSSTimer(self):
+        print("停止显示扩频数据")
+        self.SStimer01.stop()
+        self.SStimer02.stop()
 
     '''def startDataTimer(self):
         self.dataTimer.start(1)
@@ -1172,8 +1373,32 @@ class configPage(QMainWindow, Ui_MainWindow):
         except ValueError:
             print("IQ端口配置无效")
 
+    def setSSSysPort(self):
+        global portSSSys
+        try:
+            port = int(self.SysPort_obj.text())
+            if 1024 <= port < 65535:
+                portSSSys = port
+            else:
+                if (self.SysPort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= SysPort < 65535")
+        except ValueError:
+            print("扩频系统端口配置无效")
+
+    def setSSCorrValuePort(self):
+        global portCorrValue
+        try:
+            port = int(self.CorrValuePort_obj.text())
+            if 1024 <= port < 65535:
+                portCorrValue = port
+            else:
+                if (self.CorrValuePort_obj.hasFocus()):
+                    QMessageBox.information(self, "Tips", "1024 <= CorrValuePort < 65535")
+        except ValueError:
+            print("扩频相关数端口配置无效")
+
 if __name__ == "__main__":
-    portStatistical, LDPCportStatistical, SpectrumPortStatistical, portIQ = getStatisticalPort()
+    portStatistical, LDPCportStatistical, SpectrumPortStatistical, portIQ, portSSSys, portCorrValue = getStatisticalPort()
     ipaddr = getChosenIP('1')
     statisticThread = StatisticThread()
     statisticThread.start()
@@ -1183,6 +1408,10 @@ if __name__ == "__main__":
     spectrumThread.start()
     IQdataThread = IQThread()
     IQdataThread.start()
+    SSSystemThread = SSSysThread()
+    SSSystemThread.start()
+    CorrValueThread = SSCorrValueThread()
+    CorrValueThread.start()
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Windows'))
     mainWin = configPage()

@@ -1,4 +1,4 @@
-import socket
+import socket, serial, pynmea2
 
 def getChosenIP(segment):
     hostName = socket.gethostname()
@@ -15,7 +15,7 @@ def getChosenIP(segment):
     return ipList[0]
 
 portFile = 'setPort.txt'
-def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=7001):
+def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=7001, SSSysport=7002, SSCorrValuePort=7003):
     try:
         port = open(portFile, 'r', encoding='utf-8')
         Line1 = port.readline().strip()
@@ -26,10 +26,25 @@ def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=700
         SpectrumPort = int(Line3.split(":")[1])
         Line4 = port.readline().strip()
         IQport = int(Line4.split(":")[1])
+        Line5 = port.readline().strip()
+        SSSysport = int(Line5.split(":")[1])
+        Line6 = port.readline().strip()
+        SSCorrValuePort = int(Line6.split(":")[1])
     except FileNotFoundError:
         print("提示：未设置统计端口port，以默认端口启动")
-        return MDport, LDPCport, SpectrumPort, IQport
-    return MDport, LDPCport, SpectrumPort, IQport
+        return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort
+    return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort
+
+def getGPSdata(port='COM3', baudrate=38400):
+    try:
+        ser = serial.Serial(port, baudrate=baudrate)
+        line = bytes.decode(ser.readline())
+        if line.startswith('$GNRMC'):
+            rmc = pynmea2.parse(line)
+            print(rmc.longitude, rmc.latitude)
+    except serial.serialutil.SerialException as error:
+        print("串口连接错误：")
+        print(error)
 
 def print_bytes_hex(data):
     lin = ['%02X' % i for i in data]
@@ -150,3 +165,4 @@ if __name__ == "__main__":
     print("设置观察通道选择")
     print_bytes_hex(config.connectObservationChannelInfo(0, 1, 1, config.addrhead[15], 2))  # 设置观察通道选择
     getStatisticalPort()
+    getGPSdata()

@@ -1,4 +1,6 @@
-MDPort:7002
-LDPCPort:7011
-SpectrumPort:7021
-IQPort:7003
+MDPort:7000
+LDPCPort:7010
+SpectrumPort:7020
+IQPort:7001
+SSSysPort:7002
+SSCorrValuePort:7003
