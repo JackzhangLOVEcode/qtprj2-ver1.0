@@ -22,8 +22,8 @@ class StatisticThread(QThread):
         super(StatisticThread, self).__init__()
 
     def run(self):
-        # global portStatistical
-        # portStatistical = 7000
+        # global BBstop
+        # BBstop = False
         global statisticalQueue
         statisticalQueue = queue.Queue(0)
         while True:
@@ -918,15 +918,19 @@ class configPage(QMainWindow, Ui_MainWindow):
         FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
         # print("FIFOEmpty:",data[18:19], FIFOEmpty)
         self.FIFOEmpty_show.setText(str(FIFOEmpty))
-        if (noise_pwr_sum == 0):
-            SNR = 50
-        elif self.MType_rx_obj.currentIndex() == 3:
-            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 10) / noise_pwr_sum))
+        if (singal_pwr_sum == 0):
+            SNR = 0
         else:
-            SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 6) / noise_pwr_sum))
+            if (noise_pwr_sum == 0):
+                SNR = 50
+            else:
+                if self.MType_rx_obj.currentIndex() == 3:
+                    SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 10) / noise_pwr_sum))
+                else:
+                    SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 6) / noise_pwr_sum))
         self.SNR_current_show.setText('{:.1f}'.format(SNR))
         # self.count_dot(SNR)
-        self.PrepareSNRSamples(SNR)
+        # self.PrepareSNRSamples(SNR)
         car1 = int.from_bytes(data[19:22], byteorder='big')
         # print("car1_hex:", data[19:22], car1)
         self.car1_hex_show.setText(format(car1, 'x').zfill(5))
@@ -957,6 +961,21 @@ class configPage(QMainWindow, Ui_MainWindow):
             M = M2bit[self.MType_rx_obj.currentIndex()]
             BER = errbit/(((self.calculateValidBitNum(self.car_num_rx_obj.value())*64*M-32)*12)*tolfrm)
             self.BER_show.setText('{:.2e}'.format(BER))
+        SNRSub = []
+        for i in range(20):
+            sigPwr = int.from_bytes(data[(42+i*2):(44+i*2)], byteorder='big')
+            nosPwr = int.from_bytes(data[(90+i*2):(92+i*2)], byteorder='big')
+            if (sigPwr == 0):
+                SNRSub.append(0)
+            else:
+                if (nosPwr == 0):
+                    SNRSub.append(0)
+                else:
+                    if self.MType_rx_obj.currentIndex() == 3:
+                        SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 10) / nosPwr))
+                    else:
+                        SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 6) / nosPwr))
+        self.PrepareSNRSamples(SNRSub)
 
     def showLDPCStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
@@ -1086,14 +1105,15 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def PrepareSNRSamples(self, value):
         self.SNRLineFigure.ax.cla()
-        self.SNRLineFigure.ax.set_xlim(0, 100)
+        self.SNRLineFigure.ax.set_autoscale_on(True)
+        #self.SNRLineFigure.ax.set_xlim(0, 100)
         #self.SNRLineFigure.ax.set_ylim(0, 50)
-        if len(self.SNRDataArray) >= 100:
-            self.SNRDataArray = self.SNRDataArray[-100:]
-        self.SNRDataArray.append(value)
+        #if len(self.SNRDataArray) >= 100:
+        #    self.SNRDataArray = self.SNRDataArray[-100:]
+        #self.SNRDataArray.append(value)
         # SNRLine = Line2D(list(range(len(self.SNRDataArray))), self.SNRDataArray)
         # self.SNRLineFigure.ax.add_line(SNRLine)
-        self.SNRLineFigure.ax.plot(self.SNRDataArray)
+        self.SNRLineFigure.ax.plot(value)
         self.SNRLineFigure.draw()
         self.SNRLineFigure.flush_events()
 
@@ -1222,6 +1242,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             self.CorrValue02LineFigure.flush_events()
         else:
             print("无效的统计数据")
+            print(flag, Statistical)
 
     def updateStatistical(self):
         if not statisticalQueue.empty():
@@ -1241,10 +1262,12 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def updateSSSysStatistical(self):
         if not SSSysQueue.empty():
+            print("更新扩频系统数据")
             self.showStatistical(SSSysQueue.get())
 
     def updateSSCorrValueStatistical(self):
         if not SSCorrValueQueue.empty():
+            print("更新扩频相关值")
             self.showStatistical(SSCorrValueQueue.get())
 
     def statisticalTimer(self):
