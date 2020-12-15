@@ -692,7 +692,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -1082,7 +1082,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Reserv_B0</string>
+              <string>Tx_Rst</string>
              </property>
             </widget>
            </item>
@@ -1094,7 +1094,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Reserv_B1</string>
+              <string>Rx_Rst</string>
              </property>
             </widget>
            </item>
@@ -7713,6 +7713,50 @@
              </property>
              <property name="autoFillBackground">
               <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="sync_pwr_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>同步功率</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLabel" name="sync_pwr_show">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: rgb(255, 255, 255);</string>

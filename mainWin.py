@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import sys, math, socket, queue, time, datetime, encodings.idna
-from array import array
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout, QStyleFactory
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
@@ -22,48 +21,56 @@ class StatisticThread(QThread):
         super(StatisticThread, self).__init__()
 
     def run(self):
-        # global BBstop
-        # BBstop = False
+        global BBstop
+        BBstop = True
         global statisticalQueue
         statisticalQueue = queue.Queue(0)
         while True:
             try:
+                if BBstop == True:
+                    statisticalQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, portStatistical)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                statisticalQueue.put(data)
+                if BBstop == False:
+                    statisticalQueue.put(data)
                 # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
                 # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
 
+
 class LDPCStatisticThread(QThread):
     def __int__(self):
         super(LDPCStatisticThread, self).__init__()
 
     def run(self):
-        #global LDPCportStatistical
-        #LDPCportStatistical = 7010
+        global LDPCstop
+        LDPCstop = True
         global LDPCstatisticalQueue
         LDPCstatisticalQueue = queue.Queue(0)
         while True:
             try:
+                if LDPCstop == True:
+                    LDPCstatisticalQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, LDPCportStatistical)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                LDPCstatisticalQueue.put(data)
+                if LDPCstop == False:
+                    LDPCstatisticalQueue.put(data)
                 # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
                 # print("LDPC数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
 
 class SpectrumStatisticThread(QThread):
     def __int__(self):
@@ -78,89 +85,109 @@ class SpectrumStatisticThread(QThread):
         self.socket.bind(addr)'''
 
     def run(self):
-        # global SpectrumPortStatistical
-        # SpectrumPortStatistical = 7020
+        global SpectrumStop
+        SpectrumStop = True
         global SpectrumStatisticalQueue
         SpectrumStatisticalQueue = queue.Queue(0)
         while True:
             try:
+                if SpectrumStop == True:
+                    SpectrumStatisticalQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, SpectrumPortStatistical)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                SpectrumStatisticalQueue.put(data)
+                if SpectrumStop == False:
+                    SpectrumStatisticalQueue.put(data)
             except socket.timeout:
                 # print("频谱数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
 
 class IQThread(QThread):
     def __int__(self):
         super(IQThread, self).__init__()
 
     def run(self):
-        # global portIQ
-        # portIQ = 7001
+        global IQstop
+        IQstop = True
         global IQQueue
         IQQueue = queue.Queue(0)
         while True:
             try:
+                if IQstop == True:
+                    IQQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, portIQ)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                IQQueue.put(data)
+                if IQstop == False:
+                    IQQueue.put(data)
                 # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
                 # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
 
 class SSSysThread(QThread):
     def __int__(self):
         super(SSSysThread, self).__init__()
 
     def run(self):
+        global SSSysStop
+        SSSysStop = True
         global SSSysQueue
         SSSysQueue = queue.Queue(0)
         while True:
             try:
+                if SSSysStop == True:
+                    SSSysQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, portSSSys)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                SSSysQueue.put(data)
+                if SSSysStop == False:
+                    SSSysQueue.put(data)
             except socket.timeout:
                 pass
             statisticalSocket.close()
+
 
 class SSCorrValueThread(QThread):
     def __int__(self):
         super(SSCorrValueThread, self).__init__()
 
     def run(self):
+        global SSCorrStop
+        SSCorrStop = True
         global SSCorrValueQueue
         SSCorrValueQueue = queue.Queue(0)
         while True:
             try:
+                if SSCorrStop == True:
+                    SSCorrValueQueue.queue.clear()
                 statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 addr = (ipaddr, portCorrValue)
                 buffsize = 1500
                 statisticalSocket.bind(addr)
                 statisticalSocket.settimeout(1)
                 data, addrsource = statisticalSocket.recvfrom(buffsize)
-                SSCorrValueQueue.put(data)
+                if SSCorrStop == False:
+                    SSCorrValueQueue.put(data)
                 # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
             except socket.timeout:
                 # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
                 pass
             statisticalSocket.close()
+
 '''class DataThread(QThread):
     def __int__(self):
         super(DataThread, self).__init__()
@@ -532,12 +559,12 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Rx_enb_obj.setCurrentIndex(0)
         self.Rx_channel_obj.setCurrentIndex(0)
         self.Rx_delay_obj.setValue(20)
-        self.Time_trig2tx_obj.setValue(13000)
+        self.Time_trig2tx_obj.setValue(33300)
         self.Time_tx_hold_obj.setValue(40000)
         self.ms_T_sync2trig_obj.setValue(23880)
-        self.bs_tdd_time_gap_obj.setValue(100000)
-        self.bs_tx_time_gap_obj.setValue(50000)
-        self.Trig_gap_cnt_obj.setValue(100000)
+        self.bs_tdd_time_gap_obj.setValue(80000)
+        self.bs_tx_time_gap_obj.setValue(40000)
+        self.Trig_gap_cnt_obj.setValue(80000)
         self.alway_tx_obj.setCurrentIndex(0)
         self.tx1_en_obj.setCurrentIndex(0)
         self.udpfifo_reset_obj.setCurrentIndex(0)
@@ -606,10 +633,10 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def setLDPCDefaultConfig(self):
         # 设置LDPC配置参数
-        self.LDPC_loop_obj.setCurrentIndex(0)
+        self.LDPC_loop_obj.setCurrentIndex(1)
         self.Pause_obj.setCurrentIndex(0)
         self.LDPC_reset_obj.setChecked(False)
-        self.LDPC_UDPorPN_obj.setCurrentIndex(0)
+        self.LDPC_UDPorPN_obj.setCurrentIndex(1)
         self.FFTManual_obj.setCurrentIndex(0)
         self.FFTTrigger_obj.setCurrentIndex(0)
 
@@ -953,6 +980,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.cnt_rx_frame_show.setText(str(rx_frame_cnt))
         tx_frame_cnt = int.from_bytes(data[39:42], byteorder='big')
         self.cnt_frame_tx_show.setText(str(tx_frame_cnt))
+        sync_pwr = int.from_bytes(data[138:140], byteorder='big')
+        self.sync_pwr_show.setText(str(sync_pwr))
         if tolfrm == 0:
             BER = 'Invalid'
             self.BER_show.setText(BER)
@@ -1262,51 +1291,69 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def updateSSSysStatistical(self):
         if not SSSysQueue.empty():
-            print("更新扩频系统数据")
+            # print("更新扩频系统数据")
             self.showStatistical(SSSysQueue.get())
 
     def updateSSCorrValueStatistical(self):
         if not SSCorrValueQueue.empty():
-            print("更新扩频相关值")
+            # print("更新扩频相关值")
             self.showStatistical(SSCorrValueQueue.get())
 
     def statisticalTimer(self):
+        global BBstop
+        BBstop = False
         self.timer.start(0)
         print('调制解调统计数据开始更新')
         self.timer.timeout.connect(self.updateStatistical)
 
     def killStatisticalTimer(self):
+        global BBstop
+        BBstop = True
         print('停止显示调制解调统计数据')
         self.timer.stop()
 
     def LDPCStatisticalTimer(self):
+        global LDPCstop
+        LDPCstop = False
         self.LDPCtimer.start(1)
         print('LDPC统计数据开始更新')
         self.LDPCtimer.timeout.connect(self.updateLDPCStatistical)
 
     def killLDPCStatisticalTimer(self):
+        global LDPCstop
+        LDPCstop = True
         print('停止显示LDPC统计数据')
         self.LDPCtimer.stop()
 
     def startSpectrumTimer(self):
+        global SpectrumStop
+        SpectrumStop = False
         self.spectrumTimer.start(1)
         print("频谱检测开始更新")
         self.spectrumTimer.timeout.connect(self.updateSpectrumStatistical)
 
     def killSpectrumTimer(self):
+        global SpectrumStop
+        SpectrumStop = True
         print("停止显示频谱检测")
         self.spectrumTimer.stop()
 
     def startIQTimer(self):
+        global IQstop
+        IQstop = False
         self.IQtimer.start(1)
         print("IQ显示开始更新")
         self.IQtimer.timeout.connect(self.updateIQStatistical)
 
     def killIQTimer(self):
+        global IQstop
+        IQstop = True
         print("停止IQ显示更新")
         self.IQtimer.stop()
 
     def startSSTimer(self):
+        global SSSysStop, SSCorrStop
+        SSSysStop, SSCorrStop = False, False
         print("扩频数据显示开始更新")
         self.SStimer01.start(1)
         self.SStimer02.start(1)
@@ -1314,6 +1361,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SStimer02.timeout.connect(self.updateSSCorrValueStatistical)
 
     def killSSTimer(self):
+        global SSSysStop, SSCorrStop
+        SSSysStop, SSCorrStop = True, True
         print("停止显示扩频数据")
         self.SStimer01.stop()
         self.SStimer02.stop()
