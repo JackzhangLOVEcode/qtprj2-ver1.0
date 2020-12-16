@@ -282,8 +282,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCstatisticalPort_obj.setText(str(LDPCportStatistical))
         self.spectrumPort_obj.setText(str(SpectrumPortStatistical))
         self.IQPort_obj.setText(str(portIQ))
-        self.Reserv_5_obj.setVisible(False)
-        self.Reserv_5_label.setVisible(False)
         self.Reserv_6_obj.setVisible(False)
         self.Reserv_6_label.setVisible(False)
         self.Reserv_I0_obj.setVisible(False)
@@ -292,8 +290,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Reserv_I1_label.setVisible(False)
         self.Reserv_I2_obj.setVisible(False)
         self.Reserv_I2_label.setVisible(False)
-        self.Reserv_U0_obj.setVisible(False)
-        self.Reserv_U0_label.setVisible(False)
         self.Reserv_U1_obj.setVisible(False)
         self.Reserv_U1_label.setVisible(False)
         self.Rx_channel_obj.setVisible(False)
@@ -357,7 +353,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.filterOption.activated.connect(self.RFFilterChanged)
         self.RFCalibration.clicked.connect(self.RFCalibrationStatusChanged)
 
-    def closeEvent(self,event):
+    def closeEvent(self, event):
         reply = QMessageBox.information(self, '警告',"系统将退出，是否确认?", QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
@@ -372,16 +368,10 @@ class configPage(QMainWindow, Ui_MainWindow):
                 car += 1
         return int(car)
 
-    def calculateOFDMSymbleNum(self, car_num, mtype):
+    def calculateOFDMSymbleNum(self, car_num, mtype, adjust = 4):
         MTypeToBit = [2, 4, 6, 8]
         car = self.calculateValidBitNum(car_num)
-        m_len = car * 64 * MTypeToBit[mtype] / 8 - 4
-        return int(m_len)
-
-    def calculateOFDMSymbleNumRX(self, car_num, mtype):
-        MTypeToBit = [2, 4, 6, 8]
-        car = self.calculateValidBitNum(car_num)
-        m_len = car * 64 * MTypeToBit[mtype] / 8
+        m_len = car * 64 * MTypeToBit[mtype] / 8 - adjust
         return int(m_len)
 
     def connectTXConfigData(self):
@@ -437,7 +427,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((self.car_num_rx_obj.value()).to_bytes(3, byteorder='big'))
         car_N = self.calculateValidBitNum(self.car_num_rx_obj.value()) * 64 - 1
         self.RXConfig.extend((car_N).to_bytes(2, byteorder='big'))
-        data_len = self.calculateOFDMSymbleNumRX(self.car_num_rx_obj.value(), self.MType_rx_obj.currentIndex())
+        data_len = self.calculateOFDMSymbleNum(self.car_num_rx_obj.value(), self.MType_rx_obj.currentIndex(), 0)
         self.RXConfig.extend((data_len).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.i_freq_est_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.sync_factor_obj.value()).to_bytes(2, byteorder='big'))
@@ -464,7 +454,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RXConfig.extend((Reserv_B0).to_bytes(1, byteorder='big'))
         Reserv_B1 = 1 if self.Reserv_B1_obj.isChecked() else 0
         self.RXConfig.extend((Reserv_B1).to_bytes(1, byteorder='big'))
-        self.RXConfig.extend((self.Reserv_U0_obj.value()).to_bytes(1, byteorder='big'))
+        Reserv_U0 = 1 if self.Reserv_U0_obj.isChecked() else 0
+        self.RXConfig.extend((Reserv_U0).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_U1_obj.value()).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I0_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I1_obj.value()).to_bytes(2, byteorder='big'))
@@ -501,7 +492,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig.extend(int(self.FFTTrigger_obj.currentIndex()).to_bytes(2, byteorder='big'))
         localIPArray = list(map(int, ipaddr.split(".")))
         self.LDPCConfig = self.LDPCConfig + localIPArray
-        self.LDPCConfig.extend((self.Reserv_5_obj.value()).to_bytes(4, byteorder='big'))
+        Reserv_5 = 1 if self.Reserv_5_obj.isChecked() else 0
+        self.LDPCConfig.extend((Reserv_5).to_bytes(4, byteorder='big'))
         self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
         self.LDPCConfigBytes = bytes(self.LDPCConfig)
 
@@ -561,7 +553,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Rx_delay_obj.setValue(20)
         self.Time_trig2tx_obj.setValue(33300)
         self.Time_tx_hold_obj.setValue(40000)
-        self.ms_T_sync2trig_obj.setValue(23880)
+        self.ms_T_sync2trig_obj.setValue(3880)
         self.bs_tdd_time_gap_obj.setValue(80000)
         self.bs_tx_time_gap_obj.setValue(40000)
         self.Trig_gap_cnt_obj.setValue(80000)
@@ -731,10 +723,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         configSocket.close()
         return
 
-    def setBBConfig(self):
-        self.setBBDefaultConfig()
-        # self.sendConfigtoBaseBand()
-
     def setRFConfig(self):
         self.setRFDefaultConfig()
         '''self.RFSendFreqChanged()
@@ -751,13 +739,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RFAmplifierChanged()
         self.RFFilterChanged()'''
 
-    def setLDPCConfig(self):
-        self.setLDPCDefaultConfig()
-        # self.sendConfigtoLDPC()
-
     def setBBandLDPCConfig(self):
-        self.setBBConfig()
-        self.setLDPCConfig()
+        self.setBBDefaultConfig()
+        self.setLDPCDefaultConfig()
 
     def sendBBandLDPCConfig(self):
         self.sendConfigtoBaseBand()
@@ -788,6 +772,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             self.sendConfigtoRF(data, feedbacktime=0.5)
         except ValueError:
             self.textBrowser_2.append("<font color='red'>" + "接收频率配置无效")
+            self.RF_receive_freq_obj.setText('1.6')
 
     def RFReceiveBandChanged(self):
         WR_bit = 1
@@ -922,6 +907,16 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.textBrowser_2.append("<font color='blue'>"+"配置滤波器")
         self.sendConfigtoRF(data)
 
+    def showSuitableCarrier(self, Mtype, SNRarray):
+        threshold = [8, 13, 22, 30][Mtype]
+        base = 0
+        pointer = len(SNRarray)
+        for snr in SNRarray:
+            pointer -= 1
+            if snr >= threshold:
+                base += 2**(pointer)
+        return format(base, 'x').zfill(5)
+
     def showBasebandStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
         self.errbit_show.setText(str(errbit))
@@ -982,6 +977,19 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.cnt_frame_tx_show.setText(str(tx_frame_cnt))
         sync_pwr = int.from_bytes(data[138:140], byteorder='big')
         self.sync_pwr_show.setText(str(sync_pwr))
+        if self.TDD_EN_obj.currentIndex() == 1:
+            R2_16b = int.from_bytes(data[142:144], byteorder='big')
+            Path = (R2_16b - [42541.9, 42817.9, 42541.9][self.ModeBSorMS_obj.currentIndex()]) * 6
+            self.distance_show.setText(str(Path)+'m')
+            if Path <= 0 or float(self.RF_receive_freq_obj.text()) <= 0:
+                PathLoss = 32.5
+                print("实际路径小于0，或者射频接收频率设置错误！！")
+            else:
+                PathLoss = 32.5+20*math.log10(Path*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
+            self.pathLoss_show.setText(str(PathLoss) + 'dB')
+        else:
+            self.distance_show.setText('无效值')
+            self.pathLoss_show.setText('无效值')
         if tolfrm == 0:
             BER = 'Invalid'
             self.BER_show.setText(BER)
@@ -998,12 +1006,13 @@ class configPage(QMainWindow, Ui_MainWindow):
                 SNRSub.append(0)
             else:
                 if (nosPwr == 0):
-                    SNRSub.append(0)
+                    SNRSub.append(50)
                 else:
                     if self.MType_rx_obj.currentIndex() == 3:
                         SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 10) / nosPwr))
                     else:
                         SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 6) / nosPwr))
+        self.SuitableCarrier_show.setText(self.showSuitableCarrier(self.MType_rx_obj.currentIndex(), SNRSub))
         self.PrepareSNRSamples(SNRSub)
 
     def showLDPCStatistical(self, data):
@@ -1129,7 +1138,7 @@ class configPage(QMainWindow, Ui_MainWindow):
 
     def PrepareSNRLineCanvas(self):
         self.SNRLineFigure = Figure_Canvas()
-        self.SNRLineFigureLayout = QGridLayout(self.SNRshow)
+        self.SNRLineFigureLayout = QGridLayout(self.subCarrierSNR)
         self.SNRLineFigureLayout.addWidget(self.SNRLineFigure)
 
     def PrepareSNRSamples(self, value):

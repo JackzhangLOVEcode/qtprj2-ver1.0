@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1563</width>
+    <width>1505</width>
     <height>969</height>
    </rect>
   </property>
@@ -692,7 +692,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -734,6 +734,27 @@
              </property>
              <property name="text">
               <string>LDPC复位</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="Reserv_5_obj">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>停止上传</string>
              </property>
             </widget>
            </item>
@@ -983,7 +1004,7 @@
          <widget class="QGroupBox" name="groupBox_11">
           <property name="maximumSize">
            <size>
-            <width>1000</width>
+            <width>1200</width>
             <height>100</height>
            </size>
           </property>
@@ -993,7 +1014,7 @@
            </font>
           </property>
           <property name="title">
-           <string>系统基本配置</string>
+           <string>基带系统基本配置</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
            <item row="0" column="0">
@@ -1099,6 +1120,18 @@
             </widget>
            </item>
            <item row="0" column="5">
+            <widget class="QCheckBox" name="Reserv_U0_obj">
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>停止上传</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
             <widget class="QComboBox" name="udpfifo_reset_obj">
              <property name="font">
               <font>
@@ -1135,7 +1168,7 @@
              </item>
             </widget>
            </item>
-           <item row="0" column="6">
+           <item row="0" column="7">
             <widget class="QLabel" name="udpfifo_reset_label">
              <property name="font">
               <font>
@@ -1164,7 +1197,7 @@
           <property name="maximumSize">
            <size>
             <width>400</width>
-            <height>350</height>
+            <height>150</height>
            </size>
           </property>
           <property name="font">
@@ -1176,7 +1209,7 @@
            <string>LDPC配置预留区</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_7">
-           <item row="1" column="1">
+           <item row="0" column="1">
             <widget class="QLabel" name="Reserv_6_label">
              <property name="maximumSize">
               <size>
@@ -1195,36 +1228,6 @@
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QSpinBox" name="Reserv_5_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
             <widget class="QSpinBox" name="Reserv_6_obj">
              <property name="maximumSize">
               <size>
@@ -1251,24 +1254,6 @@
              </property>
              <property name="value">
               <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="Reserv_5_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_5</string>
              </property>
             </widget>
            </item>
@@ -3258,7 +3243,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>34000</number>
+              <number>40000</number>
              </property>
             </widget>
            </item>
@@ -3309,7 +3294,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>34000</number>
+              <number>33300</number>
              </property>
             </widget>
            </item>
@@ -3515,7 +3500,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>100000</number>
+              <number>80000</number>
              </property>
             </widget>
            </item>
@@ -3581,7 +3566,7 @@
               <number>1</number>
              </property>
              <property name="value">
-              <number>21880</number>
+              <number>3880</number>
              </property>
             </widget>
            </item>
@@ -4036,7 +4021,7 @@
            <string>预留区</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_22">
-           <item row="4" column="1">
+           <item row="3" column="1">
             <widget class="QLabel" name="Reserv_I2_label">
              <property name="font">
               <font>
@@ -4048,7 +4033,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="0" column="1">
             <widget class="QLabel" name="Reserv_U1_label">
              <property name="font">
               <font>
@@ -4061,30 +4046,6 @@
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QSpinBox" name="Reserv_U0_obj">
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'等线'; font-size:10.5pt;&quot;&gt;depapr_thr&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="specialValueText">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>255</number>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
             <widget class="QSpinBox" name="Reserv_U1_obj">
              <property name="font">
               <font>
@@ -4109,6 +4070,18 @@
             </widget>
            </item>
            <item row="2" column="1">
+            <widget class="QLabel" name="Reserv_I1_label">
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Reserv_I1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
             <widget class="QLabel" name="Reserv_I0_label">
              <property name="font">
               <font>
@@ -4120,7 +4093,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="1" column="0">
             <widget class="QSpinBox" name="Reserv_I0_obj">
              <property name="font">
               <font>
@@ -4144,7 +4117,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="2" column="0">
             <widget class="QSpinBox" name="Reserv_I1_obj">
              <property name="font">
               <font>
@@ -4168,19 +4141,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="Reserv_I1_label">
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_I1</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
+           <item row="3" column="0">
             <widget class="QSpinBox" name="Reserv_I2_obj">
              <property name="font">
               <font>
@@ -4201,18 +4162,6 @@
              </property>
              <property name="value">
               <number>0</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="Reserv_U0_label">
-             <property name="font">
-              <font>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reserv_U0</string>
              </property>
             </widget>
            </item>
@@ -7769,6 +7718,94 @@
              </property>
             </widget>
            </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="distance_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>实测距离</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLabel" name="distance_show">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="0">
+            <widget class="QLabel" name="pathLoss_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>路损</string>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="1">
+            <widget class="QLabel" name="pathLoss_show">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -7806,6 +7843,85 @@
           <property name="title">
            <string>SNR实时显示</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_39">
+           <item row="0" column="0">
+            <widget class="QLabel" name="SuitableCarrier_label">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>推荐子载波</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="SuitableCarrier_show">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="tabletTracking">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <property name="inputMethodHints">
+              <set>Qt::ImhNone</set>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::WinPanel</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::AutoText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QGroupBox" name="subCarrierSNR">
+             <property name="maximumSize">
+              <size>
+               <width>400</width>
+               <height>300</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="title">
+              <string>子载波信噪比</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="1" column="2">
@@ -8876,7 +8992,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1563</width>
+     <width>1505</width>
      <height>23</height>
     </rect>
    </property>
