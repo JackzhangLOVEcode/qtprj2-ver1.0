@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1505</width>
+    <width>1628</width>
     <height>969</height>
    </rect>
   </property>
@@ -692,7 +692,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -758,98 +758,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="LDPC_loop_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>内环</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>外环</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="LDPC_loop_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>LDPC打环</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="Pause_obj">
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(255, 255, 255);</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>不暂停</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>暂停</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="Pause_label">
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>数据暂停</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="0">
             <widget class="QComboBox" name="LDPC_UDPorPN_obj">
              <property name="maximumSize">
@@ -881,11 +789,11 @@
              </item>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="LDPC_UDPorPN_label">
+           <item row="2" column="0">
+            <widget class="QComboBox" name="Pause_obj">
              <property name="maximumSize">
               <size>
-               <width>150</width>
+               <width>120</width>
                <height>30</height>
               </size>
              </property>
@@ -894,9 +802,47 @@
                <pointsize>16</pointsize>
               </font>
              </property>
-             <property name="text">
-              <string>UDP or PN</string>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
              </property>
+             <item>
+              <property name="text">
+               <string>不暂停</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>暂停</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="LDPC_loop_obj">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>内环</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>外环</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="4" column="0">
@@ -930,6 +876,24 @@
              </item>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="LDPC_loop_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>LDPC打环</string>
+             </property>
+            </widget>
+           </item>
            <item row="4" column="1">
             <widget class="QLabel" name="FFTManual_label">
              <property name="maximumSize">
@@ -945,6 +909,42 @@
              </property>
              <property name="text">
               <string>手动FFT</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="LDPC_UDPorPN_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>UDP or PN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="Pause_label">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>数据暂停</string>
              </property>
             </widget>
            </item>
@@ -1004,7 +1004,7 @@
          <widget class="QGroupBox" name="groupBox_11">
           <property name="maximumSize">
            <size>
-            <width>1200</width>
+            <width>1400</width>
             <height>100</height>
            </size>
           </property>
@@ -1183,6 +1183,48 @@
              </property>
              <property name="textFormat">
               <enum>Qt::PlainText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="8">
+            <widget class="QPushButton" name="selfCheck">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>开始自检</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="9">
+            <widget class="QPushButton" name="stopCheck">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>停止自检</string>
              </property>
             </widget>
            </item>
@@ -8992,7 +9034,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1505</width>
+     <width>1628</width>
      <height>23</height>
     </rect>
    </property>

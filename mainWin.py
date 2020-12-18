@@ -306,11 +306,14 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.noise_pwr_sum_label_2.setVisible(False)
         self.SNR_current_show_2.setVisible(False)
         self.SNR_current_label_2.setVisible(False)
+        self.checkFalg = False
+        self.errbitLDPCArray = []
+        self.tolfrmLDPCArray = []
 
     def bindSingalandSlot(self):
         self.sendBBConfig.clicked.connect(self.sendBBandLDPCConfig)
         self.setBBDefault.clicked.connect(self.setBBandLDPCConfig)
-        self.setRFDefault.clicked.connect(self.setRFConfig)
+        self.setRFDefault.clicked.connect(self.setRFDefaultConfig)
         self.sendSpreadConfig.clicked.connect(self.sendSSConfig)
         self.setSpreadDefault.clicked.connect(self.setSSDefaultConfig)
         self.start.clicked.connect(self.statisticalTimer)
@@ -352,6 +355,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Amplifier_obj.activated.connect(self.RFAmplifierChanged)
         self.filterOption.activated.connect(self.RFFilterChanged)
         self.RFCalibration.clicked.connect(self.RFCalibrationStatusChanged)
+        self.selfCheck.clicked.connect(self.startCheckConnect)
+        self.stopCheck.clicked.connect(self.stopCheckConnect)
 
     def closeEvent(self, event):
         reply = QMessageBox.information(self, '警告',"系统将退出，是否确认?", QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
@@ -547,7 +552,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.Sys_reset_obj.setChecked(False)
         self.Sys_enble_obj.setChecked(True)
         self.ModeUDPorPN_obj.setCurrentIndex(1)
-        self.Base_loop_en_obj.setCurrentIndex(1)
+        self.Base_loop_en_obj.setCurrentIndex(0)
         self.Rx_enb_obj.setCurrentIndex(0)
         self.Rx_channel_obj.setCurrentIndex(0)
         self.Rx_delay_obj.setValue(20)
@@ -601,13 +606,13 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.filterOption.setCurrentIndex(0)
         self.FPGA_option_obj.setCurrentIndex(0)
         self.FMC_option_obj.setCurrentIndex(0)
-        self.RF_send_freq_obj.setText('2.5')
-        self.RF_receive_freq_obj.setText('1.6')
+        self.RF_send_freq_obj.setText('1')
+        self.RF_receive_freq_obj.setText('1')
         self.RF_receive_band_obj.setText('2.0')
         self.RF_TX1_channel_obj.setValue(10.0)
         self.RF_TX2_channel_obj.setValue(10.0)
         self.RF_RX_AGC.setChecked(False)
-        self.RF_RX1_gain_obj.setValue(30.0)
+        self.RF_RX1_gain_obj.setValue(0.0)
         self.RF_RX2_gain_obj.setValue(30.0)
         self.RF_observe_AGC.setChecked(False)
         self.RF_ORX1_gain_obj.setValue(18)
@@ -649,7 +654,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.connectTXConfigData()
         print("表1配置(基带发端配置)：", self.TXConfig)
         configSocket.sendto((self.TXConfigBytes), addrBB)
-        time.sleep(1)
+        # time.sleep(1)
         self.connectRXConfigData()
         print("表2配置(基带收端配置)：", self.RXConfig)
         configSocket.sendto(self.RXConfigBytes, addrBB)
@@ -723,9 +728,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         configSocket.close()
         return
 
-    def setRFConfig(self):
+    '''def setRFConfig(self):
         self.setRFDefaultConfig()
-        '''self.RFSendFreqChanged()
+        self.RFSendFreqChanged()
         self.RFReceiveFreqChanged()
         self.RFReceiveBandChanged()
         self.RFTXChannelChanged()
@@ -888,7 +893,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, "提示：", "射频硬件校准中，请等待......")
         self.textBrowser_2.append("<font color='blue'>" + "硬件校准:")
         data = self.RFConfig.connectCalibrationInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, calibrationValue)
-        self.sendConfigtoRF(data, feedbacktime=10)
+        self.sendConfigtoRF(data, feedbacktime=5)
         self.RF_Config.show()
 
     def RFAmplifierChanged(self):
@@ -983,7 +988,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             self.distance_show.setText(str(Path)+'m')
             if Path <= 0 or float(self.RF_receive_freq_obj.text()) <= 0:
                 PathLoss = 32.5
-                print("实际路径小于0，或者射频接收频率设置错误！！")
+                # self.statusbar.showMessage('实际路径小于0，或者射频接收频率设置错误！！')
             else:
                 PathLoss = 32.5+20*math.log10(Path*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
             self.pathLoss_show.setText(str(PathLoss) + 'dB')
@@ -1020,6 +1025,23 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.errbit_show_2.setText(str(errbit))
         tolfrm = int.from_bytes(data[4:8], byteorder='big')
         self.tolfrm_show_2.setText(str(tolfrm))
+        if self.checkFalg == True:
+            self.statusbar.showMessage('自检开始')
+            self.errbitLDPCArray.append(errbit)
+            self.tolfrmLDPCArray.append(tolfrm)
+            if len(self.errbitLDPCArray) == 5 and len(self.tolfrmLDPCArray) == 5:
+                if len(set(self.tolfrmLDPCArray)) > 1 and len(set(self.errbitLDPCArray)) == 1 and self.errbitLDPCArray[0] == 0:
+                    self.selfCheck.setStyleSheet("background-color: rgb(85, 255, 0)")
+                    self.selfCheck.setText('自检成功')
+                    self.checkFalg = False
+                else:
+                    self.selfCheck.setStyleSheet("background-color: rgb(255, 0, 0)")
+                    self.selfCheck.setText('自检失败')
+                self.tolfrmLDPCArray.clear()
+                self.errbitLDPCArray.clear()
+        else:
+            self.tolfrmLDPCArray.clear()
+            self.errbitLDPCArray.clear()
         noise_pwr_sum = int.from_bytes(data[8:10], byteorder='big')
         self.noise_pwr_sum_show_2.setText(str(noise_pwr_sum))
         singal_pwr_sum = int.from_bytes(data[10:12], byteorder='big')
@@ -1375,6 +1397,35 @@ class configPage(QMainWindow, Ui_MainWindow):
         print("停止显示扩频数据")
         self.SStimer01.stop()
         self.SStimer02.stop()
+
+    def startCheckConnect(self):
+        configCheck = [['1', '2', 10, 0, 1, 0, 1, 1, 0], ['2', '1', 10, 0, 1, 1, 1, 1, 0]]
+        configSend = configCheck[self.ModeBSorMS_obj.currentIndex()]
+        self.setBBandLDPCConfig()
+        self.setRFDefaultConfig()
+        self.RF_send_freq_obj.setText(configSend[0])
+        self.RF_receive_freq_obj.setText(configSend[1])
+        self.RF_TX1_channel_obj.setValue(configSend[2])
+        self.RF_RX1_gain_obj.setValue(configSend[3])
+        self.source_Clock_obj.setCurrentIndex(configSend[4])
+        self.ModeBSorMS_obj.setCurrentIndex(configSend[5])
+        self.TDD_EN_obj.setCurrentIndex(configSend[6])
+        self.tx1_en_obj.setCurrentIndex(configSend[7])
+        self.Base_loop_en_obj.setCurrentIndex(configSend[8])
+        self.RFSendFreqChanged()
+        self.RFReceiveFreqChanged()
+        self.RFTXChannelChanged()
+        self.RFRXGainChanged()
+        self.RFClockChanged()
+        self.RFCalibrationStatusChanged()
+        self.sendBBandLDPCConfig()
+        self.checkFalg = True
+
+    def stopCheckConnect(self):
+        self.checkFalg = False
+        self.selfCheck.setStyleSheet("background-color: rgb(220, 220, 220)")
+        self.selfCheck.setText('开始自检')
+        self.statusbar.showMessage('停止自检')
 
     '''def startDataTimer(self):
         self.dataTimer.start(1)
