@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1628, 969)
+        MainWindow.resize(1828, 969)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.FrftConfig = QtWidgets.QWidget(MainWindow)
@@ -3564,7 +3564,7 @@ class Ui_MainWindow(object):
         self.gridLayout_31.addWidget(self.tabWidget, 0, 1, 5, 1)
         MainWindow.setCentralWidget(self.FrftConfig)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1628, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1828, 23))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -3666,7 +3666,7 @@ class Ui_MainWindow(object):
         self.Sys_reset_obj.setText(_translate("MainWindow", "系统复位"))
         self.Sys_enble_obj.setText(_translate("MainWindow", "系统使能"))
         self.Reserv_B0_obj.setText(_translate("MainWindow", "Tx_Rst"))
-        self.Reserv_B1_obj.setText(_translate("MainWindow", "Rx_Rst"))
+        self.Reserv_B1_obj.setText(_translate("MainWindow", "alpha_auto"))
         self.Reserv_U0_obj.setText(_translate("MainWindow", "停止上传"))
         self.udpfifo_reset_obj.setCurrentText(_translate("MainWindow", "close"))
         self.udpfifo_reset_obj.setItemText(0, _translate("MainWindow", "close"))

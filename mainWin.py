@@ -499,7 +499,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCConfig = self.LDPCConfig + localIPArray
         Reserv_5 = 1 if self.Reserv_5_obj.isChecked() else 0
         self.LDPCConfig.extend((Reserv_5).to_bytes(4, byteorder='big'))
-        self.LDPCConfig.extend((self.Reserv_6_obj.value()).to_bytes(4, byteorder='big'))
+        self.LDPCConfig.extend((self.ModeBSorMS_obj.currentIndex()).to_bytes(4, byteorder='big'))
         self.LDPCConfigBytes = bytes(self.LDPCConfig)
 
     def connectSSConfig(self):
@@ -546,8 +546,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.MType_tx_obj.setCurrentIndex(0)
         self.car_num_tx_obj.setValue(0xfffff)
         self.Alpha_tx_obj.setValue(0.5)
-        self.pilot_factor_obj.setValue(16384)
-        self.pss_factor_obj.setValue(16384)
+        self.pilot_factor_obj.setValue(11467)
+        self.pss_factor_obj.setValue(11467)
         self.ModeBSorMS_obj.setCurrentIndex(1)
         self.Sys_reset_obj.setChecked(False)
         self.Sys_enble_obj.setChecked(True)
@@ -587,10 +587,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.car_thr2_obj.setValue(6250000)
         self.car_thr3_obj.setValue(625000000)
         self.mmse_thr_obj.setValue(1000)
-        self.scale_equa_obj.setValue(0)
+        self.scale_equa_obj.setValue(1)
         self.scale_fft_obj.setValue(0)
         self.phase_en_obj.setCurrentIndex(1)
-        self.phase_factor_obj.setValue(2048)
+        self.phase_factor_obj.setValue(1434)
         self.freq_offset_en_obj.setCurrentIndex(1)
         self.LDPC_en_obj.setCurrentIndex(1)
         self.MMSEorLS_obj.setCurrentIndex(0)
