@@ -223,7 +223,7 @@ class Figure_Canvas(FigureCanvas):
         self.ax=self.fig.add_subplot(111)
 
 class configPage(QMainWindow, Ui_MainWindow):
-    _signal = pyqtSignal(int)
+
     def __init__(self):
         super(configPage, self).__init__()
         self.setupUi(self)
@@ -357,6 +357,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.RFCalibration.clicked.connect(self.RFCalibrationStatusChanged)
         self.selfCheck.clicked.connect(self.startCheckConnect)
         self.stopCheck.clicked.connect(self.stopCheckConnect)
+        self.setTDDDefault.clicked.connect(self.setTDDDefaultConfig)
+        self.setFDDDefault.clicked.connect(self.setFDDDefaultConfig)
+        self.setUDPDefault.clicked.connect(self.setUDPDefaultConfig)
+        self.setAUTODefault.clicked.connect(self.setAUTODefaultConfig)
 
     def closeEvent(self, event):
         reply = QMessageBox.information(self, '警告',"系统将退出，是否确认?", QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
@@ -535,8 +539,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.ZC32_Value_obj.setValue(24575)
         self.ZC128_Value_obj.setValue(24575)
 
-        self.BBIP_obj.setText('192.168.1.93')
-        self.BBPort_obj.setText('8003')
+        # self.BBIP_obj.setText('192.168.1.93')
+        # self.BBPort_obj.setText('8003')
 
     def setBBDefaultConfig(self):
         # 设置发端默认参数
@@ -590,15 +594,15 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.scale_equa_obj.setValue(1)
         self.scale_fft_obj.setValue(0)
         self.phase_en_obj.setCurrentIndex(1)
-        self.phase_factor_obj.setValue(1434)
+        self.phase_factor_obj.setValue(2867)
         self.freq_offset_en_obj.setCurrentIndex(1)
         self.LDPC_en_obj.setCurrentIndex(1)
         self.MMSEorLS_obj.setCurrentIndex(0)
         self.as_time_trig2tx_obj.setValue(17339)
         self.as_trig2tx_cnt_obj.setValue(58735)
 
-        self.BBIP_obj.setText('192.168.1.84')
-        self.BBPort_obj.setText('8000')
+        # self.BBIP_obj.setText('192.168.1.84')
+        # self.BBPort_obj.setText('8000')
 
     def setRFDefaultConfig(self):
         # 设置射频参数
@@ -748,6 +752,43 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setBBDefaultConfig()
         self.setLDPCDefaultConfig()
 
+    def setTDDDefaultConfig(self):
+        self.setBBDefaultConfig()
+        self.setLDPCDefaultConfig()
+        self.TDD_EN_obj.setCurrentIndex(1)
+        self.tx1_en_obj.setCurrentIndex(1)
+
+    def setFDDDefaultConfig(self):
+        self.setBBDefaultConfig()
+        self.setLDPCDefaultConfig()
+        self.TDD_EN_obj.setCurrentIndex(0)
+        self.tx1_en_obj.setCurrentIndex(1)
+        self.bs_tdd_time_gap_obj.setValue(40000)
+        self.bs_tx_time_gap_obj.setValue(40000)
+        self.Trig_gap_cnt_obj.setValue(40000)
+
+    def setUDPDefaultConfig(self):
+        self.setBBDefaultConfig()
+        self.setLDPCDefaultConfig()
+        self.tx1_en_obj.setCurrentIndex(1)
+        self.bs_tdd_time_gap_obj.setValue(40000)
+        self.bs_tx_time_gap_obj.setValue(40000)
+        self.Trig_gap_cnt_obj.setValue(40000)
+        self.LDPC_UDPorPN_obj.setCurrentIndex(0)
+        self.FFTManual_obj.setCurrentIndex(1)
+        self.Reserv_5_obj.setChecked(True)
+
+    def setAUTODefaultConfig(self):
+        self.setBBDefaultConfig()
+        self.setLDPCDefaultConfig()
+        self.TDD_EN_obj.setCurrentIndex(1)
+        self.tx1_en_obj.setCurrentIndex(1)
+        self.bs_tdd_time_gap_obj.setValue(600000)
+        self.bs_tx_time_gap_obj.setValue(300000)
+        self.Trig_gap_cnt_obj.setValue(600000)
+        self.ms_T_sync2trig_obj.setValue(100000)
+        self.Reserv_B1_obj.setChecked(True)
+
     def sendBBandLDPCConfig(self):
         self.sendConfigtoBaseBand()
         self.sendConfigtoLDPC()
@@ -893,7 +934,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, "提示：", "射频硬件校准中，请等待......")
         self.textBrowser_2.append("<font color='blue'>" + "硬件校准:")
         data = self.RFConfig.connectCalibrationInfo(FPGAOption, WR_bit, FMCOption, RegisterAddr, calibrationValue)
-        self.sendConfigtoRF(data, feedbacktime=5)
+        self.sendConfigtoRF(data, feedbacktime=10)
         self.RF_Config.show()
 
     def RFAmplifierChanged(self):
