@@ -641,6 +641,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPC_UDPorPN_obj.setCurrentIndex(1)
         self.FFTManual_obj.setCurrentIndex(0)
         self.FFTTrigger_obj.setCurrentIndex(0)
+        self.Reserv_5_obj.setChecked(False)
 
     def sendConfigtoBaseBand(self):
         self.ipBB = self.BBIP_obj.text()
