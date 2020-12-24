@@ -248,6 +248,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNRDataArray = []
         self.CorrValue01 = []
         self.CorrValue02 = []
+        self.pathValue = []
         self.TXConfigBytes = bytes()
         self.RXConfigBytes = bytes()
         self.LDPCConfigBytes = bytes()
@@ -1025,14 +1026,18 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.sync_pwr_show.setText(str(sync_pwr))
         if self.TDD_EN_obj.currentIndex() == 1:
             R2_16b = int.from_bytes(data[142:144], byteorder='big')
-            Path = (R2_16b - [42541.9, 42817.9, 42541.9][self.ModeBSorMS_obj.currentIndex()]) * 6
-            self.distance_show.setText(str(Path)+'m')
-            if Path <= 0 or float(self.RF_receive_freq_obj.text()) <= 0:
-                PathLoss = 32.5
-                # self.statusbar.showMessage('实际路径小于0，或者射频接收频率设置错误！！')
-            else:
-                PathLoss = 32.5+20*math.log10(Path*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
-            self.pathLoss_show.setText(str(PathLoss) + 'dB')
+            Path = (R2_16b - [42535.8, 42822.8, 42535.8][self.ModeBSorMS_obj.currentIndex()]) * 6
+            self.pathValue.append(Path)
+            if len(self.pathValue) >= 10:
+                pathValueAverage = sum(self.pathValue)/len(self.pathValue)
+                self.distance_show.setText(str(pathValueAverage)+'m')
+                if pathValueAverage <= 0 or float(self.RF_receive_freq_obj.text()) <= 0:
+                    PathLoss = 32.5
+                    # self.statusbar.showMessage('实际路径小于0，或者射频接收频率设置错误！！')
+                else:
+                    PathLoss = 32.5+20*math.log10(Path*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
+                self.pathLoss_show.setText(str(PathLoss) + 'dB')
+                self.pathValue.clear()
         else:
             self.distance_show.setText('无效值')
             self.pathLoss_show.setText('无效值')
