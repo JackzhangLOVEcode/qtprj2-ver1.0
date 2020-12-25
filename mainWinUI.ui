@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1678</width>
-    <height>854</height>
+    <width>1828</width>
+    <height>935</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -692,7 +692,7 @@
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="TXRX_Config">
        <attribute name="title">
@@ -8280,6 +8280,36 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="RB_Ctrl_obj">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>RB_Ctrl</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
             <widget class="QComboBox" name="Source_select_obj">
              <property name="sizePolicy">
@@ -9138,7 +9168,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1678</width>
+     <width>1828</width>
      <height>23</height>
     </rect>
    </property>

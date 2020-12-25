@@ -520,7 +520,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SSConfig.extend(int(self.Statis_num_obj.value()).to_bytes(2, byteorder='big'))
         self.SSConfig.extend(int(0).to_bytes(4, byteorder='big'))
         self.SSConfig.extend(int(self.ZC128_T_obj.value()).to_bytes(3, byteorder='big'))
-        self.SSConfig.extend(int(0).to_bytes(3, byteorder='big'))
+        self.SSConfig.extend(int(0).to_bytes(2, byteorder='big'))
+        RB_Ctrl = 1 if self.RB_Ctrl_obj.isChecked() else 0
+        self.SSConfig.extend(int(RB_Ctrl).to_bytes(1, byteorder='big'))
         self.SSConfig.extend(int(self.ZC32_Value_obj.value()).to_bytes(4, byteorder='big'))
         self.SSConfig.extend(int(self.ZC128_Value_obj.value()).to_bytes(4, byteorder='big'))
         SSIp = list(map(int, self.BBIP_obj.text().split(".")))
@@ -539,6 +541,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.ZC128_T_obj.setValue(625000)
         self.ZC32_Value_obj.setValue(24575)
         self.ZC128_Value_obj.setValue(24575)
+        self.RB_Ctrl_obj.setChecked(False)
 
         # self.BBIP_obj.setText('192.168.1.93')
         # self.BBPort_obj.setText('8003')
