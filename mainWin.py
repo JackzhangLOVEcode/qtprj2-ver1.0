@@ -285,8 +285,6 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.IQPort_obj.setText(str(portIQ))
         self.Reserv_6_obj.setVisible(False)
         self.Reserv_6_label.setVisible(False)
-        self.Reserv_I0_obj.setVisible(False)
-        self.Reserv_I0_label.setVisible(False)
         self.Reserv_I1_obj.setVisible(False)
         self.Reserv_I1_label.setVisible(False)
         self.Reserv_I2_obj.setVisible(False)
@@ -467,7 +465,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         Reserv_U0 = 1 if self.Reserv_U0_obj.isChecked() else 0
         self.RXConfig.extend((Reserv_U0).to_bytes(1, byteorder='big'))
         self.RXConfig.extend((self.Reserv_U1_obj.value()).to_bytes(1, byteorder='big'))
-        self.RXConfig.extend((self.Reserv_I0_obj.value()).to_bytes(2, byteorder='big'))
+        self.RXConfig.extend((self.udp_sync_thr_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I1_obj.value()).to_bytes(2, byteorder='big'))
         self.RXConfig.extend((self.Reserv_I2_obj.value()).to_bytes(2, byteorder='big'))
         localIPArray = list(map(int, ipaddr.split(".")))
@@ -604,6 +602,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.MMSEorLS_obj.setCurrentIndex(0)
         self.as_time_trig2tx_obj.setValue(17339)
         self.as_trig2tx_cnt_obj.setValue(58735)
+        self.udp_sync_thr_obj.setValue(10000)
 
         # self.BBIP_obj.setText('192.168.1.84')
         # self.BBPort_obj.setText('8000')
@@ -1039,7 +1038,7 @@ class configPage(QMainWindow, Ui_MainWindow):
                     PathLoss = 32.5
                     # self.statusbar.showMessage('实际路径小于0，或者射频接收频率设置错误！！')
                 else:
-                    PathLoss = 32.5+20*math.log10(Path*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
+                    PathLoss = 32.5+20*math.log10(pathValueAverage*10**-3)+20*math.log10(float(self.RF_receive_freq_obj.text())*10**-3)
                 self.pathLoss_show.setText(str(PathLoss) + 'dB')
                 self.pathValue.clear()
         else:
