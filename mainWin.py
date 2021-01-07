@@ -360,6 +360,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.setFDDDefault.clicked.connect(self.setFDDDefaultConfig)
         self.setUDPDefault.clicked.connect(self.setUDPDefaultConfig)
         self.setAUTODefault.clicked.connect(self.setAUTODefaultConfig)
+        self.LDPC_UDPorPN_obj.currentIndexChanged.connect(self.resetLDPC)
 
     def closeEvent(self, event):
         reply = QMessageBox.information(self, '警告',"系统将退出，是否确认?", QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
@@ -604,6 +605,11 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.as_trig2tx_cnt_obj.setValue(58735)
         self.udp_sync_thr_obj.setValue(10000)
 
+        self.QPSK_SNRThr_obj.setValue(8)
+        self.QAM16_SNRThr_obj.setValue(13)
+        self.QAM64_SNRThr_obj.setValue(22)
+        self.QAM256_SNRThr_obj.setValue(30)
+
         # self.BBIP_obj.setText('192.168.1.84')
         # self.BBPort_obj.setText('8000')
 
@@ -797,6 +803,12 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.sendConfigtoBaseBand()
         self.sendConfigtoLDPC()
 
+    def resetLDPC(self):
+        self.LDPC_reset_obj.setChecked(True)
+        self.sendConfigtoLDPC()
+        self.LDPC_reset_obj.setChecked(False)
+        self.sendConfigtoLDPC()
+
     def RFSendFreqChanged(self):
         WR_bit = 1
         FPGAOption = int(self.FPGA_option_obj.currentIndex())
@@ -958,7 +970,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.sendConfigtoRF(data)
 
     def showSuitableCarrier(self, Mtype, SNRarray):
-        threshold = [8, 13, 22, 30][Mtype]
+        thresholdConfig = [self.QPSK_SNRThr_obj.value(), self.QAM16_SNRThr_obj.value(), self.QAM64_SNRThr_obj.value(), self.QAM256_SNRThr_obj.value()]
+        threshold = thresholdConfig[Mtype]
         base = 0
         pointer = len(SNRarray)
         for snr in SNRarray:
