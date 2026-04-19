@@ -819,6 +819,7 @@ class configPage(QMainWindow, Ui_MainWindow):
             return 0
         if noise_pwr == 0:
             return 50
+        # 256QAM (index=3) 使用 2^10 缩放因子，其他调制方式使用 2^6
         scale_exp = 10 if mtype_index == 3 else 6
         return 10 * math.log10(signal_pwr * math.pow(2, scale_exp) / noise_pwr)
 
@@ -1069,6 +1070,7 @@ class configPage(QMainWindow, Ui_MainWindow):
                 ivalue = int.from_bytes(sourceData[offset:offset+2], byteorder='big', signed=True)
                 qvalue = int.from_bytes(sourceData[offset+2:offset+4], byteorder='big', signed=True)
                 if dataType == 'pilot':
+                    # 2^26 = 导频功率归一化因子 (I^2+Q^2 的定标)
                     Qdata.append((ivalue * ivalue + qvalue * qvalue) / (1 << 26))
                 elif dataType == 'spectrum':
                     if ivalue != 0 or qvalue != 0:
