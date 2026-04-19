@@ -1013,7 +1013,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SpectrumLineLayout.addWidget(self.SpectrumLineFigure)
 
     def PrepareSpectrumIdata(self):
-        self.IdataSpectrum = []
+        self.IdataSpectrum.clear()
         for i in range(2048):
             if i <= 1022:
                 mapped = 1022 - i

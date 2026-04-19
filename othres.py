@@ -53,8 +53,10 @@ class ConnectRFConfig():
         """通用配置构建方法：设置基础信息、寄存器信息和数据值"""
         # setBaseInfo
         fpgaAddr = self.fpgaAddr[fpgaindex]
-        WR_bit = wrinfo if 0 <= wrinfo <= 1 else 1
-        if not (0 <= wrinfo <= 1):
+        if 0 <= wrinfo <= 1:
+            WR_bit = wrinfo
+        else:
+            WR_bit = 1
             print("读写配置错误")
         bytesInfo = WR_bit * 2**15 + fpgaAddr
         self.txConfig[:2] = bytesInfo.to_bytes(2, byteorder='big')
