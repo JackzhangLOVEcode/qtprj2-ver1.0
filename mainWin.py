@@ -1013,10 +1013,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.IdataSpectrum = []
         for i in range(2048):
             if i <= 1022:
-                mapped = i + 1025
+                freq_index = i + 1025
             else:
-                mapped = i - 1023
-            self.IdataSpectrum.append(mapped * 125 / 2048 - 125 / 2)
+                freq_index = i - 1023
+            self.IdataSpectrum.append(freq_index * 125 / 2048 - 125 / 2)
 
     def _calculateSNR(self, sigPwr, nosPwr, mtype_index=None):
         """计算SNR的通用方法，避免重复代码"""
