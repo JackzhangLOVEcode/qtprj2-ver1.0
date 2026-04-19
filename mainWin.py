@@ -16,177 +16,34 @@ from othres import getChosenIP, ConnectRFConfig, print_bytes_hex, getStatistical
     ba.append(h4)
     return struct.unpack("!f", ba)[0]'''
 
-class StatisticThread(QThread):
-    def __int__(self):
-        super(StatisticThread, self).__init__()
+class UdpReceiverThread(QThread):
+    """通用UDP数据接收线程，替代原先6个近乎相同的线程类"""
+    def __init__(self, ip, port, buffsize=1500):
+        super(UdpReceiverThread, self).__init__()
+        self._ip = ip
+        self._port = port
+        self._buffsize = buffsize
+        self.stopped = True
+        self.dataQueue = queue.Queue(0)
 
     def run(self):
-        global BBstop
-        BBstop = True
-        global statisticalQueue
-        statisticalQueue = queue.Queue(0)
-        while True:
-            try:
-                if BBstop == True:
-                    statisticalQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, portStatistical)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if BBstop == False:
-                    statisticalQueue.put(data)
-                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-            except socket.timeout:
-                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            statisticalSocket.close()
-
-
-class LDPCStatisticThread(QThread):
-    def __int__(self):
-        super(LDPCStatisticThread, self).__init__()
-
-    def run(self):
-        global LDPCstop
-        LDPCstop = True
-        global LDPCstatisticalQueue
-        LDPCstatisticalQueue = queue.Queue(0)
-        while True:
-            try:
-                if LDPCstop == True:
-                    LDPCstatisticalQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, LDPCportStatistical)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if LDPCstop == False:
-                    LDPCstatisticalQueue.put(data)
-                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-            except socket.timeout:
-                # print("LDPC数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            statisticalSocket.close()
-
-
-class SpectrumStatisticThread(QThread):
-    def __int__(self):
-        super(SpectrumStatisticThread, self).__init__()
-
-    '''def buildUdpSocket(self, port, buffsize):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.setblocking(True) #设置阻塞模式
-        self.socket.settimeout(1)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, buffsize * 80)
-        addr = (ipaddr, port)
-        self.socket.bind(addr)'''
-
-    def run(self):
-        global SpectrumStop
-        SpectrumStop = True
-        global SpectrumStatisticalQueue
-        SpectrumStatisticalQueue = queue.Queue(0)
-        while True:
-            try:
-                if SpectrumStop == True:
-                    SpectrumStatisticalQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, SpectrumPortStatistical)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if SpectrumStop == False:
-                    SpectrumStatisticalQueue.put(data)
-            except socket.timeout:
-                # print("频谱数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            statisticalSocket.close()
-
-
-class IQThread(QThread):
-    def __int__(self):
-        super(IQThread, self).__init__()
-
-    def run(self):
-        global IQstop
-        IQstop = True
-        global IQQueue
-        IQQueue = queue.Queue(0)
-        while True:
-            try:
-                if IQstop == True:
-                    IQQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, portIQ)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if IQstop == False:
-                    IQQueue.put(data)
-                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-            except socket.timeout:
-                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            statisticalSocket.close()
-
-
-class SSSysThread(QThread):
-    def __int__(self):
-        super(SSSysThread, self).__init__()
-
-    def run(self):
-        global SSSysStop
-        SSSysStop = True
-        global SSSysQueue
-        SSSysQueue = queue.Queue(0)
-        while True:
-            try:
-                if SSSysStop == True:
-                    SSSysQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, portSSSys)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if SSSysStop == False:
-                    SSSysQueue.put(data)
-            except socket.timeout:
-                pass
-            statisticalSocket.close()
-
-
-class SSCorrValueThread(QThread):
-    def __int__(self):
-        super(SSCorrValueThread, self).__init__()
-
-    def run(self):
-        global SSCorrStop
-        SSCorrStop = True
-        global SSCorrValueQueue
-        SSCorrValueQueue = queue.Queue(0)
-        while True:
-            try:
-                if SSCorrStop == True:
-                    SSCorrValueQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                addr = (ipaddr, portCorrValue)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
-                if SSCorrStop == False:
-                    SSCorrValueQueue.put(data)
-                # print("收到数据：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-            except socket.timeout:
-                # print("调制解调数据超时：", time.strftime('%H-%M-%S',time.localtime(time.time())))
-                pass
-            statisticalSocket.close()
+        self.stopped = True
+        udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        udpSocket.bind((self._ip, self._port))
+        udpSocket.settimeout(1)
+        try:
+            while True:
+                if self.stopped:
+                    self.dataQueue.queue.clear()
+                try:
+                    data, _ = udpSocket.recvfrom(self._buffsize)
+                    if not self.stopped:
+                        self.dataQueue.put(data)
+                except socket.timeout:
+                    pass
+        finally:
+            udpSocket.close()
 
 '''class DataThread(QThread):
     def __int__(self):
@@ -283,28 +140,22 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.LDPCstatisticalPort_obj.setText(str(LDPCportStatistical))
         self.spectrumPort_obj.setText(str(SpectrumPortStatistical))
         self.IQPort_obj.setText(str(portIQ))
-        self.Reserv_6_obj.setVisible(False)
-        self.Reserv_6_label.setVisible(False)
-        self.Reserv_I1_obj.setVisible(False)
-        self.Reserv_I1_label.setVisible(False)
-        self.Reserv_I2_obj.setVisible(False)
-        self.Reserv_I2_label.setVisible(False)
-        self.Reserv_U1_obj.setVisible(False)
-        self.Reserv_U1_label.setVisible(False)
-        self.Rx_channel_obj.setVisible(False)
-        self.Rx_channel_label.setVisible(False)
-        self.FIFOEmpty_show_2.setVisible(False)
-        self.FIFOEmpty_label_2.setVisible(False)
-        self.phase_est_show_2.setVisible(False)
-        self.phase_est_label_2.setVisible(False)
-        self.o_freq_est_t_show_2.setVisible(False)
-        self.o_freq_est_t_label_2.setVisible(False)
-        self.singal_pwr_sum_show_2.setVisible(False)
-        self.singal_pwr_sum_label_2.setVisible(False)
-        self.noise_pwr_sum_show_2.setVisible(False)
-        self.noise_pwr_sum_label_2.setVisible(False)
-        self.SNR_current_show_2.setVisible(False)
-        self.SNR_current_label_2.setVisible(False)
+        # 批量隐藏不需要显示的控件
+        hiddenWidgets = [
+            self.Reserv_6_obj, self.Reserv_6_label,
+            self.Reserv_I1_obj, self.Reserv_I1_label,
+            self.Reserv_I2_obj, self.Reserv_I2_label,
+            self.Reserv_U1_obj, self.Reserv_U1_label,
+            self.Rx_channel_obj, self.Rx_channel_label,
+            self.FIFOEmpty_show_2, self.FIFOEmpty_label_2,
+            self.phase_est_show_2, self.phase_est_label_2,
+            self.o_freq_est_t_show_2, self.o_freq_est_t_label_2,
+            self.singal_pwr_sum_show_2, self.singal_pwr_sum_label_2,
+            self.noise_pwr_sum_show_2, self.noise_pwr_sum_label_2,
+            self.SNR_current_show_2, self.SNR_current_label_2,
+        ]
+        for widget in hiddenWidgets:
+            widget.setVisible(False)
         self.checkFalg = False
         self.errbitLDPCArray = []
         self.tolfrmLDPCArray = []
@@ -980,6 +831,16 @@ class configPage(QMainWindow, Ui_MainWindow):
                 base += 2**(pointer)
         return format(base, 'x').zfill(5)
 
+    @staticmethod
+    def _calculateSNR(signal_pwr, noise_pwr, mtype_index):
+        """计算信噪比的通用方法"""
+        if signal_pwr == 0:
+            return 0
+        if noise_pwr == 0:
+            return 50
+        scale = 10 if mtype_index == 3 else 6
+        return 10 * math.log10(signal_pwr * math.pow(2, scale) / noise_pwr)
+
     def showBasebandStatistical(self, data):
         errbit = int.from_bytes(data[0:4], byteorder='big')
         self.errbit_show.setText(str(errbit))
@@ -1003,16 +864,7 @@ class configPage(QMainWindow, Ui_MainWindow):
         FIFOEmpty = int.from_bytes(data[18:19], byteorder='big')
         # print("FIFOEmpty:",data[18:19], FIFOEmpty)
         self.FIFOEmpty_show.setText(str(FIFOEmpty))
-        if (singal_pwr_sum == 0):
-            SNR = 0
-        else:
-            if (noise_pwr_sum == 0):
-                SNR = 50
-            else:
-                if self.MType_rx_obj.currentIndex() == 3:
-                    SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 10) / noise_pwr_sum))
-                else:
-                    SNR = (10 * math.log10(singal_pwr_sum * math.pow(2, 6) / noise_pwr_sum))
+        SNR = self._calculateSNR(singal_pwr_sum, noise_pwr_sum, self.MType_rx_obj.currentIndex())
         self.SNR_current_show.setText('{:.1f}'.format(SNR))
         # self.count_dot(SNR)
         # self.PrepareSNRSamples(SNR)
@@ -1066,20 +918,12 @@ class configPage(QMainWindow, Ui_MainWindow):
             BER = errbit/(((self.calculateValidBitNum(self.car_num_rx_obj.value())*64*M-32)*12)*tolfrm)
             self.BER_show.setText('{:.2e}'.format(BER))
         SNRSub = []
+        mtype_idx = self.MType_rx_obj.currentIndex()
         for i in range(20):
             sigPwr = int.from_bytes(data[(42+i*2):(44+i*2)], byteorder='big')
             nosPwr = int.from_bytes(data[(90+i*2):(92+i*2)], byteorder='big')
-            if (sigPwr == 0):
-                SNRSub.append(0)
-            else:
-                if (nosPwr == 0):
-                    SNRSub.append(50)
-                else:
-                    if self.MType_rx_obj.currentIndex() == 3:
-                        SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 10) / nosPwr))
-                    else:
-                        SNRSub.append(10 * math.log10(sigPwr * math.pow(2, 6) / nosPwr))
-        self.SuitableCarrier_show.setText(self.showSuitableCarrier(self.MType_rx_obj.currentIndex(), SNRSub))
+            SNRSub.append(self._calculateSNR(sigPwr, nosPwr, mtype_idx))
+        self.SuitableCarrier_show.setText(self.showSuitableCarrier(mtype_idx, SNRSub))
         self.PrepareSNRSamples(SNRSub)
 
     def showLDPCStatistical(self, data):
@@ -1198,17 +1042,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SpectrumLineLayout.addWidget(self.SpectrumLineFigure)
 
     def PrepareSpectrumIdata(self):
-        self.IdataSpectrum.clear()
-        data = list(range(2048))
-        for element in data:
-            if element <= 1022:
-                newElement = 1022 - element
-            else:
-                newElement = 3070 - element
-            self.IdataSpectrum.append(newElement)
-        for i in range(2048):
-            newElement02 = 2047 - self.IdataSpectrum[i]
-            self.IdataSpectrum[i] = newElement02*125/2048 - 125/2
+        self.IdataSpectrum = []
+        for element in range(2048):
+            mirrored = (1022 - element) if element <= 1022 else (3070 - element)
+            self.IdataSpectrum.append((2047 - mirrored) * 125 / 2048 - 125 / 2)
 
     def PrepareCorrValue01Canvas(self):
         self.CorrValue01LineFigure = Figure_Canvas()
@@ -1239,7 +1076,9 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SNRLineFigure.draw()
         self.SNRLineFigure.flush_events()
 
-    def getIQdata(self, sourceData, Qdata, Idata=[], targetLen=1280, dataType='pilot'):
+    def getIQdata(self, sourceData, Qdata, Idata=None, targetLen=1280, dataType='pilot'):
+        if Idata is None:
+            Idata = []
         for i in range(int(len(sourceData)/4)):
             if dataType == 'corrValue01' or dataType == 'corrValue02':
                 Qdata.append(int.from_bytes(sourceData[0:4], byteorder='big'))
@@ -1367,86 +1206,76 @@ class configPage(QMainWindow, Ui_MainWindow):
             print(flag, Statistical)
 
     def updateStatistical(self):
-        if not statisticalQueue.empty():
-            self.showStatistical(statisticalQueue.get())
+        if not statisticThread.dataQueue.empty():
+            self.showStatistical(statisticThread.dataQueue.get())
 
     def updateLDPCStatistical(self):
-        if not LDPCstatisticalQueue.empty():
-            self.showStatistical(LDPCstatisticalQueue.get())
+        if not statisticThreadLDPC.dataQueue.empty():
+            self.showStatistical(statisticThreadLDPC.dataQueue.get())
 
     def updateSpectrumStatistical(self):
-        if not SpectrumStatisticalQueue.empty():
-            self.showStatistical(SpectrumStatisticalQueue.get())
+        if not spectrumThread.dataQueue.empty():
+            self.showStatistical(spectrumThread.dataQueue.get())
 
     def updateIQStatistical(self):
-        if not IQQueue.empty():
-            self.showStatistical(IQQueue.get())
+        if not IQdataThread.dataQueue.empty():
+            self.showStatistical(IQdataThread.dataQueue.get())
 
     def updateSSSysStatistical(self):
-        if not SSSysQueue.empty():
-            # print("更新扩频系统数据")
-            self.showStatistical(SSSysQueue.get())
+        if not SSSystemThread.dataQueue.empty():
+            self.showStatistical(SSSystemThread.dataQueue.get())
 
     def updateSSCorrValueStatistical(self):
-        if not SSCorrValueQueue.empty():
-            # print("更新扩频相关值")
-            self.showStatistical(SSCorrValueQueue.get())
+        if not CorrValueThread.dataQueue.empty():
+            self.showStatistical(CorrValueThread.dataQueue.get())
 
     def statisticalTimer(self):
-        global BBstop
-        BBstop = False
+        statisticThread.stopped = False
         self.timer.start(0)
         print('调制解调统计数据开始更新')
         self.timer.timeout.connect(self.updateStatistical)
 
     def killStatisticalTimer(self):
-        global BBstop
-        BBstop = True
+        statisticThread.stopped = True
         print('停止显示调制解调统计数据')
         self.timer.stop()
 
     def LDPCStatisticalTimer(self):
-        global LDPCstop
-        LDPCstop = False
+        statisticThreadLDPC.stopped = False
         self.LDPCtimer.start(1)
         print('LDPC统计数据开始更新')
         self.LDPCtimer.timeout.connect(self.updateLDPCStatistical)
 
     def killLDPCStatisticalTimer(self):
-        global LDPCstop
-        LDPCstop = True
+        statisticThreadLDPC.stopped = True
         print('停止显示LDPC统计数据')
         self.LDPCtimer.stop()
 
     def startSpectrumTimer(self):
-        global SpectrumStop
-        SpectrumStop = False
+        spectrumThread.stopped = False
         self.spectrumTimer.start(1)
         print("频谱检测开始更新")
         self.spectrumTimer.timeout.connect(self.updateSpectrumStatistical)
 
     def killSpectrumTimer(self):
-        global SpectrumStop
-        SpectrumStop = True
+        spectrumThread.stopped = True
         print("停止显示频谱检测")
         self.spectrumTimer.stop()
 
     def startIQTimer(self):
-        global IQstop
-        IQstop = False
+        IQdataThread.stopped = False
         self.IQtimer.start(1)
         print("IQ显示开始更新")
         self.IQtimer.timeout.connect(self.updateIQStatistical)
 
     def killIQTimer(self):
-        global IQstop
-        IQstop = True
+        IQdataThread.stopped = True
         print("停止IQ显示更新")
         self.IQtimer.stop()
 
     def startSSTimer(self):
-        global SSSysStop, SSCorrStop
-        SSSysStop, SSCorrStop = False, False
+        SSSystemThread.stopped = False
+        CorrValueThread.stopped = False
         print("扩频数据显示开始更新")
         self.SStimer01.start(1)
         self.SStimer02.start(1)
@@ -1454,8 +1283,8 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SStimer02.timeout.connect(self.updateSSCorrValueStatistical)
 
     def killSSTimer(self):
-        global SSSysStop, SSCorrStop
-        SSSysStop, SSCorrStop = True, True
+        SSSystemThread.stopped = True
+        CorrValueThread.stopped = True
         print("停止显示扩频数据")
         self.SStimer01.stop()
         self.SStimer02.stop()
@@ -1594,17 +1423,17 @@ class configPage(QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     portStatistical, LDPCportStatistical, SpectrumPortStatistical, portIQ, portSSSys, portCorrValue = getStatisticalPort()
     ipaddr = getChosenIP('1')
-    statisticThread = StatisticThread()
+    statisticThread = UdpReceiverThread(ipaddr, portStatistical)
     statisticThread.start()
-    statisticThreadLDPC = LDPCStatisticThread()
+    statisticThreadLDPC = UdpReceiverThread(ipaddr, LDPCportStatistical)
     statisticThreadLDPC.start()
-    spectrumThread = SpectrumStatisticThread()
+    spectrumThread = UdpReceiverThread(ipaddr, SpectrumPortStatistical)
     spectrumThread.start()
-    IQdataThread = IQThread()
+    IQdataThread = UdpReceiverThread(ipaddr, portIQ)
     IQdataThread.start()
-    SSSystemThread = SSSysThread()
+    SSSystemThread = UdpReceiverThread(ipaddr, portSSSys)
     SSSystemThread.start()
-    CorrValueThread = SSCorrValueThread()
+    CorrValueThread = UdpReceiverThread(ipaddr, portCorrValue)
     CorrValueThread.start()
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create('Windows'))
