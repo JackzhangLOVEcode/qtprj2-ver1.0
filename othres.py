@@ -63,7 +63,7 @@ class ConnectRFConfig():
             self.txConfig[2:4] = (fmcinfo * 2**12 + registerinfo).to_bytes(2, byteorder='big')
 
     def _buildConfig(self, fpgaindex, wrinfo, fmcinfo, registerinfo, value):
-        """通用配置构建方法"""
+        """通用配置构建方法：设置FPGA基础信息、寄存器地址，并将预计算的value写入配置的最后4字节"""
         self.setBaseInfo(fpgaindex, wrinfo)
         self.connectRegisterInfo(fmcinfo, registerinfo)
         self.txConfig[16:] = int(value).to_bytes(4, byteorder='big')
@@ -71,7 +71,7 @@ class ConnectRFConfig():
 
     def connectFreqInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo, value):
         """用于组织发射频率、接收频率以及侦测接收频率的配置数据"""
-        return self._buildConfig(fpgaindex, wrinfo, fmcinfo, registerinfo, value * 10 ** 9 / 100)
+        return self._buildConfig(fpgaindex, wrinfo, fmcinfo, registerinfo, value * 10 ** 7)
 
     def connectTXAttenuationInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo, channel1, channel2):
         """用于组织发射衰减配置数据"""

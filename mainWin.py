@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import sys, math, socket, queue, time, datetime, encodings.idna
+import sys, math, socket, queue, time, datetime, threading, encodings.idna
 from mainWinUI import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QGridLayout, QStyleFactory
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
@@ -22,21 +22,31 @@ class UdpListenerThread(QThread):
         super(UdpListenerThread, self).__init__()
         self._ip = ip
         self._port = port
-        self.stopped = True
+        self._stopEvent = threading.Event()
+        self._stopEvent.set()  # 初始为停止状态
         self.dataQueue = queue.Queue(0)
+
+    @property
+    def stopped(self):
+        return self._stopEvent.is_set()
+
+    @stopped.setter
+    def stopped(self, value):
+        if value:
+            self._stopEvent.set()
+        else:
+            self._stopEvent.clear()
 
     def run(self):
         while True:
+            statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            statisticalSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            statisticalSocket.bind((self._ip, self._port))
+            statisticalSocket.settimeout(1)
             try:
                 if self.stopped:
                     self.dataQueue.queue.clear()
-                statisticalSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                statisticalSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                addr = (self._ip, self._port)
-                buffsize = 1500
-                statisticalSocket.bind(addr)
-                statisticalSocket.settimeout(1)
-                data, addrsource = statisticalSocket.recvfrom(buffsize)
+                data, addrsource = statisticalSocket.recvfrom(1500)
                 if not self.stopped:
                     self.dataQueue.put(data)
             except socket.timeout:
@@ -1061,8 +1071,10 @@ class configPage(QMainWindow, Ui_MainWindow):
         self.SpectrumLineLayout.addWidget(self.SpectrumLineFigure)
 
     def PrepareSpectrumIdata(self):
+        """构建频谱X轴数据：FFT频率bin重排序（DC居中），映射到MHz"""
         self.IdataSpectrum.clear()
         for i in range(2048):
+            # FFT bin重排序：将[0,1022]映射到正频率，[1023,2047]映射到负频率
             if i <= 1022:
                 mapped = 1025 + i
             else:
