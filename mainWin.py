@@ -16,8 +16,8 @@ class UdpReceiverThread(QThread):
         self._ip = ip
         self._port = port
         self.dataQueue = queue.Queue(0)
-        self.stopEvent = threading.Event()
-        self.stopEvent.set()  # 初始状态为停止
+        self._paused = threading.Event()
+        self._paused.set()  # 初始状态为暂停
 
     def run(self):
         udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -25,21 +25,24 @@ class UdpReceiverThread(QThread):
         udpSocket.bind((self._ip, self._port))
         udpSocket.settimeout(1)
         buffsize = 1500
-        while True:
-            try:
-                if self.stopEvent.is_set():
-                    self.dataQueue.queue.clear()
-                data, _ = udpSocket.recvfrom(buffsize)
-                if not self.stopEvent.is_set():
-                    self.dataQueue.put(data)
-            except socket.timeout:
-                pass
+        try:
+            while True:
+                try:
+                    if self._paused.is_set():
+                        self.dataQueue.queue.clear()
+                    data, _ = udpSocket.recvfrom(buffsize)
+                    if not self._paused.is_set():
+                        self.dataQueue.put(data)
+                except socket.timeout:
+                    pass
+        finally:
+            udpSocket.close()
 
     def pause(self):
-        self.stopEvent.set()
+        self._paused.set()
 
     def resume(self):
-        self.stopEvent.clear()
+        self._paused.clear()
 
 class Figure_Canvas(FigureCanvas):
     def __init__(self,parent=None,width=3.9,height=2.7,dpi=100):
@@ -1061,6 +1064,7 @@ class configPage(QMainWindow, Ui_MainWindow):
     def getIQdata(self, sourceData, Qdata, Idata=None, targetLen=1280, dataType='pilot'):
         if Idata is None:
             Idata = []
+        PILOT_DIVISOR = 67108864  # 2**26
         for i in range(len(sourceData) // 4):
             offset = i * 4
             if dataType in ('corrValue01', 'corrValue02'):
@@ -1069,7 +1073,7 @@ class configPage(QMainWindow, Ui_MainWindow):
                 ivalue = int.from_bytes(sourceData[offset:offset+2], byteorder='big', signed=True)
                 qvalue = int.from_bytes(sourceData[offset+2:offset+4], byteorder='big', signed=True)
                 if dataType == 'pilot':
-                    Qdata.append((ivalue * ivalue + qvalue * qvalue) / (2**26))
+                    Qdata.append((ivalue * ivalue + qvalue * qvalue) / PILOT_DIVISOR)
                 elif dataType == 'spectrum':
                     if ivalue != 0 or qvalue != 0:
                         Qdata.append(20 * math.log10(math.sqrt(ivalue*ivalue + qvalue*qvalue)) - 96)

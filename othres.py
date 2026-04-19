@@ -17,6 +17,9 @@ def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=700
     try:
         with open(portFile, 'r', encoding='utf-8') as f:
             lines = f.readlines()
+            if len(lines) < 6:
+                print("提示：端口配置文件行数不足，以默认端口启动")
+                return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort
             ports = [int(line.strip().split(":")[1]) for line in lines[:6]]
             MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort = ports
     except FileNotFoundError:
@@ -69,7 +72,7 @@ class ConnectRFConfig():
 
     def connectFreqInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo, value):
         """用于组织发射频率、接收频率以及侦测接收频率的配置数据"""
-        return self._buildConfig(fpgaindex, wrinfo, fmcinfo, registerinfo, value * 10 ** 9 / 100)
+        return self._buildConfig(fpgaindex, wrinfo, fmcinfo, registerinfo, value * 1e7)
 
     def connectTXAttenuationInfo(self, fpgaindex:int, wrinfo:int, fmcinfo:int, registerinfo, channel1, channel2):
         """用于组织发射衰减配置数据"""
