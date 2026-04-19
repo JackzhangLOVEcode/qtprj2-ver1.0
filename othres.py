@@ -17,12 +17,15 @@ def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=700
     try:
         with open(portFile, 'r', encoding='utf-8') as port:
             lines = port.readlines()
-            MDport = int(lines[0].strip().split(":")[1])
-            LDPCport = int(lines[1].strip().split(":")[1])
-            SpectrumPort = int(lines[2].strip().split(":")[1])
-            IQport = int(lines[3].strip().split(":")[1])
-            SSSysport = int(lines[4].strip().split(":")[1])
-            SSCorrValuePort = int(lines[5].strip().split(":")[1])
+            if len(lines) < 6:
+                print("提示：端口配置文件行数不足，部分端口以默认值启动")
+            else:
+                MDport = int(lines[0].strip().split(":")[1])
+                LDPCport = int(lines[1].strip().split(":")[1])
+                SpectrumPort = int(lines[2].strip().split(":")[1])
+                IQport = int(lines[3].strip().split(":")[1])
+                SSSysport = int(lines[4].strip().split(":")[1])
+                SSCorrValuePort = int(lines[5].strip().split(":")[1])
     except FileNotFoundError:
         print("提示：未设置统计端口port，以默认端口启动")
     return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort

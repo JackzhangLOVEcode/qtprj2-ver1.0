@@ -1079,7 +1079,8 @@ class configPage(QMainWindow, Ui_MainWindow):
     def getIQdata(self, sourceData, Qdata, Idata=None, targetLen=1280, dataType='pilot'):
         if Idata is None:
             Idata = []
-        for i in range(len(sourceData) // 4):
+        num_chunks = len(sourceData) // 4
+        for i in range(num_chunks):
             if dataType in ('corrValue01', 'corrValue02'):
                 Qdata.append(int.from_bytes(sourceData[0:4], byteorder='big'))
             else:
