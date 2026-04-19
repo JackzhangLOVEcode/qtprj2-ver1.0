@@ -17,22 +17,21 @@ def getChosenIP(segment):
 portFile = 'setPort.txt'
 def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=7001, SSSysport=7002, SSCorrValuePort=7003):
     try:
-        port = open(portFile, 'r', encoding='utf-8')
-        Line1 = port.readline().strip()
-        MDport = int(Line1.split(":")[1])
-        Line2 = port.readline().strip()
-        LDPCport = int(Line2.split(":")[1])
-        Line3 = port.readline().strip()
-        SpectrumPort = int(Line3.split(":")[1])
-        Line4 = port.readline().strip()
-        IQport = int(Line4.split(":")[1])
-        Line5 = port.readline().strip()
-        SSSysport = int(Line5.split(":")[1])
-        Line6 = port.readline().strip()
-        SSCorrValuePort = int(Line6.split(":")[1])
+        with open(portFile, 'r', encoding='utf-8') as port:
+            Line1 = port.readline().strip()
+            MDport = int(Line1.split(":")[1])
+            Line2 = port.readline().strip()
+            LDPCport = int(Line2.split(":")[1])
+            Line3 = port.readline().strip()
+            SpectrumPort = int(Line3.split(":")[1])
+            Line4 = port.readline().strip()
+            IQport = int(Line4.split(":")[1])
+            Line5 = port.readline().strip()
+            SSSysport = int(Line5.split(":")[1])
+            Line6 = port.readline().strip()
+            SSCorrValuePort = int(Line6.split(":")[1])
     except FileNotFoundError:
         print("提示：未设置统计端口port，以默认端口启动")
-        return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort
     return MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort
 
 def getGPSdata(port='COM3', baudrate=38400):
