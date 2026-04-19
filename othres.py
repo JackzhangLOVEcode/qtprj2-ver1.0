@@ -18,11 +18,10 @@ portFile = 'setPort.txt'
 def getStatisticalPort(MDport=7000, LDPCport=7010, SpectrumPort=7020, IQport=7001, SSSysport=7002, SSCorrValuePort=7003):
     try:
         with open(portFile, 'r', encoding='utf-8') as port:
-            port_names = ['MDport', 'LDPCport', 'SpectrumPort', 'IQport', 'SSSysport', 'SSCorrValuePort']
             defaults = [MDport, LDPCport, SpectrumPort, IQport, SSSysport, SSCorrValuePort]
             results = list(defaults)
             for i, line in enumerate(port):
-                if i >= len(port_names):
+                if i >= len(results):
                     break
                 results[i] = int(line.strip().split(":")[1])
     except FileNotFoundError:
@@ -61,12 +60,11 @@ class ConnectRFConfig():
 
     def setBaseInfo(self, fpgaindex:int, wrinfo:int):
         fpgaAddr = self.fpgaAddr[fpgaindex]
-        WR_bit = wrinfo if 0 <= wrinfo <= 1 else 1
-        if wrinfo < 0 or wrinfo > 1:
+        if not (0 <= wrinfo <= 1):
             print("读写配置错误")
-        bytesInfo = WR_bit * 2**15 + fpgaAddr
-        bytesInfoArray = bytesInfo.to_bytes(2, byteorder='big')
-        self.txConfig[:2] = bytesInfoArray
+            wrinfo = 1
+        bytesInfo = wrinfo * 2**15 + fpgaAddr
+        self.txConfig[:2] = bytesInfo.to_bytes(2, byteorder='big')
 
     def connectRegisterInfo(self, fmcinfo:int, registerinfo):
         if fmcinfo == 1:
