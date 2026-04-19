@@ -1,26 +1,32 @@
 from socket import socket, AF_INET, SOCK_DGRAM
+import struct
 
 ip = '127.0.0.1'
 port = 51000
 addr = (ip, port)
-sourceData = []
-sourceData.extend(int(23562).to_bytes(4, byteorder='big'))
-sourceData.extend(int(156).to_bytes(4, byteorder='big'))
-sourceData.extend(int(345).to_bytes(2, byteorder='big'))
-sourceData.extend(int(123).to_bytes(2, byteorder='big'))
-sourceData.extend(int(122).to_bytes(2, byteorder='big'))
-sourceData.extend(int(100).to_bytes(2, byteorder='big'))
-sourceData.extend(int(10).to_bytes(1, byteorder='big'))
-sourceData.extend(int(0).to_bytes(1, byteorder='big'))
-sourceData.extend(int(1).to_bytes(1, byteorder='big'))
+
+sourceData = bytearray()
+sourceData.extend(struct.pack('>I', 23562))
+sourceData.extend(struct.pack('>I', 156))
+sourceData.extend(struct.pack('>H', 345))
+sourceData.extend(struct.pack('>H', 123))
+sourceData.extend(struct.pack('>H', 122))
+sourceData.extend(struct.pack('>H', 100))
+sourceData.extend(struct.pack('>B', 10))
+sourceData.extend(struct.pack('>B', 0))
+sourceData.extend(struct.pack('>B', 1))
 sourceDataBytes = bytes(sourceData)
-#buffsize = 1470
+
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 sourcePort = 51001
 addr2 = (ip, sourcePort)
 clientSocket.bind(addr2)
-while True:
-    print('send message ......')
-    clientSocket.sendto(sourceDataBytes, addr)
-    print(sourceDataBytes)
-clientSocket.close()
+try:
+    while True:
+        print('send message ......')
+        clientSocket.sendto(sourceDataBytes, addr)
+        print(sourceDataBytes)
+except KeyboardInterrupt:
+    pass
+finally:
+    clientSocket.close()
