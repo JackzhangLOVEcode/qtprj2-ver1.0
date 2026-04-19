@@ -17,7 +17,7 @@ from othres import getChosenIP, ConnectRFConfig, print_bytes_hex, getStatistical
     return struct.unpack("!f", ba)[0]'''
 
 class UdpReceiverThread(QThread):
-    """通用UDP接收线程，替代6个几乎相同的线程类"""
+    """通用UDP接收线程, 替代6个几乎相同的线程类"""
     def __init__(self, ip_addr, port, parent=None):
         super(UdpReceiverThread, self).__init__(parent)
         self._ip_addr = ip_addr
@@ -36,6 +36,7 @@ class UdpReceiverThread(QThread):
     def run(self):
         self._stopped = True
         while True:
+            udpSocket = None
             try:
                 if self._stopped:
                     self.dataQueue.queue.clear()
@@ -51,7 +52,8 @@ class UdpReceiverThread(QThread):
             except socket.timeout:
                 pass
             finally:
-                udpSocket.close()
+                if udpSocket is not None:
+                    udpSocket.close()
 
 '''class DataThread(QThread):
     def __int__(self):
