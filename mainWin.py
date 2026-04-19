@@ -31,19 +31,22 @@ class UdpReceiverThread(QThread):
 
     def run(self):
         udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        addr = (self._ip, self._port)
-        udpSocket.bind(addr)
-        udpSocket.settimeout(1)
-        while True:
-            try:
-                if self.isStopped():
-                    self.dataQueue.queue.clear()
-                data, _ = udpSocket.recvfrom(self._buffsize)
-                if not self.isStopped():
-                    self.dataQueue.put(data)
-            except socket.timeout:
-                pass
+        try:
+            udpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            addr = (self._ip, self._port)
+            udpSocket.bind(addr)
+            udpSocket.settimeout(1)
+            while True:
+                try:
+                    if self.isStopped():
+                        self.dataQueue.queue.clear()
+                    data, _ = udpSocket.recvfrom(self._buffsize)
+                    if not self.isStopped():
+                        self.dataQueue.put(data)
+                except socket.timeout:
+                    pass
+        finally:
+            udpSocket.close()
 
 class Figure_Canvas(FigureCanvas):
     def __init__(self,parent=None,width=3.9,height=2.7,dpi=100):
